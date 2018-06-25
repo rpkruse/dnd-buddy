@@ -11,16 +11,21 @@ import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
 
 //Components:
-import { AppComponent, CreateCharacterComponent, HomeComponent } from './components';
+import { AppComponent, CreateCharacterComponent, HomeComponent, LoginComponent } from './components';
 
 //Services:
-import { ApiService } from './services/services';
+import { ApiService, DataShareService, SessionGuard, StorageService, UserResolver } from './services/services';
+
+//Directives:
+import { NgEnterDirective } from './directives/directives';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateCharacterComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    NgEnterDirective
   ],
   imports: [
     BrowserModule,
@@ -32,11 +37,11 @@ import { ApiService } from './services/services';
     RouterModule.forRoot(rootRouterConfig, { useHash: true })
   ],
   providers: [
-    ApiService
-    //DataShareService,
-    //SessionGuard,
-    //StorageService,
-    //UserResolver,
+    ApiService,
+    DataShareService,
+    SessionGuard,
+    StorageService,
+    UserResolver,
     //HubService,
     //MessageService
   ],

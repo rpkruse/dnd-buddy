@@ -1,0 +1,143 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ApiService, StorageService, DataShareService } from '../services/services';
+
+import { User } from '../interfaces/interfaces';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css', '../global-style.css']
+})
+export class LoginComponent implements OnInit {
+  invaldiLogin: boolean = false;
+  private username: string = "";
+  private password: string = "";
+  private rememberMe: boolean = true;
+
+  createUser: boolean = false;
+
+  usernameTaken: boolean = false;
+  private hasClickedOff: boolean = false;
+
+  private createUsername: string = "";
+  private createPassword: string = "";
+  private createPasswordConfirm: string = "";
+
+  constructor(private _apiService: ApiService, private _storage: StorageService, private _router: Router, private _dataShareService: DataShareService) { }
+
+  ngOnInit() {
+    let usrName = this._storage.getFromLocal('savedUsername');
+
+    if(usrName) this.username = usrName;
+  }
+
+  private loginClicked() {
+    if(!this.allFieldsFilled()) return;
+
+    let s: Subscription;
+    
+    let loginCred = {
+      Username: this.username,
+      Password: this.password
+    };
+
+    let cred: string = JSON.stringify(loginCred);
+    let user: any;
+
+    s = this._apiService.getLoginToken(cred).subscribe(
+      d => user = d,
+      err => { this.invaldiLogin = true; this.password = "" },
+      () => {
+        this._storage.setValue("token", user["token"]);
+        this.validateLogin();
+        s.unsubscribe();
+      }
+    );
+  }
+
+  private validateLogin(){
+    let user: User;
+    let s: Subscription = this._apiService.validateToken().subscribe(
+      d => user = d,
+      err => console.log("Invalid token", err),
+      () => {
+        this._storage.setValue("loggedIn", true);
+
+        if(this.rememberMe)
+          this._storage.saveToLocal('savedUsername', this.username)
+        else
+          this._storage.removeFromLocal('savedUsername');
+
+        s.unsubscribe();
+
+        this._dataShareService.changeUser(user);
+        this._router.navigate(['./home']);
+      }
+    );
+  }
+
+  private validateUsername() {
+    if(this.createUsername.length <= 0) return;
+
+    let s: Subscription;
+    s = this._apiService.validateUsername(this.createUsername).subscribe(
+      d => d = d,
+      err => {
+        if(err['error']['Error']){
+          this.usernameTaken = true;
+        }else{
+          this.hasClickedOff = true;
+        }
+      }
+    );
+  }
+
+  private createUserClicked() {
+    this.createUser = true;
+    this.createUsername = "";
+    this.createPassword = "";
+    this.createPasswordConfirm = "";
+  }
+
+  private createAccount() {
+    let s: Subscription;
+
+    let newUser = {
+      Username: this.createUsername,
+      Password: this.createPassword
+    };
+
+    let returnedUser: User;
+    s = this._apiService.postEntity<User>("Users", newUser).subscribe(
+      d => returnedUser = d,
+      err => {
+        if(err['error']['Error']) {
+          this.usernameTaken = true;
+          this.createUsername = "";
+        }
+      },
+      () => {
+        s.unsubscribe();
+        this.username = this.createUsername;
+        this.password = this.createPassword;
+        this.loginClicked();
+      }
+    );
+  }
+
+  private passwordsMatch(): boolean{
+    return this.createPasswordConfirm.toLocaleLowerCase() === this.createPassword.toLocaleLowerCase() && this.createPassword.length > 0 && this.createPasswordConfirm.length > 0;
+  }
+
+  private allFieldsFilled(): boolean {
+    if(this.createUser)
+      return this.passwordsMatch() && !this.usernameTaken && this.username.length > 0;
+    
+      return this.username.length > 0 && this.password.length > 0;
+  }
+
+
+}

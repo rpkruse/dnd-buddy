@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ApiService } from './services/services';
+import { ApiService, DataShareService, StorageService } from './services/services';
+import { User } from './interfaces/interfaces';
 
 import { Class, ClassDetails } from './interfaces/interfaces';
 import { Observable, Subscription } from 'rxjs';
@@ -11,41 +12,43 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./app.component.css', './global-style.css']
 })
 export class AppComponent implements OnInit {
-  title = 'app';
+  user: User;
 
-  classes: Class[] = []
+  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, private _storage: StorageService) { }
 
-  selectedClass: ClassDetails;
-
-  constructor(private _apiService: ApiService) { }
-  
   isNavbarCollapsed: boolean = true;
 
   ngOnInit() {
+    if(this.isLoggedIn()){
+      let s: Subscription;
+      let tempUser: User;
 
-    // this._apiService.getAllEntities<Class>("classes").subscribe(
-    //   d => this.classes = d,
-    //   err => console.log(err),
-    //   () => console.log(this.classes)
-    // )
+      s = this._apiService.validateToken().subscribe(
+        d => tempUser = d,
+        err => console.log(err),
+        () => {
+          s.unsubscribe();
+          this.user = tempUser;
+          this._dataShareService.changeUser(this.user);
+        }
+      );
+    }
+
+    this._dataShareService.user.subscribe(res => this.user = res);
   }
 
-  public getClassDetails(url: string){
-    let s: Subscription = this._apiService.getSingleEntity<ClassDetails>(url).subscribe(
-      d => this.selectedClass = d,
-      err => console.log(err),
-      () => {
-        s.unsubscribe();
-        console.log(this.selectedClass);
-      }
-    )
-  }
 
-  public getUser() {
-    return true;
+  public getUser(): User{
+    return this.user;
   }
 
   public isLoggedIn(): boolean {
-    return true;
+    return this._storage.getValue('loggedIn') || this._storage.getValue('token');
+  }
+
+  public logout(){
+    this._storage.setValue("loggedIn", false);
+    this._storage.removeValue("token");
+    this._dataShareService.clearAllValues();
   }
 }

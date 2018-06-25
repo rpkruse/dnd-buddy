@@ -13,24 +13,24 @@
 
   <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
     <!-- Inside navbar content here -->
-    <div ngbDropdown class="nav-item d-inline-block text-light">
+    <!--<div ngbDropdown class="nav-item d-inline-block text-light">
       <div ngbDropdownToggle>Character</div>
       <div ngbDropdownMenu>
-        <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Character</a>
+        <a class="dropdown-item disabled" [routerLink]="['/createCharacter']">Create Character</a>
         <a class="dropdown-item disabled" [routerLink]="['/viewCharacters']">View Characters</a>
-      </div>
-      <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> -->
-    </div>
+      </div>-->
+      <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> 
+    </div>-->
   </div>
 
   <!-- Content always outside of the collapse -->
   <div class="nav-item ml-auto no-padding" style="margin: 0" *ngIf="this.isLoggedIn()">
     <div ngbDropdown placement="bottom-right" *ngIf="this.getUser()">
-      <h6 class="font-weight-bold text-light" ngbDropdownToggle>Username here</h6>
+      <h6 class="font-weight-bold text-light" ngbDropdownToggle>{{ this.getUser().username }}</h6>
       <div ngbDropdownMenu>
-        <button class="dropdown-item" [routerLink]="['/profile']">Profile</button>
-        <button class="dropdown-item" [routerLink]="['/characters']">Characters</button>
-        <button class="dropdown-item" [routerLink]="['/login']">Logout</button>
+        <!--<button class="dropdown-item" [routerLink]="['/profile']">Profile</button>
+        <button class="dropdown-item" [routerLink]="['/characters']">Characters</button>-->
+        <button class="dropdown-item " [routerLink]="['/login']" (click)="this.logout()">Logout</button>
       </div>
     </div>
   </div>
@@ -38,76 +38,8 @@
 
 <div class="container-fluid">
   <div class="row">
-   <!-- <div class="col-2">
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-action text-center" *ngFor="let class of this.classes.results" (click)="getClassDetails(class.url)">
-          {{class.name}}
-        </li>
-      </ul>
-    </div>
-
-    <div class="col-6" *ngIf="this.selectedClass">
-      <div class="card">
-        <div class="card-header text-center font-weight-bold">
-          {{ this.selectedClass.name }}
-        </div>
-
-        <div class="card-body">
-          <b>Hit Die:</b> {{ this.selectedClass.hit_die }}
-          <ngb-accordion #acc="ngbAccordion">
-            <!-- Profs 
-            <ngb-panel title="Proficiencies">
-              <ng-template ngbPanelContent>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item list-group-item-action" *ngFor="let prof of this.selectedClass.proficiencies">
-                    {{ prof.name }}
-                  </li>
-                </ul>
-              </ng-template>
-            </ngb-panel>
-
-            <!-- Prof selection 
-            <!--<ngb-panel title="Proficiencies Choices">
-              <ng-template ngbPanelContent>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item list-group-item-action" *ngFor="let prof of this.selectedClass.proficiency_choices">
-                    {{ prof.from[0] }}
-                  </li>
-                </ul>
-              </ng-template>
-            </ngb-panel>-->
-
-            <!-- Saving Throws 
-            <ngb-panel title="Saving Throws">
-              <ng-template ngbPanelContent>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item list-group-item-action" *ngFor="let save of this.selectedClass.saving_throws">
-                    {{ save.name }}
-                  </li>
-                </ul>
-              </ng-template>
-            </ngb-panel>
-
-            <!-- SubClasses 
-            <ngb-panel title="Subclasses">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item list-group-item-action" *ngFor="let sub of this.selectedClass.subclasses">
-                      {{ sub.name }}
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-
-
-          </ngb-accordion>
-        </div>
-      </div>
-    </div>-->
     <div class="col-12">
       <router-outlet></router-outlet>
     </div>
-
-
   </div>
 </div>

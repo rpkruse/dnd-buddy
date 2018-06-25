@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  api: 'https://dnd-buddy.herokuapp.com/api/', //'http://localhost:49950/api/',
   dnd_api: 'http://www.dnd5eapi.co/api/'
 };
 
