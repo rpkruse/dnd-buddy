@@ -1,5 +1,10 @@
+import { Character } from './character';
+import { Game } from './game';
+
 export interface User{
-    id: number,
+    userId: number,
     username: string,
-    password: string
+    password: string,
+    character: Character[],
+    game: Game[]
 }

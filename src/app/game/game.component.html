@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row">
+    <!-- List of games -->
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header text-center">Current Games</div>
+        <ul class="list-group list-group-flush static-size-list half-height">
+          <li class="list-group-item list-group-item-action" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
+            {{ i+1 }}. {{ game.name }}
+          </li>
+        </ul>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success float-right" (click)="createGame()">New Game</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <!-- Creating a new game -->
+      <div *ngIf="this.creatingGame">
+        <form>
+          <div class="input-group-prepend">
+            <label class="input-group-text">Game Name:</label>
+            <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control col-9" placeholder="Game name"
+              required>
+          </div>
+          <div class="input-group-prepend">
+            <label class="checkbox float-right">
+              <input type="checkbox" [checked]="isGM" (change)="isGM = !isGM">GM
+            </label>
+          </div>
+          <button type="button" class="btn btn-primary" (click)="saveNewGame()" [disabled]="!gameName.length">Create Game</button>
+        </form>
+      </div>
+
+      <!-- Viewing a game -->
+      <div *ngIf="this.selectedGame">
+        <div class="card">
+          <div class="card-header text-center">{{ this.selectedGame.name }}</div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let character of this.selectedGame.characters index as i">
+              {{ character.name }}
+            </li>
+            <li class="list-group-item" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

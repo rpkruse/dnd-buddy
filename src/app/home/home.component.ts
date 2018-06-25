@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { DataShareService } from '../services/services';
+
+import { User } from '../interfaces/interfaces';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -7,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _dataShareService: DataShareService) { }
 
   ngOnInit() {
   }

@@ -1,3 +1,19 @@
+.static-size-list{
+    overflow-y: scroll;
+}
+
+.half-height{
+    max-height: 35vh;
+}
+
+.half-height-with-some {
+    max-height: 40vh;
+}
+
+.three-fourth-height {
+    max-height: 70vh;
+}
+
 .margin-top{
     margin-top: 3%;
 }

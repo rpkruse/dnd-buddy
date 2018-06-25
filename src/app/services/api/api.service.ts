@@ -19,6 +19,7 @@ export class ApiService {
       { 'Content-Type': 'application/json' }
     );
 
+    console.log(environment.api);
     return this._http.post(environment.api + 'Auth/login', cred, { headers }) as Observable<any>;
   }
 
@@ -35,12 +36,12 @@ export class ApiService {
   }
 
 
-  public getAllEntities<T>(path: string): Observable<T> {
-    return this._http.get(environment.dnd_api + path) as Observable<T>;
+  public getAllEntities<T>(path: string): Observable<T[]> {
+    return this._http.get(environment.api + path) as Observable<T[]>;
   }
 
   public getSingleEntity<T>(path: string): Observable<T> {
-    return this._http.get(path) as Observable<T>;
+    return this._http.get(environment.api + path) as Observable<T>;
   }
 
   public postEntity<T>(path: string, obj: any): Observable<T> {

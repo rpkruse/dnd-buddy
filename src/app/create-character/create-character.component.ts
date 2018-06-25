@@ -45,7 +45,7 @@ export class CreateCharacterComponent implements OnInit {
   constructor(private _apiService: ApiService, private _modalService: NgbModal) { }
 
   ngOnInit() {
-    let s: Subscription = this._apiService.getAllEntities<Class>("classes").subscribe(
+    /*let s: Subscription = this._apiService.getAllEntities<Class>("classes").subscribe(
       d => this.classes = d,
       err => console.log("unable to fetch classes", err),
       () => s.unsubscribe()
@@ -55,7 +55,7 @@ export class CreateCharacterComponent implements OnInit {
       d => this.races = d,
       err => console.log("unable to fetch races"),
       () => { j.unsubscribe(); console.log(this.races); }
-    );
+    );*/
   }
 
   public getClassesInRange(start: number, end: number): Class {

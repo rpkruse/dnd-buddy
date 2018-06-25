@@ -1,4 +1,6 @@
 //Our database info:
+import { Character } from '../interfaces/api/user/character';
+import { Game } from '../interfaces/api/user/game';
 import { User } from '../interfaces/api/user/user';
 
 import { Class } from '../interfaces/api/class/class';
@@ -10,6 +12,8 @@ import { RaceDetails } from '../interfaces/api/race/racedetails';
 import { ProficiencyChoices } from '../interfaces/api/proficiencychoices';
 
 export {
+    Character,
+    Game,
     User,
     Class,
     ClassDetails,
