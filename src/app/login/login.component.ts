@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./login.component.css', '../global-style.css']
 })
 export class LoginComponent implements OnInit {
-  invaldiLogin: boolean = false;
+  invalidLogin: boolean = false;
   private username: string = "";
   private password: string = "";
   private rememberMe: boolean = true;
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   private createPassword: string = "";
   private createPasswordConfirm: string = "";
 
-  constructor(private _apiService: ApiService, private _storage: StorageService, private _router: Router, private _dataShareService: DataShareService) { }
+  constructor(private _apiService: ApiService, public _storage: StorageService, private _router: Router, private _dataShareService: DataShareService) { }
 
   ngOnInit() {
     let usrName = this._storage.getFromLocal('savedUsername');
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
 
     s = this._apiService.getLoginToken(cred).subscribe(
       d => user = d,
-      err => { this.invaldiLogin = true; this.password = "" },
+      err => { this.invalidLogin = true; this.password = "" },
       () => {
         this._storage.setValue("token", user["token"]);
         this.validateLogin();

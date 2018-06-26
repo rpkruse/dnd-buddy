@@ -19,7 +19,6 @@ export class ApiService {
       { 'Content-Type': 'application/json' }
     );
 
-    console.log(environment.api);
     return this._http.post(environment.api + 'Auth/login', cred, { headers }) as Observable<any>;
   }
 

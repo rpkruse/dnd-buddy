@@ -1,28 +1,36 @@
 <ng-progress [thick]="true" color="red" [spinner]="false"></ng-progress>
 
 <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
-    <div class="nav-item">
-      <!-- <h4 class="font-weight-bold text-light d-inline nav-link">Dnd Buddy</h4> -->
-      <a class="nav-link text-light font-weight-bold" [routerLink]="['/home']">Dnd Buddy</a>
-    </div>
+  <div class="nav-item">
+    <!-- <h4 class="font-weight-bold text-light d-inline nav-link">Dnd Buddy</h4> -->
+    <a class="nav-link text-light font-weight-bold" [routerLink]="['/home']">Dnd Buddy</a>
+  </div>
 
   <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarSupportedContent"
     [attr.aria-expanded]="isNavbarCollapsed" aria-label="Toggle Navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="this.isLoggedIn()">
     <!-- Inside navbar content here -->
-    <div class="nav-item">
-      <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
+    <div ngbDropdown placement="bottom-left">
+      <div class="text-light" ngbDropdownToggle>Character</div>
+      <div ngbDropdownMenu>
+          <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Character</a>
+          <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
+          <!-- <a class="dropdown-item disabled" [routerLink]="['/viewCharacters']">View Characters</a> -->
+      </div>
     </div>
+    <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
+    <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> -->
+    <!-- <a class="nav-link text-light" [routerLink]="['/game']">Games</a> -->
     <!--<div ngbDropdown class="nav-item d-inline-block text-light">
       <div ngbDropdownToggle>Character</div>
       <div ngbDropdownMenu>
         <a class="dropdown-item disabled" [routerLink]="['/createCharacter']">Create Character</a>
         <a class="dropdown-item disabled" [routerLink]="['/viewCharacters']">View Characters</a>
       </div>-->
-      <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> 
+    <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> 
     </div>-->
   </div>
 

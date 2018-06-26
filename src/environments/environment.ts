@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  api: 'http://localhost:49950/api/', //'https://dnd-buddy.herokuapp.com/api/', 
-  dnd_api: 'http://www.dnd5eapi.co/api/'
+  api: 'https://dnd-buddy.herokuapp.com/api/', //'https://dnd-buddy.herokuapp.com/api/', //'http://localhost:49950/api/'
+  dnd_api: 'https://dnd-5e-api.herokuapp.com/api/'
 };
 
 /*

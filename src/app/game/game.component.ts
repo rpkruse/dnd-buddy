@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ApiService, DataShareService } from '../services/services';
-import { Character, Game, User } from '../interfaces/interfaces';
+import { ApiService, DndApiService, DataShareService } from '../services/services';
+import { Character, Game, User, ClassDetails, RaceDetails } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 
@@ -20,14 +21,18 @@ export class GameComponent implements OnInit {
 
   selectedGame: Game;
 
-  constructor(private _apiService: ApiService, private _dataShareService: DataShareService) { }
+  characterDetail: Character;
+  classDetail: ClassDetails;
+  raceDetail: RaceDetails;
+
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal) { }
 
   ngOnInit() {
     this._dataShareService.user.subscribe(res => this.user = res);
     let s: Subscription = this._apiService.getAllEntities<Game>("Games/user/" + this.user.userId).subscribe(
       d => this.games = d,
       err => console.log("Unable to get games"),
-      () => s.unsubscribe()  
+      () => s.unsubscribe()
     );
   }
 
@@ -36,7 +41,7 @@ export class GameComponent implements OnInit {
     this.selectedGame = null;
   }
 
-  public saveNewGame(){
+  public saveNewGame() {
     let s: Subscription;
 
     let g = {
@@ -56,7 +61,7 @@ export class GameComponent implements OnInit {
     )
   }
 
-  public loadGame(game: Game){
+  public loadGame(game: Game) {
     this.creatingGame = false;
     let s: Subscription;
 
@@ -65,5 +70,40 @@ export class GameComponent implements OnInit {
       err => console.log("Unable to load game", err),
       () => s.unsubscribe()
     );
+  }
+
+  public loadCharacterDetails(index: number, content) {
+    this.characterDetail = this.selectedGame.character[index];
+    let s, j: Subscription;
+
+    s = this._dndApiService.getSingleEntity<ClassDetails>(this.selectedGame.character[index].class).subscribe(
+      d => this.classDetail = d,
+      err => console.log(err),
+      () => s.unsubscribe()
+    );
+
+    j = this._dndApiService.getSingleEntity<RaceDetails>(this.selectedGame.character[index].race).subscribe(
+      d => this.raceDetail = d,
+      err => console.log(err),
+      () => j.unsubscribe()
+    );
+
+    this.openModal(content);
+  }
+
+  public openModal(content) {
+    this._modalService.open(content).result.then((result) => { //On close via save
+      //this.addNeededEntitiesToDB(); //When we save, we attempt to add all needed entities to the DB
+      //this.currentStep = 1;
+      this.clearCharacterDetails();
+    }, (reason) => { //on close via click off
+      //this.currentStep = 1;
+      this.clearCharacterDetails();
+    });
+  }
+
+  public clearCharacterDetails() {
+    this.classDetail = null;
+    this.raceDetail = null;
   }
 }

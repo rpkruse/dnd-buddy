@@ -7,6 +7,6 @@ export interface Game {
     userId: number,
     GM: boolean,
 
-    characters: Character[],
+    character: Character[],
     user: User;
 }

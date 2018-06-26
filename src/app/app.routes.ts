@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { AppComponent, CreateCharacterComponent, GameComponent, HomeComponent, LoginComponent } from './components';
+import { AppComponent, CreateCharacterComponent, CharacterRaceDetails, GameComponent, HomeComponent, LoginComponent } from './components';
 
 import { SessionGuard, UserResolver } from './services/services';
 
@@ -9,5 +9,6 @@ export const rootRouterConfig: Routes = [
     { path: 'home', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: HomeComponent },
     { path: 'game', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: GameComponent },
     { path: 'createCharacter', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: CreateCharacterComponent },
+    { path: 'characterRaceDetails', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: CharacterRaceDetails },
     { path: 'login', component: LoginComponent }
 ];
