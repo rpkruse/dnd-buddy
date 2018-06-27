@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { trigger, state, animate, transition, style } from '@angular/animations';
 
 import {ApiService, DndApiService, DataShareService } from '../services/services';
 
@@ -10,7 +11,22 @@ import { NgModel } from '@angular/forms';
 @Component({
   selector: 'app-character-manager',
   templateUrl: './character-manager.component.html',
-  styleUrls: ['./character-manager.component.css', '../global-style.css']
+  styleUrls: ['./character-manager.component.css', '../global-style.css'],
+  animations: [
+    trigger(
+      'showState', [
+        state('show', style({
+          opacity: 1,
+          visibility: 'visible'
+        })),
+        state('hide', style({
+          opacity: 0,
+          visibility: 'hidden'
+        })),
+        transition('show => *', animate('400ms')),
+        transition('hide => show', animate('400ms')),
+      ])
+  ]
 })
 export class CharacterManagerComponent implements OnInit {
   MessageType = MessageType;
@@ -22,6 +38,8 @@ export class CharacterManagerComponent implements OnInit {
 
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
+
+  mouseOver: number = -1;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal) { }
 
@@ -58,7 +76,9 @@ export class CharacterManagerComponent implements OnInit {
     this.selectedCharacter = null;
   }
 
-  public confirmDeleteCharacter(content){
+  public confirmDeleteCharacter(content, event, character?: Character){
+    event.stopPropagation();
+    if(character) this.selectedCharacter = character;
     this._modalService.open(content).result.then((result) => { //On close via save
       this.deleteCharacter(); //When we save, we attempt to add all needed entities to the DB
     }, (reason) => { //on close via click off

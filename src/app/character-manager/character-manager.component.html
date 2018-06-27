@@ -4,15 +4,21 @@
     <!-- Character List -->
     <div class="col-md-5 mb-5">
       <div class="card w-100">
-        <div class="card-header">Characters</div>
+        <div class="card-header">
+          Characters
+          <img class="icon icon-sm float-right" [routerLink]="['/createCharacter']" placement="right" ngbTooltip="Create Character"
+            src="assets/icons/create_icon.png">
+        </div>
         <ul class="list-group list-group-flush static-size half-height" *ngIf="this.characters.length">
-          <li class="list-group-item list-group-item-action" (click)="getCharacterDetails(character)" *ngFor="let character of this.characters index as i">
+          <li class="list-group-item list-group-item-action" (click)="getCharacterDetails(character)" (mouseover)="this.mouseOver = i"
+            (mouseout)="this.mouseOver = -1" *ngFor="let character of this.characters index as i">
             {{ character.name }}
+            <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event, character)"
+              placement="right" ngbTooltip="Delete Character" src="assets/icons/x_icon.png">
           </li>
         </ul>
         <div class="card-body" *ngIf="!this.characters.length">
-          <body class="card-text d-inline">No Characters</body>
-          <button type="button" class="btn btn-success d-inline float-right" [routerLink]="['/createCharacter']">Create Character</button>
+          <body class="card-text text-center">No Characters</body>
         </div>
       </div>
     </div>
@@ -40,7 +46,7 @@
           <body class="card-text text-left">CHA: {{ this.selectedCharacter.abil_Score_Cha }}</body>
         </div>
         <div class="card-footer">
-          <img class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png">
+          <img class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png">
         </div>
       </div>
     </div>
