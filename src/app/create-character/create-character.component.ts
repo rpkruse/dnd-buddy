@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, Game, Character, User } from '../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, Game, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,6 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./create-character.component.css', '../global-style.css']
 })
 export class CreateCharacterComponent implements OnInit {
+  MessageType = MessageType;
   private user: User;
 
   classes: Class = null;
@@ -31,7 +33,7 @@ export class CreateCharacterComponent implements OnInit {
 
   rolls: number[] = [0, 0, 0, 0, 0, 0];
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService) { }
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router) { }
 
   ngOnInit() {
     let s, j, k: Subscription;
@@ -61,12 +63,12 @@ export class CreateCharacterComponent implements OnInit {
       name: "",
       class: "",
       race: "",
-      abil_score_str: 0,
-      abil_score_dex: 0,
-      abil_score_con: 0,
-      abil_score_int: 0,
-      abil_score_wis: 0,
-      abil_score_cha: 0,
+      abil_Score_Str: 0,
+      abil_Score_Dex: 0,
+      abil_Score_Con: 0,
+      abil_Score_Int: 0,
+      abil_Score_Wis: 0,
+      abil_Score_Cha: 0,
       level: 1,
       userId: this.user.userId || null,
       gameId: null,
@@ -119,12 +121,12 @@ export class CreateCharacterComponent implements OnInit {
       name: this.character.name,
       class: this.character.class,
       race: this.character.race,
-      abil_score_str: this.character.abil_score_str,
-      abil_score_dex: this.character.abil_score_dex,
-      abil_score_con: this.character.abil_score_con,
-      abil_score_int: this.character.abil_score_int,
-      abil_score_wis: this.character.abil_score_wis,
-      abil_score_cha: this.character.abil_score_cha,
+      abil_Score_Str: this.character.abil_Score_Str,
+      abil_Score_Dex: this.character.abil_Score_Dex,
+      abil_Score_Con: this.character.abil_Score_Con,
+      abil_Score_Int: this.character.abil_Score_Int,
+      abil_Score_Wis: this.character.abil_Score_Wis,
+      abil_Score_Cha: this.character.abil_Score_Cha,
       level: this.level,
       userId: this.character.user.userId,
       gameId: this.character.gameId,
@@ -134,8 +136,12 @@ export class CreateCharacterComponent implements OnInit {
     let returnedChar: Character;
     s = this._apiService.postEntity<Character>("Characters", c).subscribe(
       d => returnedChar = d,
-      err => console.log(err),
-      () => {s.unsubscribe(); console.log(returnedChar);}
+      err => this.triggerMessage("", "Unable to create character", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage("", "Character Created!", MessageType.Success);
+        this._router.navigate(['./game']);
+      }
     );
   }
 
@@ -143,22 +149,22 @@ export class CreateCharacterComponent implements OnInit {
     let val: number = parseInt(this.selectedRace.ability_bonuses[index]);
     switch (index) {
       case 0:
-        this.character.abil_score_str += val;
+        this.character.abil_Score_Str += val;
         break;
       case 1:
-        this.character.abil_score_dex += val;
+        this.character.abil_Score_Dex += val;
         break;
       case 2:
-        this.character.abil_score_con += val;
+        this.character.abil_Score_Con += val;
         break;
       case 3:
-        this.character.abil_score_int += val;
+        this.character.abil_Score_Int += val;
         break;
       case 4:
-        this.character.abil_score_wis += val;
+        this.character.abil_Score_Wis += val;
         break;
       case 5:
-        this.character.abil_score_cha += val;
+        this.character.abil_Score_Cha += val;
         break;
     }
   }
@@ -173,17 +179,17 @@ export class CreateCharacterComponent implements OnInit {
     
     switch (index) {
       case 0:
-        return "STR: " + this.character.abil_score_str + raceBonusAttr;
+        return "STR: " + this.character.abil_Score_Str + raceBonusAttr;
       case 1:
-        return "DEX: " + this.character.abil_score_dex + raceBonusAttr;
+        return "DEX: " + this.character.abil_Score_Dex + raceBonusAttr;
       case 2:
-        return "CON: " + this.character.abil_score_con + raceBonusAttr;
+        return "CON: " + this.character.abil_Score_Con + raceBonusAttr;
       case 3:
-        return "INT: " + this.character.abil_score_int + raceBonusAttr;
+        return "INT: " + this.character.abil_Score_Int + raceBonusAttr;
       case 4:
-        return "WIS: " + this.character.abil_score_wis + raceBonusAttr;
+        return "WIS: " + this.character.abil_Score_Wis + raceBonusAttr;
       case 5:
-        return "CHA: " + this.character.abil_score_cha + raceBonusAttr;
+        return "CHA: " + this.character.abil_Score_Cha + raceBonusAttr;
     }
   }
 
@@ -196,22 +202,22 @@ export class CreateCharacterComponent implements OnInit {
   public setStatString(index: number, val: number) {
     switch (index) {
       case 0:
-        this.character.abil_score_str = val;
+        this.character.abil_Score_Str = val;
         break;
       case 1:
-        this.character.abil_score_dex = val;
+        this.character.abil_Score_Dex = val;
         break;
       case 2:
-        this.character.abil_score_con = val;
+        this.character.abil_Score_Con = val;
         break;
       case 3:
-        this.character.abil_score_int = val;
+        this.character.abil_Score_Int = val;
         break;
       case 4:
-        this.character.abil_score_wis = val;
+        this.character.abil_Score_Wis = val;
         break;
       case 5:
-        this.character.abil_score_cha = val;
+        this.character.abil_Score_Cha = val;
         break;
     }
   }
@@ -259,5 +265,15 @@ export class CreateCharacterComponent implements OnInit {
 
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0 
           && this.selectedGame !== null && this.level !== null;
+  }
+
+  private triggerMessage(message: string, action: string, level: MessageType){
+    let out: MessageOutput = {
+      message: message,
+      action: action,
+      level: level
+    };
+
+    this._dataShareService.changeMessage(out);
   }
 }

@@ -36,7 +36,11 @@
       <!-- Viewing a game -->
       <div *ngIf="this.selectedGame">
         <div class="card">
-          <div class="card-header text-center">{{ this.selectedGame.name }}</div>
+          <div class="card-header text-center">
+            {{ this.selectedGame.name }}
+            <img class="icon icon-sm float-right" (click)="confirmDeleteGame(confirm)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png"
+              *ngIf="this.selectedGame.gm">
+          </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" *ngFor="let character of this.selectedGame.character index as i" (click)="loadCharacterDetails(i, content)">
               {{ character.name }}
@@ -50,20 +54,43 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ this.characterDetail.name }}</h4>
+  </div>
+
+  <div class="modal-body">
+    <div *ngIf="this.classDetail">
+
+      <body>Class: {{this.classDetail.name}}</body>
+    </div>
+    <div *ngIf="this.raceDetail">
+
+      <body>Race: {{this.raceDetail.name}}</body>
+    </div>
+
+    <body>Level: {{this.characterDetail.level}}</body>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #confirm let-c="close" let-d="dismiss">
     <div class="modal-header">
-      <h4 class="modal-title">{{ this.characterDetail.name }}</h4>
+      <h4 class="modal-title">Confirmation</h4>
     </div>
   
     <div class="modal-body">
-      <div *ngIf="this.classDetail">
-        <h4>Class: {{this.classDetail.name}}</h4>
-      </div>
-      <div *ngIf="this.raceDetail">
-        <h4>Race: {{this.raceDetail.name}}</h4>
-      </div>
-      <h4>Level: {{this.characterDetail.level}}</h4>
+  
+      <body>Are you sure you want to the game delete:
+        <b>{{ this.selectedGame.name }}?</b>
+      </body>
+  
+      <body class="text-muted">This action cannot be undone</body>
     </div>
+  
     <div class="modal-footer">
-      <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+      <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
+      <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
     </div>
   </ng-template>

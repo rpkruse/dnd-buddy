@@ -50,4 +50,20 @@ export class ApiService {
 
     return this._http.post(environment.api + path, obj, { headers }) as Observable<T>;
   }
+
+  public putEntity<T>(path: string, obj: any): Observable<T> {
+    let headers: HttpHeaders = new HttpHeaders(
+      { "Authorization": "Bearer " + this._storage.getValue("token") }
+    );
+
+    return this._http.put(environment.api + path, obj, { headers }) as Observable<T>;
+  }
+
+  public deleteEntity<T>(path: string, id: number): Observable<T>{
+    let headers: HttpHeaders = new HttpHeaders(
+      { "Authorization": "Bearer " + this._storage.getValue("token") }
+    );
+
+    return this._http.delete(environment.api + path + "/" + id, { headers }) as Observable<T>;
+  }
 }

@@ -14,24 +14,14 @@
   <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="this.isLoggedIn()">
     <!-- Inside navbar content here -->
     <div ngbDropdown placement="bottom-left">
-      <div class="text-light" ngbDropdownToggle>Character</div>
+      <div class="text-light" ngbDropdownToggle>Manage</div>
       <div ngbDropdownMenu>
-          <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Character</a>
-          <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
-          <!-- <a class="dropdown-item disabled" [routerLink]="['/viewCharacters']">View Characters</a> -->
+        <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
+        <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
+        <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
       </div>
     </div>
     <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
-    <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> -->
-    <!-- <a class="nav-link text-light" [routerLink]="['/game']">Games</a> -->
-    <!--<div ngbDropdown class="nav-item d-inline-block text-light">
-      <div ngbDropdownToggle>Character</div>
-      <div ngbDropdownMenu>
-        <a class="dropdown-item disabled" [routerLink]="['/createCharacter']">Create Character</a>
-        <a class="dropdown-item disabled" [routerLink]="['/viewCharacters']">View Characters</a>
-      </div>-->
-    <!-- <a class="nav-link text-light" [routerLink]="['/createCharacter']">Create Character</a> 
-    </div>-->
   </div>
 
   <!-- Content always outside of the collapse -->
@@ -39,8 +29,7 @@
     <div ngbDropdown placement="bottom-right" *ngIf="this.getUser()">
       <h6 class="font-weight-bold text-light" ngbDropdownToggle>{{ this.getUser().username }}</h6>
       <div ngbDropdownMenu>
-        <!--<button class="dropdown-item" [routerLink]="['/profile']">Profile</button>
-        <button class="dropdown-item" [routerLink]="['/characters']">Characters</button>-->
+        <!--<button class="dropdown-item" [routerLink]="['/profile']">Profile</button>-->
         <button class="dropdown-item " [routerLink]="['/login']" (click)="this.logout()">Logout</button>
       </div>
     </div>
@@ -53,4 +42,5 @@
       <router-outlet></router-outlet>
     </div>
   </div>
+  <app-snackbar></app-snackbar>
 </div>

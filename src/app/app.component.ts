@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { SnackbarComponent } from './components';
+
 import { ApiService, DataShareService, StorageService } from './services/services';
 import { User } from './interfaces/interfaces';
 

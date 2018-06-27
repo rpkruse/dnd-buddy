@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="row mt-5">
+
+    <!-- Character List -->
+    <div class="col-md-5 mb-5">
+      <div class="card w-100">
+        <div class="card-header">Characters</div>
+        <ul class="list-group list-group-flush static-size half-height" *ngIf="this.characters.length">
+          <li class="list-group-item list-group-item-action" (click)="getCharacterDetails(character)" *ngFor="let character of this.characters index as i">
+            {{ character.name }}
+          </li>
+        </ul>
+        <div class="card-body" *ngIf="!this.characters.length">
+          <body class="card-text d-inline">No Characters</body>
+          <button type="button" class="btn btn-success d-inline float-right" [routerLink]="['/createCharacter']">Create Character</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Character detail -->
+    <div class="col-md-6" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
+      <div class="card w-100">
+        <div class="card-header text-center">
+          <b>{{ this.selectedCharacter.name }}:</b>
+          Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}
+          <img class="icon icon-sm float-right" (click)="resetSelectedCharacter()" placement="right" ngbTooltip="close" src="assets/icons/x_icon.png">
+        </div>
+        <div class="card-body">
+
+          <body class="card-text text-left">STR: {{ this.selectedCharacter.abil_Score_Str }}</body>
+
+          <body class="card-text text-left">DEX: {{ this.selectedCharacter.abil_Score_Dex }}</body>
+
+          <body class="card-text text-left">CON: {{ this.selectedCharacter.abil_Score_Con }}</body>
+
+          <body class="card-text text-left">INT: {{ this.selectedCharacter.abil_Score_Int }}</body>
+
+          <body class="card-text text-left">WIS: {{ this.selectedCharacter.abil_Score_Wis }}</body>
+
+          <body class="card-text text-left">CHA: {{ this.selectedCharacter.abil_Score_Cha }}</body>
+        </div>
+        <div class="card-footer">
+          <img class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Confirmation</h4>
+  </div>
+
+  <div class="modal-body">
+
+    <body>Are you sure you want to delete:
+      <b>{{ this.selectedCharacter.name }}?</b>
+    </body>
+
+    <body class="text-muted">This action cannot be undone</body>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+  </div>
+</ng-template>

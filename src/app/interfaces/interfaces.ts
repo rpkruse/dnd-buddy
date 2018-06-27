@@ -11,6 +11,10 @@ import { RaceDetails } from '../interfaces/api/race/racedetails';
 
 import { ProficiencyChoices } from '../interfaces/api/proficiencychoices';
 
+//Snackbar interfaces
+import { MessageOutput } from '../interfaces/ui/messageoutput'
+import { MessageType } from '../interfaces/ui/messagetype.enum';
+
 export {
     Character,
     Game,
@@ -19,5 +23,7 @@ export {
     ClassDetails,
     Race,
     RaceDetails,
-    ProficiencyChoices
+    ProficiencyChoices,
+    MessageOutput,
+    MessageType
 };

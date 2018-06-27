@@ -1,3 +1,15 @@
-<p>
-  home works!
-</p>
+<div class="container">
+  <div class="row mt-5">
+    <!-- Play now -->
+    <div class="col-md-6 chunk mb-5">
+      <h3>Play Now!</h3>
+      <button type="button" class="btn btn-success" (click)="moveToPage(0)">Join a game</button>
+    </div>
+
+    <div class="col-md-6 chunk">
+      <h3>Manage Characters</h3>
+      <button type="button" class="btn btn-secondary" (click)="moveToPage(1)">Character Details</button>
+      <button type="button" class="btn btn-success ml-2" (click)="moveToPage(2)">Manage Characters</button>      
+    </div>
+  </div>
+</div>

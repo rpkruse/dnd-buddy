@@ -6,12 +6,12 @@ export interface Character {
     name: string,
     class: string, //Url
     race: string, //Url
-    abil_score_str: number,
-    abil_score_dex: number,
-    abil_score_con: number,
-    abil_score_int: number,
-    abil_score_wis: number,
-    abil_score_cha: number,
+    abil_Score_Str: number,
+    abil_Score_Dex: number,
+    abil_Score_Con: number,
+    abil_Score_Int: number,
+    abil_Score_Wis: number,
+    abil_Score_Cha: number,
     level: number,
     userId: number,
     gameId: number,
