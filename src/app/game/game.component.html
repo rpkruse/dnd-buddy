@@ -24,11 +24,6 @@
             <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control col-9" placeholder="Game name"
               required>
           </div>
-          <div class="input-group-prepend">
-            <label class="checkbox float-right">
-              <input type="checkbox" [checked]="isGM" (change)="isGM = !isGM">GM
-            </label>
-          </div>
           <button type="button" class="btn btn-primary" (click)="saveNewGame()" [disabled]="!gameName.length">Create Game</button>
         </form>
       </div>
@@ -39,7 +34,7 @@
           <div class="card-header text-center">
             {{ this.selectedGame.name }}
             <img class="icon icon-sm float-right" (click)="confirmDeleteGame(confirm)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png"
-              *ngIf="this.selectedGame.gm">
+              *ngIf="this.selectedGame.userId === this.user.userId">
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" *ngFor="let character of this.selectedGame.character index as i" (click)="loadCharacterDetails(i, content)">
@@ -47,6 +42,9 @@
             </li>
             <li class="list-group-item" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
           </ul>
+          <div class="card-footer">
+            <button type="button" class="btn btn-success float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
+          </div>
         </div>
       </div>
     </div>

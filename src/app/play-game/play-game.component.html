@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row" *ngIf="this._messageService.groupMembers.length">
+    <div class="col-md-5">
+      <div class="card w-100">
+        <div class="card-header text-center font-weight-bold">{{ this.game.name }}</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let member of this._messageService.groupMembers index as i">
+            {{ member.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

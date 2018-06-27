@@ -15,6 +15,11 @@ import { ProficiencyChoices } from '../interfaces/api/proficiencychoices';
 import { MessageOutput } from '../interfaces/ui/messageoutput'
 import { MessageType } from '../interfaces/ui/messagetype.enum';
 
+//Message interfaces (signalR)
+import { UserMessageData } from '../interfaces/messages/usermessagedata'
+import { ItemMessageData } from '../interfaces/messages/itemmessagedata'
+import { RollMessageData } from '../interfaces/messages/rollmessagedata'
+
 export {
     Character,
     Game,
@@ -25,5 +30,8 @@ export {
     RaceDetails,
     ProficiencyChoices,
     MessageOutput,
-    MessageType
+    MessageType,
+    UserMessageData,
+    ItemMessageData,
+    RollMessageData
 };

@@ -8,11 +8,17 @@ import { UserResolver } from './session/user-resolver.service';
 
 import { DataShareService } from './data/data-share.service';
 
+//Message Services:
+import { HubService } from './message/hub.service';
+import { MessageService } from './message/message.service';
+
 export {
     ApiService,
     DndApiService,
     DataShareService,
     SessionGuard,
     StorageService,
-    UserResolver
+    UserResolver,
+    HubService,
+    MessageService
 };

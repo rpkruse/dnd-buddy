@@ -52,7 +52,7 @@ export class CreateCharacterComponent implements OnInit {
       () => j.unsubscribe()
     );
 
-    k = this._apiService.getAllEntities<Game>("Games").subscribe(
+    k = this._apiService.getAllEntities<Game>("Games/open/" + this.user.userId).subscribe(
       d => this.games = d,
       err => console.log("Unable to find games"),
       () => k.unsubscribe()
@@ -78,7 +78,7 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public selectRace(raceUrl: string) {
-    if(raceUrl === "Choose") return;
+    if (raceUrl === "Choose") return;
 
     this.character.race = raceUrl;
 
@@ -91,7 +91,7 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public selectClass(classUrl: string) { //FL[(num-10)/2]
-    if(classUrl === "Choose") return;
+    if (classUrl === "Choose") return;
     this.character.class = classUrl;
     let s: Subscription;
     s = this._dndApiService.getSingleEntity<ClassDetails>(classUrl).subscribe(
@@ -101,13 +101,33 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
-  public selectGame(index: number){
-    if(this.games[index] === undefined) return;
+  public selectGame(index: number) {
+    if (this.games[index] === undefined) return;
     this.selectedGame = this.games[index];
   }
 
-  public confirmCharacter(){
-    for(let i=0; i<6; i++){
+  public saveNewGame() {
+    let s: Subscription;
+
+    let g = {
+      name: this.selectedGame.name,
+      userId: this.user.userId
+    };
+
+    let game: Game;
+    s = this._apiService.postEntity<Game>("Games", g).subscribe(
+      d => game = d,
+      err => this.triggerMessage("", "Unable to create new character", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.selectedGame = game;
+        this.confirmCharacter();
+      }
+    )
+  }
+
+  public confirmCharacter() {
+    for (let i = 0; i < 6; i++) {
       this.setAttr(i);
     }
 
@@ -145,7 +165,7 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
-  private setAttr(index: number){
+  private setAttr(index: number) {
     let val: number = parseInt(this.selectedRace.ability_bonuses[index]);
     switch (index) {
       case 0:
@@ -171,12 +191,12 @@ export class CreateCharacterComponent implements OnInit {
 
   public getStatString(index: number): string {
     let raceBonusAttr: string = " +";
-    if(this.selectedRace){
+    if (this.selectedRace) {
       raceBonusAttr += this.selectedRace.ability_bonuses[index];
-    }else{
+    } else {
       raceBonusAttr = " select race to see bonus";
     }
-    
+
     switch (index) {
       case 0:
         return "STR: " + this.character.abil_Score_Str + raceBonusAttr;
@@ -193,7 +213,7 @@ export class CreateCharacterComponent implements OnInit {
     }
   }
 
-  public getRollString(index: number): string{
+  public getRollString(index: number): string {
     let s: string = this.rolls[index] > 0 ? "Re-roll" : "Roll";
 
     return s;
@@ -221,7 +241,7 @@ export class CreateCharacterComponent implements OnInit {
         break;
     }
   }
-  
+
   public rollStat(index: number) {
     this.rolls[index]++;
 
@@ -234,13 +254,13 @@ export class CreateCharacterComponent implements OnInit {
     let score: number = 0;
 
     //Roll each die
-    for(let i = 0; i<this.numOfDice; i++){
+    for (let i = 0; i < this.numOfDice; i++) {
       r = Math.floor(Math.random() * 6) + 1;
       localRolls.push(r);
     }
 
     //Get the top n highest and add it to our score
-    for(let i=0; i<this.numOfDiceToKeep; i++){
+    for (let i = 0; i < this.numOfDiceToKeep; i++) {
       let highest: number = Math.max(...localRolls);
       localRolls.splice(localRolls.indexOf(highest), 1);
       score += highest;
@@ -250,7 +270,7 @@ export class CreateCharacterComponent implements OnInit {
     this.setStatString(index, score);
   }
 
-  public keepRoll(index: number){
+  public keepRoll(index: number) {
     this.rolls[index] = 2;
   }
 
@@ -258,16 +278,16 @@ export class CreateCharacterComponent implements OnInit {
     return this.rolls[index] < 2;
   }
 
-  public canSubmitCharacter(): boolean{
-    for(let i=0; i<6; i++){
-      if(this.canRollAgain(i)) return false;
+  public canSubmitCharacter(): boolean {
+    for (let i = 0; i < 6; i++) {
+      if (this.canRollAgain(i)) return false;
     }
 
-    return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0 
-          && this.selectedGame !== null && this.level !== null;
+    return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
+      && this.selectedGame !== null && this.level !== null;
   }
 
-  private triggerMessage(message: string, action: string, level: MessageType){
+  private triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,
       action: action,

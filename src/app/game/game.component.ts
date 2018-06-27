@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService, DndApiService, DataShareService } from '../services/services';
 import { Character, Game, User, ClassDetails, RaceDetails, MessageType, MessageOutput } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 
 @Component({
@@ -20,7 +21,6 @@ export class GameComponent implements OnInit {
 
   creatingGame: boolean = false;
   gameName: string = "";
-  isGM: boolean = false;
 
   selectedGame: Game;
 
@@ -28,7 +28,7 @@ export class GameComponent implements OnInit {
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal) { }
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal, private _router: Router) { }
 
   ngOnInit() {
     this._dataShareService.user.subscribe(res => this.user = res);
@@ -50,7 +50,6 @@ export class GameComponent implements OnInit {
     let g = {
       name: this.gameName,
       userId: this.user.userId,
-      gm: this.isGM
     };
 
     let game: Game;
@@ -75,6 +74,11 @@ export class GameComponent implements OnInit {
       err => console.log("Unable to load game", err),
       () => s.unsubscribe()
     );
+  }
+
+  public joinGame(){
+    this._dataShareService.changeGame(this.selectedGame);
+    this._router.navigate(['./playGame']);
   }
 
   public confirmDeleteGame(confirm){
