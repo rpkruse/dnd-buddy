@@ -194,7 +194,7 @@ export class CreateCharacterComponent implements OnInit {
     if (this.selectedRace) {
       raceBonusAttr += this.selectedRace.ability_bonuses[index];
     } else {
-      raceBonusAttr = " select race to see bonus";
+      raceBonusAttr = " + 0";
     }
 
     switch (index) {

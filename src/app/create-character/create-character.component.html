@@ -5,7 +5,7 @@
         <!-- Name -->
         <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Name:</label>
-          <div class="col-5">
+          <div class="col-md-5">
             <input [value]="character.name" (input)="character.name = $event.target.value" type="text" class="form-control" placeholder="Name"
               [ngClass]="{ 'is-invalid': !character.name.length, 'is-valid': character.name.length }">
           </div>
@@ -14,7 +14,7 @@
         <!-- Level -->
         <div class="form-group row">
             <label class="col-sm-4 col-form-lable">Level:</label>
-            <div class="col-5">
+            <div class="col-md-5">
               <input [value]="this.level" (input)="this.level = $event.target.value" type="text" class="form-control" placeholder="Level"
                 [ngClass]="{ 'is-invalid': !this.level, 'is-valid': this.level }">
             </div>
@@ -23,7 +23,7 @@
         <!-- Race -->
         <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Race:</label>
-          <select class="custom-select col-5" (change)="selectRace($event.target.value)">
+          <select class="custom-select col-md-5" (change)="selectRace($event.target.value)">
             <!-->change)="selectRace(race.name, race.url)" -->
             <option selected>Choose</option>
             <option *ngFor="let race of this.races.results index as i" [value]="race.url">{{ race.name }}</option>
@@ -33,7 +33,7 @@
         <!-- Class -->
         <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Class:</label>
-          <select class="custom-select col-5" (change)="selectClass($event.target.value)">
+          <select class="custom-select col-md-5" (change)="selectClass($event.target.value)">
             <option selected>Choose</option>
             <option *ngFor="let class of this.classes.results index as i" [value]="class.url">{{ class.name }}</option>
           </select>
@@ -42,7 +42,7 @@
         <!-- Game -->
         <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Game:</label>
-          <select class="custom-select col-5" (change)="selectGame($event.target.value)">
+          <select class="custom-select col-md-5" (change)="selectGame($event.target.value)">
             <option selected>Choose</option>
             <option *ngFor="let game of this.games index as i" [value]="i">{{ game.name }}</option>
           </select>
@@ -50,12 +50,12 @@
 
         <!-- Stats -->
         <div class="form-group-row mt-2" *ngFor="let stat of this.rolls index as i">
-          <label class="col-sm-5 col-form-label">{{this.getStatString(i)}}</label>
+          <label class="col-md-6 col-form-label float-left">{{this.getStatString(i)}}</label>
           <button type="button" class="btn btm-sm btn-secondary" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{getRollString(i)}}</button>
           <button type="button" class="btn btm-sm btn-success ml-2" [disabled]="!canRollAgain(i)" (click)="keepRoll(i)">Keep</button>
         </div>
       </form>
-      <button type="btn" class="btn btn-primary float-right" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>
+      <button type="btn" class="btn btn-primary float-right mt-2" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>
     </div>
   </div>
 </div>

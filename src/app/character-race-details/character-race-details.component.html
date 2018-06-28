@@ -5,7 +5,10 @@
     <!-- Selection list -->
     <div class="col-md-3">
       <div class="card">
-        <div class="card-header">Select Class</div>
+        <div class="card-header">
+          Select Class
+          <button type="button" class="btn btn-secondary float-right" (click)="this.classDetail=null">Clear</button>
+        </div>
         <ul class="list-group list-group-flush static-size-list half-height">
           <li class="list-group-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" *ngFor="let class of this.classes.results index as i">
             {{ class.name }}
@@ -18,13 +21,13 @@
     </div>
 
     <!-- Class DetailPage -->
-    <div class="col-9" *ngIf="this.classDetail">
+    <div class="col-md-9" *ngIf="this.classDetail">
       <div class="row">
-        <div class="col-4 card w-100 no-padding">
+        <div class="col-md-4 card w-100 no-padding">
           <div class="card-header text-center">{{ this.classDetail.name }}</div>
           <img class="mx-auto class-img" [src]="this.getClassImage(classDetail.name)">
         </div>
-        <div class="col-8 card">
+        <div class="col-md-8 card">
           <div class="card-body">
             <p>
               <b>Hit Die:</b> {{ this.classDetail.hit_die }}</p>
@@ -88,7 +91,10 @@
     <!-- Race List -->
     <div class="col-md-3">
       <div class="card">
-        <div class="card-header">Select Race</div>
+        <div class="card-header">
+          Select Race
+          <button type="button" class="btn btn-secondary float-right" (click)="this.raceDetail=null">Clear</button>
+        </div>
         <ul class="list-group list-group-flush static-size-list half-height">
           <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let race of this.races.results index as i">
             {{ race.name }}
@@ -101,13 +107,13 @@
     </div>
 
     <!-- Race DetailPage -->
-    <div class="col-9" *ngIf="this.raceDetail">
+    <div class="col-md-9" *ngIf="this.raceDetail">
       <div class="row">
-        <div class="col-4 card w-100 no-padding">
+        <div class="col-md-4 card w-100 no-padding">
           <div class="card-header text-center">{{ this.raceDetail.name }}</div>
           <img class="mx-auto class-img" [src]="this.getRaceImage(raceDetail.name)">
         </div>
-        <div class="col-8 card">
+        <div class="col-md-8 card">
           <div class="card-body">
             <p>
               <b>Speed:</b> {{ this.raceDetail.speed }}</p>

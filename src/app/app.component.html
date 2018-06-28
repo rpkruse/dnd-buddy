@@ -13,15 +13,19 @@
 
   <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="this.isLoggedIn()">
     <!-- Inside navbar content here -->
-    <div ngbDropdown placement="bottom-left">
-      <div class="text-light" ngbDropdownToggle>Manage</div>
-      <div ngbDropdownMenu>
-        <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
-        <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
-        <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
+    <div class="nav-item">
+      <div ngbDropdown placement="bottom-left">
+        <div class="text-light" ngbDropdownToggle>Manage</div>
+        <div ngbDropdownMenu>
+          <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
+          <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
+          <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
+        </div>
       </div>
     </div>
-    <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
+    <div class="nav-item">
+      <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
+    </div>
   </div>
 
   <!-- Content always outside of the collapse -->
