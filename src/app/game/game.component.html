@@ -22,9 +22,10 @@
           <div class="input-group-prepend">
             <label class="input-group-text">Game Name:</label>
             <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control col-9" placeholder="Game name"
-              required>
+            (focusout)="validateGamename()" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
           </div>
-          <button type="button" class="btn btn-primary" (click)="saveNewGame()" [disabled]="!gameName.length">Create Game</button>
+          <small id="usernameHelpBlock" class="form-text text-muted" *ngIf="!gamenameTaken && hasClickedOff && gameName.length">Game name is available!</small>
+          <button type="button" class="btn btn-primary" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
         </form>
       </div>
 

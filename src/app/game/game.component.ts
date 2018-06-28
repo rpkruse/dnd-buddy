@@ -21,6 +21,8 @@ export class GameComponent implements OnInit {
 
   creatingGame: boolean = false;
   gameName: string = "";
+  gamenameTaken: boolean = false;
+  hasClickedOff: boolean = false;
 
   selectedGame: Game;
 
@@ -42,6 +44,27 @@ export class GameComponent implements OnInit {
   public createGame() {
     this.creatingGame = true;
     this.selectedGame = null;
+  }
+
+  public validateGamename(){
+    if(this.gameName.length <= 0) return;
+
+    let s: Subscription;
+    s = this._apiService.getSingleEntity<any>("Games/check/"+ this.gameName).subscribe(
+      d => d = d,
+      err => {
+        if(err['error']['Error']){
+          this.gamenameTaken = true;
+        }else{
+          this.hasClickedOff = true;
+        }
+      },
+      () => {
+        s.unsubscribe();
+        this.hasClickedOff = true;
+        this.gamenameTaken = false;
+      }
+    );
   }
 
   public saveNewGame() {

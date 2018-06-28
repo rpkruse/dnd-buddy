@@ -1,5 +1,5 @@
 <ngb-alert class="text-center" type="danger" (close)="this.invalidLogin = false" *ngIf="this.invalidLogin">Invalid username/password</ngb-alert>
-<ngb-alert class="text-center" type="danger" (close)='this.displayName = ""; this.usernameTaken = false' *ngIf="this.usernameTaken">Username is already in use</ngb-alert>
+<ngb-alert class="text-center" type="danger" (close)='this.createUsername = ""; this.usernameTaken = false' *ngIf="this.usernameTaken">Username is already in use</ngb-alert>
 
 <div class="container mx-auto mt-3" *ngIf="!this._storage.getValue('loggedIn') && !this.createUser">
   <div class="col-md-6 mx-auto">

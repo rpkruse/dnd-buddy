@@ -91,6 +91,10 @@ export class LoginComponent implements OnInit {
         }else{
           this.hasClickedOff = true;
         }
+      },
+      () => {
+        s.unsubscribe();
+        this.hasClickedOff = true;
       }
     );
   }
