@@ -19,6 +19,7 @@ import { MessageType } from '../interfaces/ui/messagetype.enum';
 import { UserMessageData } from '../interfaces/messages/usermessagedata'
 import { ItemMessageData } from '../interfaces/messages/itemmessagedata'
 import { RollMessageData } from '../interfaces/messages/rollmessagedata'
+import { OnlineUser } from '../interfaces/messages/onlineuser';
 
 export {
     Character,
@@ -33,5 +34,6 @@ export {
     MessageType,
     UserMessageData,
     ItemMessageData,
-    RollMessageData
+    RollMessageData,
+    OnlineUser
 };

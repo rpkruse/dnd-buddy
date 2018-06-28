@@ -1,6 +1,7 @@
 export interface RollMessageData {
     groupName: string,
-    ID: string,
+    charId: number,
     roll: number,
+    numDice: number,
     maxRoll: number
 }

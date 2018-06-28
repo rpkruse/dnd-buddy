@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   api: 'https://dnd-buddy.herokuapp.com/api/', //'https://dnd-buddy.herokuapp.com/api/', //'http://localhost:49950/api/'
   dnd_api: 'https://dnd-5e-api.herokuapp.com/api/',
-  message_api: 'http://localhost:49950///' //https://dnd-buddy.herokuapp.com/'
+  message_api: 'https://dnd-buddy.herokuapp.com/' //'http://localhost:49950///' //https://dnd-buddy.herokuapp.com/'
 };
 
 /*

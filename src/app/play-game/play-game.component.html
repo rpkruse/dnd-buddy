@@ -1,4 +1,4 @@
-<div class="container">
+<!--<div class="container">
   <div class="row" *ngIf="this._messageService.groupMembers.length">
     <div class="col-md-5">
 
@@ -14,6 +14,76 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>-->
+
+
+<div class="container-fluid" *ngIf="this.hasJoined">
+  <!-- If we are the GM put us in the middle of the screen-->
+  <div class="row" *ngIf="this.isGM">
+    <div class="col-md-6 mx-auto">
+
+      <div class="card w-100">
+        <div class="card-header text-center">{{ this.user.username }} (GM)</div>
+        <div class="card-body">
+          <label>Roll:</label>
+          <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+
+          <br>
+          <label>Die:</label>
+          <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
+            <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+          </select>
+          <button type="button" class="btn btn-primary d-inline" (click)="rollDice(false)">Roll</button>
+          <button type="button" class="btn btn-secondary d-inline" (click)="rollDice(true)">Hidden Roll</button>
+          <button type="button" class="btn btn-secondary" (click)="clearRoll()">Clear Roll</button>
+          <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success float-right" (click)="leaveGame()">Leave Group</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Put our character in the middle of the screen-->
+  <div class="row" *ngIf="!this.isGM && this.character">
+    <div class="col-md-6 mx-auto">
+
+      <div class="card w-100">
+        <div class="card-header text-center">{{ this.character.name }} ({{ this.user.username }})</div>
+        <div class="card-body">
+
+          <label>Roll:</label>
+          <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+
+          <br>
+          <label>Die:</label>
+          <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
+            <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+          </select>
+          <button type="button" class="btn btn-primary d-inline" (click)="rollDice(false)">Roll</button>
+          <button type="button" class="btn btn-secondary d-inline" (click)="rollDice(true)">Hidden Roll</button>
+          <button type="button" class="btn btn-secondary" (click)="clearRoll()">Clear Roll</button>
+          <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success float-right" (click)="leaveGame()">Leave Group</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
+  <div class="card-deck mt-5" *ngIf="this._messageService.groupMembers.length > 1">
+    <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
+      <div class="card-header text-center">{{ member.umd.name }}</div>
+      <div class="card-body">
+        <p class="card-text" *ngIf="member.rmd">Value Rolled: {{ member.rmd.roll}} ({{ member.rmd.numDice }}D{{ member.rmd.maxRoll }})</p>
+      </div>
     </div>
   </div>
 </div>

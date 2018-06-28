@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ApiService, DndApiService, DataShareService } from '../services/services';
+import { ApiService, DndApiService, DataShareService, StorageService } from '../services/services';
 import { Character, Game, User, ClassDetails, RaceDetails, MessageType, MessageOutput } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
@@ -28,7 +28,7 @@ export class GameComponent implements OnInit {
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal, private _router: Router) { }
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal, private _router: Router, private _storageService: StorageService) { }
 
   ngOnInit() {
     this._dataShareService.user.subscribe(res => this.user = res);
@@ -61,6 +61,7 @@ export class GameComponent implements OnInit {
         this.triggerMessage("", "Game Created!", MessageType.Success);
         this.games.push(game);
         this.loadGame(game);
+        this.gameName = "";
       }
     )
   }
@@ -78,6 +79,7 @@ export class GameComponent implements OnInit {
 
   public joinGame(){
     this._dataShareService.changeGame(this.selectedGame);
+    this._storageService.setValue('game', this.selectedGame);
     this._router.navigate(['./playGame']);
   }
 

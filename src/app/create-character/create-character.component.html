@@ -1,6 +1,6 @@
-<div class="container" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
+<div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
   <div class="row">
-    <div class="col-12">
+    <div class="col-6 mx-auto mt-5">
       <form>
         <!-- Name -->
         <div class="form-group row">
@@ -51,8 +51,8 @@
         <!-- Stats -->
         <div class="form-group-row mt-2" *ngFor="let stat of this.rolls index as i">
           <label class="col-sm-5 col-form-label">{{this.getStatString(i)}}</label>
-          <button type="button" class="btn btm-sm btn-secondary col-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{getRollString(i)}}</button>
-          <button type="button" class="btn btm-sm btn-success col-2 ml-2" [disabled]="!canRollAgain(i)" (click)="keepRoll(i)">Keep</button>
+          <button type="button" class="btn btm-sm btn-secondary" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{getRollString(i)}}</button>
+          <button type="button" class="btn btm-sm btn-success ml-2" [disabled]="!canRollAgain(i)" (click)="keepRoll(i)">Keep</button>
         </div>
       </form>
       <button type="btn" class="btn btn-primary float-right" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>

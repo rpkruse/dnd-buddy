@@ -13,7 +13,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { UserMessageData, ItemMessageData, RollMessageData } from '../../interfaces/interfaces';
+import { OnlineUser, UserMessageData, ItemMessageData, RollMessageData } from '../../interfaces/interfaces';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HubService } from '../message/hub.service';
 import { StorageService } from '../session/session-storage.service';
@@ -24,14 +24,15 @@ import { ApiService } from '../api/api.service';
 })
 export class MessageService {
 
-  private MESSAGE_URL = environment.api + 'messages';
-
-  public groupMembers: UserMessageData[] = [];
+  public groupMembers: OnlineUser[] = [];
+  public rollDataSubj: Subject<RollMessageData> = new BehaviorSubject<RollMessageData>(null);
 
 
   constructor(private _http: HttpClient, private _hub: HubService, private _storage: StorageService, private _apiService: ApiService) {
     this._hub.notification.subscribe(res => this.notify(res));
     this._hub.groupMembersSubj.subscribe(res => this.groupMembers = res);
+
+    this._hub.rollDataSubj.subscribe(res => this.rollDataSubj.next(res));
   }
 
   public setConnection(){
@@ -40,6 +41,10 @@ export class MessageService {
 
   public joinGroup(userMessageData: UserMessageData){
       this._hub.invokeJoinGroup(userMessageData);
+  }
+
+  public sendRoll(rmd: RollMessageData){
+    this._hub.invokeRoll(rmd);
   }
 
   public leaveGroup(){

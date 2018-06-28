@@ -1,5 +1,5 @@
 export interface ItemMessageData {
     groupName: string,
-    ID: string,
+    charId: number,
     item: string
 }

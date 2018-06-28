@@ -9,17 +9,21 @@ import { HubConnection } from '@aspnet/signalr';
 import { DataShareService } from '../data/data-share.service';
 // import * as signalR from '@aspnet/signalr';
 
-import { UserMessageData, ItemMessageData, RollMessageData } from '../../interfaces/interfaces';
+import { UserMessageData, ItemMessageData, RollMessageData, OnlineUser } from '../../interfaces/interfaces';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HubService {
-    userMessage: EventEmitter<UserMessageData> = new EventEmitter(null); //the user's placement in the queue
-    groupMembersSubj: EventEmitter<UserMessageData[]> = new EventEmitter(null);
+    onlineUserSubj: EventEmitter<OnlineUser[]> = new EventEmitter(null);
 
-    private groupMembers: UserMessageData[] = [];
-    private me: UserMessageData;
+    userMessage: EventEmitter<UserMessageData> = new EventEmitter(null); //the user's placement in the queue
+    groupMembersSubj: EventEmitter<OnlineUser[]> = new EventEmitter(null);
+    rollDataSubj: EventEmitter<RollMessageData> = new EventEmitter<RollMessageData>(null);
+
+
+    private groupMembers: OnlineUser[] = [];
+    private me: OnlineUser;
 
     notification: EventEmitter<string> = new EventEmitter();
 
@@ -39,6 +43,7 @@ export class HubService {
             this.hubConnection.on('connected', () => this._dataShareService.connected.next(true));
             this.hubConnection.on('sendConnectionNoticeToGroup', (msg) => this.sendConnectionNoticeToGroup(msg));
             this.hubConnection.on('sendDisconnectNoticeToGroup', (msg) => this.sendDisconnectNoticeToGroup(msg));
+            this.hubConnection.on('sendRollNoticetoGroup', (msg) => this.sendRollNoticeToGroup(msg));
             this.hubConnection.on('okToStopConnection', () => this.okToStopConnection());
             this.hubConnection.on('updateLobby', (msgs) => this.updateLobby(msgs));
         }
@@ -48,23 +53,49 @@ export class HubService {
         }
     }
 
+    /*
+        This method is called when someone joins the group (it is sent to everyone but the person who joined)
+    */
     public sendConnectionNoticeToGroup(umd: UserMessageData) {
+        let index: number = this.groupMembers.findIndex(x => x.umd.characterId === umd.characterId);
+
+        if(index >= 0) this.groupMembers.splice(index, 1);
+        
         this.hubConnection.invoke("SetGroup", this.groupMembers, umd.groupName, umd.id);
 
         this.notification.emit(umd.name + " has joined the group");
-        this.groupMembers.push(umd);
+
+        let u: OnlineUser = {
+            umd: umd,
+            rmd: this.setGenericRollData(umd),
+            imd: this.setGenericItemData(umd)
+        }
+
+        this.groupMembers.push(u);
         this.groupMembersSubj.next(this.groupMembers);
     }
 
     public sendDisconnectNoticeToGroup(umd: UserMessageData) {
         this.notification.emit(umd.name + " has left the group");
-        let index = this.groupMembers.findIndex(x => x.name === umd.name);
+
+        let index = this.groupMembers.findIndex(x => x.umd.characterId === umd.characterId);
         this.groupMembers.splice(index, 1);
         this.groupMembersSubj.next(this.groupMembers);
     }
 
-    public updateLobby(umds: UserMessageData[]){
-        this.groupMembers = this.groupMembers.concat(umds);
+    public sendRollNoticeToGroup(rmd: RollMessageData){
+        this.rollDataSubj.next(rmd);
+    }
+
+    /*
+        This method is kinda bad b/c everyone in the lobby will spam the new person
+        with everyone that has joined so far...
+        for small groups this should be a problem?
+    */
+    public updateLobby(users: OnlineUser[]){
+        if(this.groupMembers.length > 1) return;
+
+        this.groupMembers = this.groupMembers.concat(users);
         this.groupMembersSubj.next(this.groupMembers);
     }
 
@@ -74,16 +105,56 @@ export class HubService {
     }
 
     public invokeJoinGroup(userMessageData: UserMessageData) {
-        this.me = userMessageData;
+        let u: OnlineUser = {
+            umd: userMessageData,
+            rmd: this.setGenericRollData(userMessageData),
+            imd: this.setGenericItemData(userMessageData)
+        }
+
+        this.me = u;
+
         this.hubConnection.invoke('JoinGroup', userMessageData);
+
+        
         this.groupMembers.push(this.me);
         this.groupMembersSubj.emit(this.groupMembers);
     }
 
-    public invokeLeaveGroup() { //TODO when the user leaves make a method that then makes this false so that if we fail, we don;t have double connections
-        this.hubConnection.invoke('LeaveGroup', this.me);
+    public invokeRoll(rmd: RollMessageData){
+        this.hubConnection.invoke('SendRoll', rmd);
+    }
+
+    public invokeLeaveGroup() { 
+        this.hubConnection.invoke('LeaveGroup', this.me.umd);
         this.groupMembers = [];
         this.groupMembersSubj.next(this.groupMembers);
     }
 
+
+    private setGenericRollData(umd: UserMessageData): RollMessageData{
+        let rmd: RollMessageData;
+
+        rmd = {
+            charId: umd.characterId,
+            maxRoll: 4,
+            groupName: umd.groupName,
+            roll: 1,
+            numDice: 1
+        };
+
+        return rmd;
+    }
+
+    private setGenericItemData(umd: UserMessageData): ItemMessageData{
+        let imd: ItemMessageData;
+
+        imd = {
+            groupName: umd.groupName,
+            charId: umd.characterId,
+            item: ""
+
+        };
+
+        return imd;
+    }
 }
