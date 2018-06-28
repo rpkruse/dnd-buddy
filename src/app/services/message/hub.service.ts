@@ -39,7 +39,7 @@ export class HubService {
             this.hubConnection.on('connected', () => this._dataShareService.connected.next(true));
             this.hubConnection.on('sendConnectionNoticeToGroup', (msg) => this.sendConnectionNoticeToGroup(msg));
             this.hubConnection.on('sendDisconnectNoticeToGroup', (msg) => this.sendDisconnectNoticeToGroup(msg));
-            this.hubConnection.on('okToStopConnection', () => this.hubConnection.stop());
+            this.hubConnection.on('okToStopConnection', () => this.okToStopConnection());
             this.hubConnection.on('updateLobby', (msgs) => this.updateLobby(msgs));
         }
 
@@ -49,14 +49,11 @@ export class HubService {
     }
 
     public sendConnectionNoticeToGroup(umd: UserMessageData) {
-        console.log(umd);
         this.hubConnection.invoke("SetGroup", this.groupMembers, umd.groupName, umd.id);
 
         this.notification.emit(umd.name + " has joined the group");
         this.groupMembers.push(umd);
         this.groupMembersSubj.next(this.groupMembers);
-
-        console.log("mems on connect", this.groupMembers);
     }
 
     public sendDisconnectNoticeToGroup(umd: UserMessageData) {
@@ -64,14 +61,16 @@ export class HubService {
         let index = this.groupMembers.findIndex(x => x.name === umd.name);
         this.groupMembers.splice(index, 1);
         this.groupMembersSubj.next(this.groupMembers);
-
-        console.log("mems on disconnect", this.groupMembers.length);
-
     }
 
     public updateLobby(umds: UserMessageData[]){
-        this.groupMembers = umds;
-        this.groupMembersSubj.next(umds);
+        this.groupMembers = this.groupMembers.concat(umds);
+        this.groupMembersSubj.next(this.groupMembers);
+    }
+
+    public okToStopConnection(){
+        this.hubConnection.stop();
+        this._dataShareService.connected.next(false);
     }
 
     public invokeJoinGroup(userMessageData: UserMessageData) {
@@ -81,9 +80,8 @@ export class HubService {
         this.groupMembersSubj.emit(this.groupMembers);
     }
 
-    public invokeLeaveGroup() {
+    public invokeLeaveGroup() { //TODO when the user leaves make a method that then makes this false so that if we fail, we don;t have double connections
         this.hubConnection.invoke('LeaveGroup', this.me);
-        this._dataShareService.connected.next(false);
         this.groupMembers = [];
         this.groupMembersSubj.next(this.groupMembers);
     }

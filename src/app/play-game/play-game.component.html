@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row" *ngIf="this._messageService.groupMembers.length">
     <div class="col-md-5">
+
       <div class="card w-100">
         <div class="card-header text-center font-weight-bold">{{ this.game.name }}</div>
         <ul class="list-group list-group-flush">
@@ -8,7 +9,11 @@
             {{ member.name }}
           </li>
         </ul>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success float-right"  [routerLink]="['/game']">Leave Group</button>
+        </div>
       </div>
+
     </div>
   </div>
 </div>

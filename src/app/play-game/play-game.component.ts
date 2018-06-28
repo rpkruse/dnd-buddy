@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataShareService, MessageService, UserResolver } from '../services/services';
 import { User, Game, Character, UserMessageData, RollMessageData, ItemMessageData, ClassDetails } from '../interfaces/interfaces';
 
+import 'rxjs/add/operator/takeWhile';
+
 @Component({
   selector: 'app-play-game',
   templateUrl: './play-game.component.html',
@@ -10,6 +12,7 @@ import { User, Game, Character, UserMessageData, RollMessageData, ItemMessageDat
 })
 export class PlayGameComponent implements OnInit {
   private user: User;
+  private isAlive: boolean = true;
 
   game: Game;
 
@@ -20,7 +23,7 @@ export class PlayGameComponent implements OnInit {
     
     this._dataShareService.user.subscribe(res => this.user = res);
     this._dataShareService.game.subscribe(res => this.game = res);
-    this._dataShareService.connected.subscribe(res => {if(res) { console.log("CONNECTED JOINING"); this.joinGame();}});
+    this._dataShareService.connected.takeWhile(() => this.isAlive).subscribe(res => {if(res) this.joinGame();});
   }
 
   private joinGame(){
@@ -35,11 +38,12 @@ export class PlayGameComponent implements OnInit {
     };
 
     this._messageService.joinGroup(umd);
-
-    console.log("GAME JOINED", this.game);
   }
 
+  
+
   ngOnDestroy(){
+    this.isAlive = false;
     this._messageService.leaveGroup();
   }
 
