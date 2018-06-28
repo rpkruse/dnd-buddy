@@ -1,8 +1,8 @@
 <ngb-alert class="text-center" type="danger" (close)="this.invalidLogin = false" *ngIf="this.invalidLogin">Invalid username/password</ngb-alert>
 <ngb-alert class="text-center" type="danger" (close)='this.displayName = ""; this.usernameTaken = false' *ngIf="this.usernameTaken">Username is already in use</ngb-alert>
 
-<div class="container mx-auto" *ngIf="!this._storage.getValue('loggedIn') && !this.createUser">
-  <div class="col-6 mx-auto">
+<div class="container mx-auto mt-3" *ngIf="!this._storage.getValue('loggedIn') && !this.createUser">
+  <div class="col-md-6 mx-auto">
     <h1 class="text-center login-title">Sign in to continue to Dnd Buddy</h1>
     <div class="account-wall">
       <form class="form-signin was-validated">
@@ -20,7 +20,7 @@
 </div>
 
 <div class="container mx-auto" *ngIf="!this._storage.getValue('loggedIn') && this.createUser">
-  <div class="col-8 mx-auto">
+  <div class="col-md-8 mx-auto">
     <div class="account-wall">
       <form>
         <div class="for-group row">
