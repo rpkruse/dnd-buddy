@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StorageService } from '../session/session-storage.service';
 
-import { User } from '../../interfaces/interfaces';
+import { ClassLevels } from '../../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +20,10 @@ export class DndApiService {
 
   public getSingleEntity<T>(path: string): Observable<T> {
     return this._http.get(path) as Observable<T>;
+  }
+
+  public getLevelInfo(c: string, level: number): Observable<ClassLevels>{
+    c = c.toLocaleLowerCase();
+    return this._http.get(environment.dnd_api + "classes/" + c +"/level/" + level) as Observable<ClassLevels>
   }
 }

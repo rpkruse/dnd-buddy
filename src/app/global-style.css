@@ -2,6 +2,10 @@
     overflow-y: scroll;
 }
 
+.short{
+    max-height: 20vh;
+}
+
 .half-height{
     max-height: 35vh;
 }

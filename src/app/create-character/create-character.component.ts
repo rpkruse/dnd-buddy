@@ -106,26 +106,6 @@ export class CreateCharacterComponent implements OnInit {
     this.selectedGame = this.games[index];
   }
 
-  public saveNewGame() {
-    let s: Subscription;
-
-    let g = {
-      name: this.selectedGame.name,
-      userId: this.user.userId
-    };
-
-    let game: Game;
-    s = this._apiService.postEntity<Game>("Games", g).subscribe(
-      d => game = d,
-      err => this.triggerMessage("", "Unable to create new character", MessageType.Failure),
-      () => {
-        s.unsubscribe();
-        this.selectedGame = game;
-        this.confirmCharacter();
-      }
-    )
-  }
-
   public confirmCharacter() {
     for (let i = 0; i < 6; i++) {
       this.setAttr(i);

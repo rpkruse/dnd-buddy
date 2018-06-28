@@ -25,7 +25,10 @@
     <div class="col-md-6 mx-auto">
 
       <div class="card w-100">
-        <div class="card-header text-center">{{ this.user.username }} (GM)</div>
+        <div class="card-header text-center">
+          {{ this.user.username }} (GM)
+          <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
+        </div>
         <div class="card-body">
           <label>Roll:</label>
           <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
@@ -35,13 +38,12 @@
           <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
             <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
           </select>
-          <button type="button" class="btn btn-primary d-inline" (click)="rollDice(false)">Roll</button>
-          <button type="button" class="btn btn-secondary d-inline" (click)="rollDice(true)">Hidden Roll</button>
-          <button type="button" class="btn btn-secondary" (click)="clearRoll()">Clear Roll</button>
           <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
         </div>
         <div class="card-footer">
-          <button type="button" class="btn btn-success float-right" (click)="leaveGame()">Leave Group</button>
+          <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
+          <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
+          <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
         </div>
       </div>
 
@@ -53,24 +55,76 @@
     <div class="col-md-6 mx-auto">
 
       <div class="card w-100">
-        <div class="card-header text-center">{{ this.character.name }} ({{ this.user.username }})</div>
+        <div class="card-header text-center">
+          {{ this.character.name }} ({{ this.user.username }})
+          <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
+        </div>
         <div class="card-body">
+          <div class="row">
+            <!-- Rolling info -->
+            <div class="col-lg-6">
+              <label>Roll:</label>
+              <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
 
-          <label>Roll:</label>
-          <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+              <br>
+              <label>Die:</label>
+              <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
+                <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+              </select>
+              <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
 
-          <br>
-          <label>Die:</label>
-          <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
-            <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-          </select>
-          <button type="button" class="btn btn-primary d-inline" (click)="rollDice(false)">Roll</button>
-          <button type="button" class="btn btn-secondary d-inline" (click)="rollDice(true)">Hidden Roll</button>
-          <button type="button" class="btn btn-secondary" (click)="clearRoll()">Clear Roll</button>
-          <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+              <p class="card-text">STR MOD: {{getAttrScore(this.character.abil_Score_Str)}}</p>
+              <p class="card-text">DEX MOD: {{getAttrScore(this.character.abil_Score_Dex)}}</p>
+              <p class="card-text">CON MOD: {{getAttrScore(this.character.abil_Score_Con)}}</p>
+              <p class="card-text">INT MOD: {{getAttrScore(this.character.abil_Score_Int)}}</p>
+              <p class="card-text">WIS MOD: {{getAttrScore(this.character.abil_Score_Wis)}}</p>
+              <p class="card-text">CHA MOD: {{getAttrScore(this.character.abil_Score_Cha)}}</p>
+            </div>
+
+            <!-- Spell info (dirty looking)-->
+            <div class="col-lg-6" *ngIf="levelDetails && this.spellSlots">
+              <ul clas="list-group static-size-list short" *ngIf="this.spellSlots">
+                <li class="list-group-item">Cantrips: {{levelDetails.spellcasting.cantrips_known}}</li>
+                <li class="list-group-item" *ngFor="let spellSlot of this.spellSlots index as i">
+                  Level {{i+1}} Spells: {{spellSlot}}
+                  <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <= 0">Cast</button>
+                </li>
+                <!--<li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_1 > 0">
+                  Level 1 Spells: {{levelDetails.spellcasting.spell_slots_level_1}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_2 > 0">
+                  Level 2 Spells: {{levelDetails.spellcasting.spell_slots_level_2}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_3 > 0">
+                  Level 3 Spells: {{levelDetails.spellcasting.spell_slots_level_3}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_4 > 0">
+                  Level 4 Spells: {{levelDetails.spellcasting.spell_slots_level_4}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_5 > 0">
+                  Level 5 Spells: {{levelDetails.spellcasting.spell_slots_level_5}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_6 > 0">
+                  Level 6 Spells: {{levelDetails.spellcasting.spell_slots_level_6}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_7 > 0">
+                  Level 7 Spells: {{levelDetails.spellcasting.spell_slots_level_7}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_8 > 0">
+                  Level 8 Spells: {{levelDetails.spellcasting.spell_slots_level_8}}
+                </li>
+                <li class="list-group-item" *ngIf="levelDetails.spellcasting.spell_slots_level_9 > 0">
+                  Level 9 Spells: {{levelDetails.spellcasting.spell_slots_level_9}}
+                </li>-->
+                <!--<button type="button" class="btn btn-secondary float-right">Rest</button>-->
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="card-footer">
-          <button type="button" class="btn btn-success float-right" (click)="leaveGame()">Leave Group</button>
+          <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
+          <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
+          <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
         </div>
       </div>
 

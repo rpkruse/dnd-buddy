@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ApiService, DataShareService, MessageService, StorageService} from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails } from '../interfaces/interfaces';
+import { ApiService, DndApiService, DataShareService, MessageService, StorageService} from '../services/services';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels} from '../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -27,7 +27,11 @@ export class PlayGameComponent implements OnInit {
   roll: number = 0; //what we got on our roll
   rollData: RollMessageData;
 
-  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, private _storageService: StorageService, private _router: Router) { }
+  classDetail: ClassDetails;
+  levelDetails: ClassLevels;
+  spellSlots: number[] = [];
+  
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, public _messageService: MessageService, private _storageService: StorageService, private _router: Router) { }
 
   ngOnInit() {
     this.game = this._storageService.getValue('game');
@@ -87,6 +91,11 @@ export class PlayGameComponent implements OnInit {
     this._messageService.sendRoll(rmd);
   }
 
+
+  public getAttrScore(attr: number){
+    return Math.floor((attr - 10) /2);
+  }
+
   public getOtherGroupMembers(): OnlineUser[]{
     let members: OnlineUser[] = [];
 
@@ -130,23 +139,58 @@ export class PlayGameComponent implements OnInit {
 
     this._messageService.joinGroup(umd);
     this.hasJoined = true;
+    if(!this.isGM) this.getClassDetails();
+  }
+
+  private getClassDetails(){
+    let s: Subscription;
+
+    s = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class).subscribe(
+      d => this.classDetail = d,
+      err => console.log("unable to get class details", err),
+      () => {
+        s.unsubscribe();
+        this.getLevelDetails();
+      }
+    );
+  }
+
+  private getLevelDetails(){
+    let s: Subscription;
+
+    s = this._dndApiService.getLevelInfo(this.classDetail.name, this.character.level).subscribe(
+      d => this.levelDetails =  d,
+      err => console.log("unable to get level details", err),
+      () =>{
+        s.unsubscribe();
+        console.log(this.levelDetails);
+        if(this.levelDetails.spellcasting) this.setSpellSlots(); else this.spellSlots = null;
+      }
+
+    )
+  }
+
+  private setSpellSlots(){
+    if(this.levelDetails.spellcasting.spell_slots_level_1 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_1);
+    if(this.levelDetails.spellcasting.spell_slots_level_2 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_2);
+    if(this.levelDetails.spellcasting.spell_slots_level_3 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_3);
+    if(this.levelDetails.spellcasting.spell_slots_level_4 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_4);
+    if(this.levelDetails.spellcasting.spell_slots_level_5 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_5);
+    if(this.levelDetails.spellcasting.spell_slots_level_6 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_6);
+    if(this.levelDetails.spellcasting.spell_slots_level_7 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_7);
+    if(this.levelDetails.spellcasting.spell_slots_level_8 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_8);
+    if(this.levelDetails.spellcasting.spell_slots_level_9 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_9);
+  }
+
+  public castSpell(index: number){
+    this.spellSlots[index]--;
   }
 
   private getRandomInt(min: number, max: number){
-    // return Math.floor(Math.random() * (max - min)) + min;
     return Math.floor(min + Math.random() * (max+1 - min));
   }
 
-  private leaveGame(){
-    this._router.navigate(['/game']);
-    /*this.isAlive = false;
-    this.hasJoined = false;
-    this._messageService.leaveGroup();
-    this._storageService.removeValue('game');*/
-  }
-
   ngOnDestroy(){
-    // this._router.navigate(['/game']);
     this.isAlive = false;
     this.hasJoined = false;
     this._messageService.leaveGroup();

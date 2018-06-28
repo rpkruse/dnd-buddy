@@ -5,6 +5,7 @@ import { User } from '../interfaces/api/user/user';
 
 import { Class } from '../interfaces/api/class/class';
 import { ClassDetails } from '../interfaces/api/class/classdetails';
+import { ClassLevels } from '../interfaces/api/class/classlevels';
 
 import { Race } from '../interfaces/api/race/race';
 import { RaceDetails } from '../interfaces/api/race/racedetails';
@@ -27,6 +28,7 @@ export {
     User,
     Class,
     ClassDetails,
+    ClassLevels,
     Race,
     RaceDetails,
     ProficiencyChoices,
