@@ -12,6 +12,9 @@ import { DataShareService } from './data/data-share.service';
 import { HubService } from './message/hub.service';
 import { MessageService } from './message/message.service';
 
+//Managers
+import { PlayManager } from './manager/playmanager.service';
+
 export {
     ApiService,
     DndApiService,
@@ -20,5 +23,6 @@ export {
     StorageService,
     UserResolver,
     HubService,
-    MessageService
+    MessageService,
+    PlayManager
 };

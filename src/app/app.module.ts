@@ -14,7 +14,7 @@ import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import { AppComponent, CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetails, PlayGameComponent, GameComponent, HomeComponent, LoginComponent, SnackbarComponent } from './components';
 
 //Services:
-import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService } from './services/services';
+import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService, PlayManager} from './services/services';
 
 //Directives:
 import { NgEnterDirective } from './directives/directives';
@@ -49,7 +49,8 @@ import { NgEnterDirective } from './directives/directives';
     StorageService,
     UserResolver,
     HubService,
-    MessageService
+    MessageService,
+    PlayManager
   ],
   bootstrap: [AppComponent]
 })

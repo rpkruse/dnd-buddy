@@ -22,6 +22,10 @@ import { ItemMessageData } from '../interfaces/messages/itemmessagedata'
 import { RollMessageData } from '../interfaces/messages/rollmessagedata'
 import { OnlineUser } from '../interfaces/messages/onlineuser';
 
+//Spell Data:
+import { Spell } from '../interfaces/api/spell/spell'
+import { SpellDetails } from '../interfaces/api/spell/spelldetail'
+
 export {
     Character,
     Game,
@@ -37,5 +41,7 @@ export {
     UserMessageData,
     ItemMessageData,
     RollMessageData,
-    OnlineUser
+    OnlineUser,
+    Spell,
+    SpellDetails
 };

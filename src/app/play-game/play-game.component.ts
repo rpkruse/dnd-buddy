@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { trigger, state, animate, transition, style } from '@angular/animations';
 import { Router } from '@angular/router';
 
-import { ApiService, DndApiService, DataShareService, MessageService, StorageService} from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels} from '../interfaces/interfaces';
+import { ApiService, DndApiService, DataShareService, MessageService, StorageService, PlayManager } from '../services/services';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels, Spell, SpellDetails} from '../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -10,12 +12,28 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-play-game',
   templateUrl: './play-game.component.html',
-  styleUrls: ['./play-game.component.css', '../global-style.css']
+  styleUrls: ['./play-game.component.css', '../global-style.css'],
+  animations: [
+    trigger(
+      'showState', [
+        state('show', style({
+          opacity: 1,
+          visibility: 'visible'
+        })),
+        state('hide', style({
+          opacity: 0,
+          visibility: 'hidden'
+        })),
+        transition('show => *', animate('400ms')),
+        transition('hide => show', animate('400ms')),
+      ])
+  ]
 })
 export class PlayGameComponent implements OnInit {
   private user: User;
   private isAlive: boolean = true;
   public hasJoined: boolean = false;
+  public mouseOver: number = -1;
 
   game: Game;
   character: Character = null;
@@ -29,9 +47,14 @@ export class PlayGameComponent implements OnInit {
 
   classDetail: ClassDetails;
   levelDetails: ClassLevels;
+
   spellSlots: number[] = [];
+  spellBook: Spell[] = [];
+  spellDetail: SpellDetails;
+
   
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, public _messageService: MessageService, private _storageService: StorageService, private _router: Router) { }
+  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
+    private _storageService: StorageService, private _router: Router, private _playManager: PlayManager, private _modal: NgbModal) { }
 
   ngOnInit() {
     this.game = this._storageService.getValue('game');
@@ -40,6 +63,11 @@ export class PlayGameComponent implements OnInit {
     // this._dataShareService.game.subscribe(res => this.game = res);
     this._dataShareService.connected.takeWhile(() => this.isAlive).subscribe(res => {if(res) this.getInfoToJoin();});
     this._messageService.rollDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setRollData(res));
+
+    this._playManager.classDetail.takeWhile(() => this.isAlive).subscribe(res => this.classDetail = res);
+    this._playManager.levelDetail.takeWhile(() => this.isAlive).subscribe(res => this.handleLevelDetail(res));
+    this._playManager.spellBook.takeWhile(() => this.isAlive).subscribe(res => this.spellBook = res);
+    this._playManager.spellDetail.takeWhile(() => this.isAlive).subscribe(res => this.handleSpellDetail(res));
 
     if(this.game !== null){      
       this._messageService.setConnection();
@@ -56,13 +84,8 @@ export class PlayGameComponent implements OnInit {
     this.roll = this.getRandomInt(min, max);
 
     if(!hidden){
-      let rmd: RollMessageData = {
-        charId: this.isGM ? -1 : this.character.characterId,
-        groupName: this.game.name,
-        maxRoll: this.rollMax,
-        roll: this.roll,
-        numDice: this.numDice
-      };
+      let id: number = this.isGM ? -1 : this.character.characterId;
+      let rmd: RollMessageData = this._playManager.createRMD(id, this.game.name, this.rollMax, this.roll, this.numDice);
       
       this._messageService.sendRoll(rmd);
     }
@@ -79,15 +102,8 @@ export class PlayGameComponent implements OnInit {
 
   public clearRoll(){
     this.roll = 0;
-
-    let rmd: RollMessageData = {
-      charId: this.isGM ? -1 : this.character.characterId,
-      groupName: this.game.name,
-      maxRoll: 4,
-      roll: this.roll,
-      numDice: 1
-    };
-
+    let id: number = this.isGM ? -1 : this.character.characterId;
+    let rmd: RollMessageData = this._playManager.createRMD(id, this.game.name, 4, this.roll, 1);
     this._messageService.sendRoll(rmd);
   }
 
@@ -130,58 +146,36 @@ export class PlayGameComponent implements OnInit {
   }
 
   private joinGame(name: string, charId: number){
-    let umd: UserMessageData = {
-      id: "",
-      name: name,
-      characterId: charId,
-      groupName: this.game.name
-    };
-
+    let umd: UserMessageData = this._playManager.createUMD(name, charId, this.game.name);
     this._messageService.joinGroup(umd);
     this.hasJoined = true;
-    if(!this.isGM) this.getClassDetails();
+
+    if(!this.isGM) this._playManager.initClassDetails(this.character);
   }
 
-  private getClassDetails(){
-    let s: Subscription;
+  private handleLevelDetail(LD: ClassLevels){
+    if(LD === null) return;
 
-    s = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class).subscribe(
-      d => this.classDetail = d,
-      err => console.log("unable to get class details", err),
-      () => {
-        s.unsubscribe();
-        this.getLevelDetails();
-      }
-    );
+    this.levelDetails = LD;
+
+    if(this.levelDetails.spellcasting) {
+      this.spellSlots = this._playManager.setSpellSlots(this.levelDetails);
+      this._playManager.initSpellBook(this.classDetail, 9); //Do level 9 here so that the user can see all spell
+    }
   }
 
-  private getLevelDetails(){
-    let s: Subscription;
-
-    s = this._dndApiService.getLevelInfo(this.classDetail.name, this.character.level).subscribe(
-      d => this.levelDetails =  d,
-      err => console.log("unable to get level details", err),
-      () =>{
-        s.unsubscribe();
-        console.log(this.levelDetails);
-        if(this.levelDetails.spellcasting) this.setSpellSlots(); else this.spellSlots = null;
-      }
-
-    )
+  public openSpellBook(content){
+    this._modal.open(content, {size: 'lg'});
+  }
+ 
+  public getSpellDetail(path: string){
+    this._playManager.getSpellDetail(path);
   }
 
-  private setSpellSlots(){
-    if(this.levelDetails.spellcasting.spell_slots_level_1 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_1);
-    if(this.levelDetails.spellcasting.spell_slots_level_2 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_2);
-    if(this.levelDetails.spellcasting.spell_slots_level_3 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_3);
-    if(this.levelDetails.spellcasting.spell_slots_level_4 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_4);
-    if(this.levelDetails.spellcasting.spell_slots_level_5 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_5);
-    if(this.levelDetails.spellcasting.spell_slots_level_6 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_6);
-    if(this.levelDetails.spellcasting.spell_slots_level_7 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_7);
-    if(this.levelDetails.spellcasting.spell_slots_level_8 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_8);
-    if(this.levelDetails.spellcasting.spell_slots_level_9 > 0) this.spellSlots.push(this.levelDetails.spellcasting.spell_slots_level_9);
+  public handleSpellDetail(spellDetail: SpellDetails){
+    this.spellDetail = spellDetail; 
   }
-
+  
   public castSpell(index: number){
     this.spellSlots[index]--;
   }
@@ -195,6 +189,7 @@ export class PlayGameComponent implements OnInit {
     this.hasJoined = false;
     this._messageService.leaveGroup();
     this._storageService.removeValue('game');
+    this._playManager.clearAllValues();
   }
 
 }
