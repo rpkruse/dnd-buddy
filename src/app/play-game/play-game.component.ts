@@ -87,7 +87,7 @@ export class PlayGameComponent implements OnInit {
       let id: number = this.isGM ? -1 : this.character.characterId;
       let rmd: RollMessageData = this._playManager.createRMD(id, this.game.name, this.rollMax, this.roll, this.numDice);
       
-      this._messageService.sendRoll(rmd);
+      if(this._messageService.groupMembers.length > 1) this._messageService.sendRoll(rmd); //Check len here b/c we don't want to spam server with rolls that only one person can see (IE no one else is in the game but you)
     }
   }
 
@@ -129,7 +129,7 @@ export class PlayGameComponent implements OnInit {
     let charId: number = this.game.userId === this.user.userId ? -1 : this.game.character[this.game.character.findIndex(u => u.userId === this.user.userId)].characterId;
     if(charId < 0){
       this.isGM = true;
-      this.joinGame(this.user.username + " (GM)", -1);
+      this.joinGame(this.user.username + " (DM)", -1);
       return;
     }
 

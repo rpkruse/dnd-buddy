@@ -1,4 +1,4 @@
-<div class="container-fluid mt-5" *ngIf="this.hasJoined">
+<div class="container-fluid mt-3" *ngIf="this.hasJoined">
   <!-- If we are the GM put us in the middle of the screen-->
   <div class="row" *ngIf="this.isGM">
     <div class="col-md-12 mx-auto">
@@ -90,7 +90,16 @@
           <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
+  <div class="card-deck mt-5 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
+    <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
+      <div class="card-header text-center">{{ member.umd.name }}</div>
+      <div class="card-body">
+        <p class="card-text" *ngIf="member.rmd">Value Rolled: {{ member.rmd.roll}} ({{ member.rmd.numDice }}D{{ member.rmd.maxRoll }})</p>
+      </div>
     </div>
   </div>
 </div>
