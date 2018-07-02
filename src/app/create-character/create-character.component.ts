@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, Game, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,6 +20,7 @@ export class CreateCharacterComponent implements OnInit {
 
   selectedClass: ClassDetails;
   selectedRace: RaceDetails;
+  selectedSubRace: SubRace;
   selectedGame: Game;
 
   level: number = 1;
@@ -80,12 +81,23 @@ export class CreateCharacterComponent implements OnInit {
   public selectRace(raceUrl: string) {
     if (raceUrl === "Choose") return;
 
-    this.character.race = raceUrl;
-
     let s: Subscription;
     s = this._dndApiService.getSingleEntity<RaceDetails>(raceUrl).subscribe(
       d => this.selectedRace = d,
       err => console.log("Unable to get details for selected race"),
+      () => s.unsubscribe()
+    );
+  }
+
+  public selectSubRace(subraceUrl: string) {
+    if (subraceUrl === "Choose") return;
+
+    this.character.race = subraceUrl;
+
+    let s: Subscription;
+    s = this._dndApiService.getSingleEntity<SubRace>(subraceUrl).subscribe(
+      d => this.selectedSubRace = d,
+      err => console.log("Unable to get details for selected subrace"),
       () => s.unsubscribe()
     );
   }
@@ -146,7 +158,7 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   private setAttr(index: number) {
-    let val: number = parseInt(this.selectedRace.ability_bonuses[index]);
+    let val: number = this.selectedSubRace.ability_bonuses[index];
     switch (index) {
       case 0:
         this.character.abil_Score_Str += val;
@@ -171,8 +183,8 @@ export class CreateCharacterComponent implements OnInit {
 
   public getStatString(index: number): string {
     let raceBonusAttr: string = " +";
-    if (this.selectedRace) {
-      raceBonusAttr += this.selectedRace.ability_bonuses[index];
+    if (this.selectedSubRace) {
+      raceBonusAttr += this.selectedSubRace.ability_bonuses[index];
     } else {
       raceBonusAttr = " + 0";
     }
