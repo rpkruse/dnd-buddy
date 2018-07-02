@@ -9,6 +9,7 @@ import { ClassLevels } from '../interfaces/api/class/classlevels';
 
 import { Race } from '../interfaces/api/race/race';
 import { RaceDetails } from '../interfaces/api/race/racedetails';
+import { SubRace } from '../interfaces/api/race/subrace';
 
 import { ProficiencyChoices } from '../interfaces/api/proficiencychoices';
 
@@ -35,6 +36,7 @@ export {
     ClassLevels,
     Race,
     RaceDetails,
+    SubRace,
     ProficiencyChoices,
     MessageOutput,
     MessageType,
