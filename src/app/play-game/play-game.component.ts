@@ -4,7 +4,9 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService, MessageService, StorageService, PlayManager } from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels, Spell, SpellDetails, EquipmentCategory, EquipmentCategoryDetails, Equipment} from '../interfaces/interfaces';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, 
+        ClassDetails, ClassLevels, Spell, SpellDetails, EquipmentCategory, 
+        EquipmentCategoryDetails, Equipment, MessageOutput, MessageType} from '../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -228,6 +230,7 @@ export class PlayGameComponent implements OnInit {
 
     let imd: ItemMessageData = this._playManager.createIMD(id, this.game.name, this.equipmentItem.url);
     this._messageService.sendItem(imd);
+    this.triggerMessage("", "Item given!", MessageType.Success);
   }
 
   /* Player ACTIONS */
@@ -307,6 +310,16 @@ export class PlayGameComponent implements OnInit {
   /* MISC */
   private getRandomInt(min: number, max: number){
     return Math.floor(min + Math.random() * (max+1 - min));
+  }
+
+  private triggerMessage(message: string, action: string, level: MessageType){
+    let out: MessageOutput = {
+      message: message,
+      action: action,
+      level: level
+    };
+
+    this._dataShareService.changeMessage(out);
   }
 
   ngOnDestroy(){
