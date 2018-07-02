@@ -4,7 +4,7 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService, MessageService, StorageService, PlayManager } from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels, Spell, SpellDetails} from '../interfaces/interfaces';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, ItemMessageData, ClassDetails, ClassLevels, Spell, SpellDetails, EquipmentCategory, EquipmentCategoryDetails, Equipment} from '../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -39,18 +39,31 @@ export class PlayGameComponent implements OnInit {
   character: Character = null;
   isGM: boolean = false;
 
+  //Roll Fields
   numDice: number = 1; //number to roll
   dice: number[] = [4, 6, 8, 10, 12, 20]; //the dice values we can have
   rollMax: number = 4; //the max die value
   roll: number = 0; //what we got on our roll
   rollData: RollMessageData;
 
+  //Character Info Fields
   classDetail: ClassDetails;
   levelDetails: ClassLevels;
 
   spellSlots: number[] = [];
   spellBook: Spell[] = [];
   spellDetail: SpellDetails;
+
+  armor: Equipment;
+  weapon: Equipment;
+  shield: Equipment;
+
+
+  equipmentTypes: EquipmentCategory;
+  equipmentList: EquipmentCategoryDetails;
+  equipmentItem: Equipment;
+
+  itemData: ItemMessageData;
 
   
   constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
@@ -63,11 +76,14 @@ export class PlayGameComponent implements OnInit {
     // this._dataShareService.game.subscribe(res => this.game = res);
     this._dataShareService.connected.takeWhile(() => this.isAlive).subscribe(res => {if(res) this.getInfoToJoin();});
     this._messageService.rollDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setRollData(res));
+    this._messageService.itemDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setItemData(res));
 
     this._playManager.classDetail.takeWhile(() => this.isAlive).subscribe(res => this.classDetail = res);
     this._playManager.levelDetail.takeWhile(() => this.isAlive).subscribe(res => this.handleLevelDetail(res));
     this._playManager.spellBook.takeWhile(() => this.isAlive).subscribe(res => this.spellBook = res);
     this._playManager.spellDetail.takeWhile(() => this.isAlive).subscribe(res => this.handleSpellDetail(res));
+
+    this._playManager.equipmentCategories.takeWhile(() => this.isAlive).subscribe(res => this.equipmentTypes = res);
 
     if(this.game !== null){      
       this._messageService.setConnection();
@@ -89,15 +105,6 @@ export class PlayGameComponent implements OnInit {
       
       if(this._messageService.groupMembers.length > 1) this._messageService.sendRoll(rmd); //Check len here b/c we don't want to spam server with rolls that only one person can see (IE no one else is in the game but you)
     }
-  }
-
-  public setRollData(rmd: RollMessageData){
-    if(rmd === null) return;
-
-    let index: number = this._messageService.groupMembers.findIndex(x => x.rmd.charId === rmd.charId);
-    if(index < 0) return;
-
-    this._messageService.groupMembers[index].rmd = rmd;
   }
 
   public clearRoll(){
@@ -140,6 +147,8 @@ export class PlayGameComponent implements OnInit {
         s.unsubscribe();
         let n: string = this.user.username + " (" + this.character.name + ")";
         this.joinGame(n, this.character.characterId);
+
+        this.getCharacterItems();
       }
     );
 
@@ -150,7 +159,10 @@ export class PlayGameComponent implements OnInit {
     this._messageService.joinGroup(umd);
     this.hasJoined = true;
 
-    if(!this.isGM) this._playManager.initClassDetails(this.character);
+    if(!this.isGM)
+      this._playManager.initClassDetails(this.character);
+    else
+      this._playManager.initGMInfo();
   }
 
   private handleLevelDetail(LD: ClassLevels){
@@ -164,6 +176,61 @@ export class PlayGameComponent implements OnInit {
     }
   }
 
+  private getCharacterItems(){
+    if(this.character.armor){
+      let s: Subscription = this._playManager.getItem(this.character.armor).subscribe(
+        d => this.armor = d,
+        err => console.log("unable to get armor", err),
+        () => s.unsubscribe()
+      );
+    }
+
+    if(this.character.weapon){
+      let s: Subscription = this._playManager.getItem(this.character.weapon).subscribe(
+        d => this.weapon = d,
+        err => console.log("unable to get weapon", err),
+        () => s.unsubscribe()
+      );
+    }
+
+    if(this.character.shield){
+      let s: Subscription = this._playManager.getItem(this.character.shield).subscribe(
+        d => this.shield = d,
+        err => console.log("unable to get weapon", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  /*GM ACTIONS */
+  public getListOfEquipment(url: string){
+    if(url === "Choose") return;
+
+    let s: Subscription = this._playManager.getItemList(url).subscribe(
+      d => this.equipmentList = d,
+      err => console.log("unable to get equipment list", err),
+      () =>  s.unsubscribe()
+    );
+  }
+
+  public getEquipmentItem(url: string){
+    if(url === "Choose") return;
+
+    let s: Subscription = this._playManager.getItem(url).subscribe(
+      d => this.equipmentItem = d,
+      err => console.log("unable to get equipment item", err),
+      () => s.unsubscribe()
+    );
+  }
+
+  public selectPlayer(id: string){
+    if (id === "Choose") return;
+
+    let imd: ItemMessageData = this._playManager.createIMD(id, this.game.name, this.equipmentItem.url);
+    this._messageService.sendItem(imd);
+  }
+
+  /* Player ACTIONS */
   public openSpellBook(content){
     this._modal.open(content, {size: 'lg'});
   }
@@ -180,6 +247,64 @@ export class PlayGameComponent implements OnInit {
     this.spellSlots[index]--;
   }
 
+  /* MESSAGE HUB ACTIONS: */
+  public setRollData(rmd: RollMessageData){
+    if(rmd === null) return;
+
+    let index: number = this._messageService.groupMembers.findIndex(x => x.rmd.charId === rmd.charId);
+    if(index < 0) return;
+
+    this._messageService.groupMembers[index].rmd = rmd;
+  }
+
+  public setItemData(itm: ItemMessageData){
+    if(itm === null) return;
+
+    this.itemData = itm;
+
+    let item: Equipment;
+
+    let s: Subscription = this._playManager.getItem(this.itemData.item).subscribe(
+      d => item = d,
+      err => console.log("Unable to get item", err),
+      () => {
+        s.unsubscribe();
+        this.handleWeaponType(item);
+      }
+    )
+  }
+
+  private handleWeaponType(item: Equipment){
+    switch(item.equipment_category){
+      case "Weapon":
+        this.character.weapon = item.url;
+        break;
+      case "Armor":
+        if(item.name === "Shield") {
+          this.character.shield = item.url;
+          break;
+        }
+
+        this.character.armor = item.url;
+        break;
+      case "Shield":
+        this.character.shield = item.url;
+        break;
+      default:
+        return;
+    }
+
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
+      d => d = d,
+      err => console.log("Unable to update character", err),
+      () => { 
+        s.unsubscribe();
+        this.getCharacterItems();
+      }
+    )
+  }
+
+  /* MISC */
   private getRandomInt(min: number, max: number){
     return Math.floor(min + Math.random() * (max+1 - min));
   }

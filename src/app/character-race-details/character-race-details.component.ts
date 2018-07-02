@@ -43,7 +43,7 @@ export class CharacterRaceDetails implements OnInit {
 
   mouseOverClass: number = -1;
   mouseOverRace: number = -1;
-
+  
   constructor(private _dndApiService: DndApiService) { }
 
   ngOnInit() {

@@ -27,6 +27,11 @@ import { OnlineUser } from '../interfaces/messages/onlineuser';
 import { Spell } from '../interfaces/api/spell/spell'
 import { SpellDetails } from '../interfaces/api/spell/spelldetail'
 
+//Equipment Data:
+import { Equipment } from '../interfaces/api/equipment/equipment';
+import { EquipmentCategory } from '../interfaces/api/equipment/equipmentcategory';
+import { EquipmentCategoryDetails } from '../interfaces/api/equipment/equipmentcategorydetails';
+
 export {
     Character,
     Game,
@@ -45,5 +50,8 @@ export {
     RollMessageData,
     OnlineUser,
     Spell,
-    SpellDetails
+    SpellDetails,
+    Equipment,
+    EquipmentCategory,
+    EquipmentCategoryDetails
 };

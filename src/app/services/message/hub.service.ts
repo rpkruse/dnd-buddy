@@ -20,6 +20,7 @@ export class HubService {
     userMessage: EventEmitter<UserMessageData> = new EventEmitter(null); //the user's placement in the queue
     groupMembersSubj: EventEmitter<OnlineUser[]> = new EventEmitter(null);
     rollDataSubj: EventEmitter<RollMessageData> = new EventEmitter<RollMessageData>(null);
+    itemDataSubj: EventEmitter<ItemMessageData> = new EventEmitter<ItemMessageData>(null);
 
 
     private groupMembers: OnlineUser[] = [];
@@ -46,6 +47,7 @@ export class HubService {
             this.hubConnection.on('sendRollNoticetoGroup', (msg) => this.sendRollNoticeToGroup(msg));
             this.hubConnection.on('okToStopConnection', () => this.okToStopConnection());
             this.hubConnection.on('updateLobby', (msgs) => this.updateLobby(msgs));
+            this.hubConnection.on('getItem', (imd) => this.getItem(imd));
         }
 
         if (this.hubConnection.connection.connectionState !== 1) {
@@ -104,6 +106,10 @@ export class HubService {
         this._dataShareService.connected.next(false);
     }
 
+    public getItem(imd: ItemMessageData) {
+        this.itemDataSubj.emit(imd);
+    }
+
     public invokeJoinGroup(userMessageData: UserMessageData) {
         let u: OnlineUser = {
             umd: userMessageData,
@@ -122,6 +128,10 @@ export class HubService {
 
     public invokeRoll(rmd: RollMessageData){
         this.hubConnection.invoke('SendRoll', rmd);
+    }
+
+    public invokeItem(itm: ItemMessageData) {
+        this.hubConnection.invoke('SendItem', itm);
     }
 
     public invokeLeaveGroup() { 
@@ -150,7 +160,7 @@ export class HubService {
 
         imd = {
             groupName: umd.groupName,
-            charId: umd.characterId,
+            connectionId: umd.id,
             item: ""
 
         };

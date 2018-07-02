@@ -51,12 +51,12 @@ export class ApiService {
     return this._http.post(environment.api + path, obj, { headers }) as Observable<T>;
   }
 
-  public putEntity<T>(path: string, obj: any): Observable<T> {
+  public putEntity<T>(path: string, obj: any, id: number): Observable<T> {
     let headers: HttpHeaders = new HttpHeaders(
       { "Authorization": "Bearer " + this._storage.getValue("token") }
     );
 
-    return this._http.put(environment.api + path, obj, { headers }) as Observable<T>;
+    return this._http.put(environment.api + path + "/" + id, obj, { headers }) as Observable<T>;
   }
 
   public deleteEntity<T>(path: string, id: number): Observable<T>{

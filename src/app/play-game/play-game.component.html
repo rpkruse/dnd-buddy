@@ -9,15 +9,39 @@
           <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
         </div>
         <div class="card-body">
-          <label>Roll:</label>
-          <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+          <!-- Rolling -->
+          <div class="col-md-6 float-left">
+            <label>Roll:</label>
+            <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
 
-          <br>
-          <label>Die:</label>
-          <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
-            <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-          </select>
-          <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+            <br>
+            <label>Die:</label>
+            <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
+              <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+            </select>
+            <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+          </div>
+
+          <!-- Item Giving -->
+          <div class="col-md-6 float-right">
+            <label class="col-sm-4 col-form-lable">Give Item (type):</label>
+            <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="this.equipmentTypes && this.equipmentTypes.results">
+              <option selected>Choose</option>
+              <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
+            </select>
+
+            <label class="col-sm-4 col-form-lable">Give Item (item):</label>
+            <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+              <option selected>Choose</option>
+              <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+            </select>
+            <br>
+            <label class="col-sm-4 col-form-lable">Give To (player):</label>
+            <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem && this._messageService.groupMembers.length > 1">
+              <option selected>Choose</option>
+              <option *ngFor="let member of this.getOtherGroupMembers() index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
+            </select>
+          </div>
         </div>
         <div class="card-footer">
           <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
@@ -80,7 +104,26 @@
                 </div>
               </div>
               <!-- ^^ End of spell info-->
-              <!-- add item info here -->
+              <!-- Item info -->
+              <div class="col-lg-6 float-right">
+                <div class="card w-100">
+                  <div class="card-header text-center">
+                    Equipment
+                  </div>
+                  <div class="card-body">
+                    <div *ngIf="this.armor">
+                      <p *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+                      <p *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
+                    </div>
+                    <div *ngIf="this.weapon">
+                      <p *ngIf="this.weapon">Weapon: {{ this.weapon.name }}</p>
+                      <p>Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+                      <p>Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

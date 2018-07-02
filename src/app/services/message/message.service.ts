@@ -26,13 +26,14 @@ export class MessageService {
 
   public groupMembers: OnlineUser[] = [];
   public rollDataSubj: Subject<RollMessageData> = new BehaviorSubject<RollMessageData>(null);
-
+  public itemDataSubj: Subject<ItemMessageData> = new BehaviorSubject<ItemMessageData>(null);
 
   constructor(private _http: HttpClient, private _hub: HubService, private _storage: StorageService, private _apiService: ApiService) {
     this._hub.notification.subscribe(res => this.notify(res));
     this._hub.groupMembersSubj.subscribe(res => this.groupMembers = res);
 
     this._hub.rollDataSubj.subscribe(res => this.rollDataSubj.next(res));
+    this._hub.itemDataSubj.subscribe(res => this.itemDataSubj.next(res));
   }
 
   public setConnection(){
@@ -45,6 +46,10 @@ export class MessageService {
 
   public sendRoll(rmd: RollMessageData){
     this._hub.invokeRoll(rmd);
+  }
+
+  public sendItem(itm: ItemMessageData){
+    this._hub.invokeItem(itm);
   }
 
   public leaveGroup(){

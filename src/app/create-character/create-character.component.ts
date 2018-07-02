@@ -1,3 +1,7 @@
+/*
+  Note: This code is very temp, and will be cleaned up ASAP
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -71,6 +75,12 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Wis: 0,
       abil_Score_Cha: 0,
       level: 1,
+      armor: null,
+      weapon: null,
+      shield: null,
+      neck: null,
+      ring_1: null,
+      ring_2: null,
       userId: this.user.userId || null,
       gameId: null,
       user: this.user,

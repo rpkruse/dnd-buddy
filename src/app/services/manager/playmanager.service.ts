@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Class, ClassDetails, ClassLevels, Character, UserMessageData, RollMessageData, ItemMessageData, Spell, SpellDetails } from '../../interfaces/interfaces';
+import { Class, ClassDetails, ClassLevels, Character, UserMessageData, RollMessageData, 
+          ItemMessageData, Spell, SpellDetails, Equipment, EquipmentCategory, EquipmentCategoryDetails } from '../../interfaces/interfaces';
 
 import { ApiService } from '../api/api.service';
 import { DndApiService } from '../api/dndapi.service';
 import { DataShareService } from '../data/data-share.service';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Subject, BehaviorSubject, Subscription, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,17 @@ export class PlayManager {
   public spellBook: Subject<Spell[]> = new BehaviorSubject<Spell[]>(null);
   public spellDetail: Subject<SpellDetails> = new BehaviorSubject<SpellDetails>(null);
 
+  public equipmentCategories: Subject<EquipmentCategory> = new BehaviorSubject<EquipmentCategory>(null);
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService) { }
 
+  public initGMInfo(){
+    let j: Subscription = this._dndApiService.getAllEntities<EquipmentCategory>("equipment-categories").subscribe(
+      d => this.equipmentCategories.next(d),
+      err => console.log(err),
+      () => j.unsubscribe()
+    )
+  }
   public initClassDetails(character: Character): void {
     let s: Subscription;
 
@@ -49,6 +59,14 @@ export class PlayManager {
         this.levelDetail.next(ld);
       }
     );
+  }
+
+  public getItemList(url: string): Observable<EquipmentCategoryDetails> {
+    return this._dndApiService.getSingleEntity<EquipmentCategoryDetails>(url);
+  }
+
+  public getItem(url: string): Observable<Equipment> {
+    return this._dndApiService.getSingleEntity<Equipment>(url);
   }
 
   public initSpellBook(cd: ClassDetails, level: number){
@@ -126,6 +144,16 @@ export class PlayManager {
     };
 
     return rmd;
+  }
+
+  public createIMD(id: string, groupName: string, item: string): ItemMessageData{
+    let itm: ItemMessageData = {
+      connectionId: id,
+      groupName: groupName,
+      item: item
+    };
+
+    return itm;
   }
 
   public clearAllValues(): void {
