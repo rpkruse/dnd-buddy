@@ -76,6 +76,20 @@ export class PlayDmComponent implements OnInit {
   }
 
   /*
+    This method is called when the GM clicks on a item type (IE armor, weapon) it returns all items of that type from the DB
+    @param url: string - The url of the item type to fetch from the db
+  */
+  public getListOfEquipment(url: string) {
+    if (url === "Choose") return;
+
+    let s: Subscription = this._playManager.getItemList(url).subscribe(
+      d => this.equipmentList = d,
+      err => console.log("unable to get equipment list", err),
+      () => s.unsubscribe()
+    );
+  }
+
+  /*
     This method is called when the DM selects a specific item (IE sword, axe, chain mail) it will pull the details of this item
     from the api
     @param url: string - The api url of the item to pull

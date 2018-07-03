@@ -35,7 +35,7 @@
           </select>
           <br>
           <label class="col-sm-4 col-form-lable">Give To (player):</label>
-          <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem && this._messageService.groupMembers.length > 1">
+          <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem">
             <option selected>Choose</option>
             <option *ngFor="let member of this.getOtherGroupMembers() index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
           </select>
