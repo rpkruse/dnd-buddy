@@ -13,12 +13,47 @@
     </div>
   </div>
 
-  <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
-  <div class="card-deck mt-5 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
-    <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
-      <div class="card-header text-center">{{ member.umd.name }}</div>
-      <div class="card-body">
-        <p class="card-text" *ngIf="member.rmd">Value Rolled: {{ member.rmd.roll}} ({{ member.rmd.numDice }}D{{ member.rmd.maxRoll }})</p>
+  <div class="row mt-4">
+
+    <!-- Grid -->
+    <div class="col-10" *ngIf="!this.gridHidden">
+      <table class="table table-bordered table-sm">
+        <tbody>
+          <tr *ngFor="let gridY of this._messageService.grid index as y">
+            <td *ngFor="let gridX of gridY index as x" class="text-center" [ngClass]="this.getGridClass(x, y)" (click)="this.placeToken(x, y)">
+              {{ this.getGridValue(x, y).type }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Selection -->
+    <div class="col-2" *ngIf="this.isGM">
+      <label class="col-4">Put:</label>
+      <select class="custom-select col-5" (change)="this.token = $event.target.value">
+        <option selected value="N">Empty</option>
+        <option value="P">Player</option>
+        <option value="E">Enemy</option>
+        <option value="W">Wall</option>
+      </select>
+    </div>
+
+    <div class="col-2" *ngIf="!this.isGm">
+        <button type="button" class="btn btn-danger btn-sm" (click)="resetGrid()" *ngIf="this.isGM">Reset Grid</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = false" *ngIf="this.gridHidden">Show Grid</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
+    <div class="card-deck mt-5 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
+      <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
+        <div class="card-header text-center">{{ member.umd.name }}</div>
+        <div class="card-body">
+          <p class="card-text" *ngIf="member.rmd">Value Rolled: {{ member.rmd.roll}} ({{ member.rmd.numDice }}D{{ member.rmd.maxRoll }})</p>
+        </div>
       </div>
     </div>
   </div>

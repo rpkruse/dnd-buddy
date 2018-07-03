@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ApiService, DataShareService, MessageService, StorageService, PlayManager } from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData } from '../interfaces/interfaces';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, GridMessageData } from '../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,9 @@ export class PlayGameComponent implements OnInit {
   game: Game;
   character: Character = null;
   isGM: boolean = false;
+
+  token: string = "N";
+  gridHidden: boolean = false;
   
   constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
     private _storageService: StorageService, private _router: Router, private _playManager: PlayManager) { }
@@ -102,11 +105,83 @@ export class PlayGameComponent implements OnInit {
   }
 
   /*
+    This method is called when the DM clicks on a tile in our grid
+    it places the token on the tile and notifies everyone in the group
+    @param x: number - The x pos
+    @param y: number - The y pos
+  */
+  public placeToken(x: number, y: number) {
+    if (this.getGridValue(x, y).type === this.token) return;
+
+    let gmd: GridMessageData = this._playManager.createGMD(x, y, this.token, "", this.game.name);
+
+    this._messageService.sendGrid(gmd);
+  }
+
+  /*
+    This method is called when the DM clicks reset it will remove all values in the grid
+    that are not empty
+  */
+  public resetGrid() {
+    let GMD: GridMessageData;
+
+    for(let y=0; y<this._messageService.grid.length; y++){
+      for(let x=0; x<this._messageService.grid[y].length; x++){
+        GMD = this.getGridValue(x, y);
+
+        if (GMD.type !== "N"){
+          GMD.type = "N";
+          this._messageService.sendGrid(GMD);
+        }
+      }
+    }
+  }
+
+  /*
+    This method is called to dynamically display the cells background
+    @param x: number - The x pos
+    @param y: number - The y pos
+  */
+  public getGridClass(x: number, y: number) {
+    let gmd: GridMessageData = this._messageService.grid[y][x];
+
+    let color: string;
+    switch(gmd.type) {
+      case "P": //Player
+        color = 'bg-primary';
+        break;
+      case "E": //Enemy
+        color = 'bg-danger';
+        break;
+      case "W": //Wall
+        color = "bg-secondary"
+        break;
+      default: //Anything else
+        color = 'bg-white';
+        break;
+    }
+
+    return color;
+  }
+
+
+  /*
+    This method returns the GMD at the given cords.
+    @param x: number - The x pos
+    @param y: number - The y pos
+    @return GridMessageData: the GMD at the given cell
+  */
+  public getGridValue(x: number, y: number): GridMessageData{
+    return this._messageService.grid[y][x];
+  }
+
+  /*
     This method is called to get all the other players in the group (minus the current user)
+    @param onlyPlayers: boolean - If we want to only return players (used for gird)
     @return OnlineUser[] - An array of all connected players minus us
   */
-  public getOtherGroupMembers(): OnlineUser[]{
-    if(this.isGM)
+  public getOtherGroupMembers(onlyPlayers?: boolean): OnlineUser[]{
+    if(this.isGM || onlyPlayers)
       return this._messageService.groupMembers.filter(x => x.umd.characterId > 0); //Filter the GM out
     else
       return this._messageService.groupMembers.filter(x => x.umd.characterId !== this.character.characterId); //filter ourself out

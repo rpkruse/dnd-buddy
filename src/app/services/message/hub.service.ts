@@ -9,7 +9,7 @@ import { HubConnection } from '@aspnet/signalr';
 import { DataShareService } from '../data/data-share.service';
 // import * as signalR from '@aspnet/signalr';
 
-import { UserMessageData, ItemMessageData, RollMessageData, OnlineUser } from '../../interfaces/interfaces';
+import { UserMessageData, ItemMessageData, RollMessageData, OnlineUser, GridMessageData } from '../../interfaces/interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +21,7 @@ export class HubService {
     groupMembersSubj: EventEmitter<OnlineUser[]> = new EventEmitter(null);
     rollDataSubj: EventEmitter<RollMessageData> = new EventEmitter<RollMessageData>(null);
     itemDataSubj: EventEmitter<ItemMessageData> = new EventEmitter<ItemMessageData>(null);
+    gridDataSubj: EventEmitter<GridMessageData> = new EventEmitter<GridMessageData>(null);
 
 
     private groupMembers: OnlineUser[] = [];
@@ -48,6 +49,7 @@ export class HubService {
             this.hubConnection.on('okToStopConnection', () => this.okToStopConnection());
             this.hubConnection.on('updateLobby', (msgs) => this.updateLobby(msgs));
             this.hubConnection.on('getItem', (imd) => this.getItem(imd));
+            this.hubConnection.on('sendGridUpdateToGroup', (gmd) => this.sendGridUpdateToGroup(gmd));
         }
 
         if (this.hubConnection.connection.connectionState !== 1) {
@@ -110,6 +112,10 @@ export class HubService {
         this.itemDataSubj.emit(imd);
     }
 
+    public sendGridUpdateToGroup(gmd: GridMessageData){
+        this.gridDataSubj.emit(gmd);
+    }
+
     public invokeJoinGroup(userMessageData: UserMessageData) {
         let u: OnlineUser = {
             umd: userMessageData,
@@ -132,6 +138,10 @@ export class HubService {
 
     public invokeItem(itm: ItemMessageData) {
         this.hubConnection.invoke('SendItem', itm);
+    }
+
+    public invokeGrid(gmd: GridMessageData) {
+        this.hubConnection.invoke('SendGridPlacement', gmd);
     }
 
     public invokeLeaveGroup() {

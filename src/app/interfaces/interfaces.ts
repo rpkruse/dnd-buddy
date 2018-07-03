@@ -21,6 +21,7 @@ import { MessageType } from '../interfaces/ui/messagetype.enum';
 import { UserMessageData } from '../interfaces/messages/usermessagedata'
 import { ItemMessageData } from '../interfaces/messages/itemmessagedata'
 import { RollMessageData } from '../interfaces/messages/rollmessagedata'
+import { GridMessageData } from '../interfaces/messages/gridmessagedata';
 import { OnlineUser } from '../interfaces/messages/onlineuser';
 
 //Spell Data:
@@ -48,6 +49,7 @@ export {
     UserMessageData,
     ItemMessageData,
     RollMessageData,
+    GridMessageData,
     OnlineUser,
     Spell,
     SpellDetails,

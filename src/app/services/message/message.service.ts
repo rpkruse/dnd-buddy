@@ -5,7 +5,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { OnlineUser, UserMessageData, ItemMessageData, RollMessageData } from '../../interfaces/interfaces';
+import { OnlineUser, UserMessageData, ItemMessageData, RollMessageData, GridMessageData } from '../../interfaces/interfaces';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HubService } from '../message/hub.service';
 
@@ -13,40 +13,81 @@ import { HubService } from '../message/hub.service';
   providedIn: 'root'
 })
 export class MessageService {
+  private gridSize: number = 10; //nxn
 
   public groupMembers: OnlineUser[] = [];
   public rollDataSubj: Subject<RollMessageData> = new BehaviorSubject<RollMessageData>(null);
   public itemDataSubj: Subject<ItemMessageData> = new BehaviorSubject<ItemMessageData>(null);
 
+  public grid: GridMessageData[][] = [];
+
   constructor(private _hub: HubService) {
+    this.grid = this.initGrid();
+
     this._hub.notification.subscribe(res => this.notify(res));
     this._hub.groupMembersSubj.subscribe(res => this.groupMembers = res);
 
     this._hub.rollDataSubj.subscribe(res => this.rollDataSubj.next(res));
     this._hub.itemDataSubj.subscribe(res => this.itemDataSubj.next(res));
+
+    this._hub.gridDataSubj.subscribe(res => this.updateGrid(res));
   }
 
-  public setConnection(){
+  public setConnection() {
     this._hub.setConnection();
   }
 
-  public joinGroup(userMessageData: UserMessageData){
-      this._hub.invokeJoinGroup(userMessageData);
+  public joinGroup(userMessageData: UserMessageData) {
+    this._hub.invokeJoinGroup(userMessageData);
   }
 
-  public sendRoll(rmd: RollMessageData){
+  public sendRoll(rmd: RollMessageData) {
     this._hub.invokeRoll(rmd);
   }
 
-  public sendItem(itm: ItemMessageData){
+  public sendItem(itm: ItemMessageData) {
     this._hub.invokeItem(itm);
   }
 
-  public leaveGroup(){
-      this._hub.invokeLeaveGroup();
+  public sendGrid(gmd: GridMessageData) {
+    this.grid[gmd.y][gmd.x] = gmd;
+
+    this._hub.invokeGrid(gmd);
   }
 
-  public notify(msg: string){
-      console.log(msg);
+  public leaveGroup() {
+    this._hub.invokeLeaveGroup();
+  }
+
+
+  private updateGrid(gmd: GridMessageData) {
+    if (!gmd) return;
+
+    this.grid[gmd.y][gmd.x] = gmd;
+  }
+
+  private initGrid(): GridMessageData[][] {
+    let g: GridMessageData[][] = [];
+    let gmd: GridMessageData;
+    for (let i = 0; i < this.gridSize; i++) {
+      g[i] = [];
+      for (let j = 0; j < this.gridSize; j++) {
+        gmd = {
+          x: j,
+          y: i,
+          type: "N", 
+          name: " ",
+          groupName: ""
+        };
+
+        g[i][j] = gmd;
+      }
+    }
+
+    return g;
+  }
+
+  public notify(msg: string) {
+    console.log(msg);
   }
 }

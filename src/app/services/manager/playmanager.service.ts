@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 
 import {
   ClassDetails, ClassLevels, Character, UserMessageData, RollMessageData,
-  ItemMessageData, Spell, SpellDetails, Equipment, EquipmentCategory, EquipmentCategoryDetails
+  ItemMessageData, Spell, SpellDetails, Equipment, EquipmentCategory, EquipmentCategoryDetails, GridMessageData
 } from '../../interfaces/interfaces';
 
 import { ApiService } from '../api/api.service';
@@ -208,6 +208,22 @@ export class PlayManager {
 
     return itm;
   }
+
+  /*
+    Creates a new GMD object to send to the message Hub
+  */
+  public createGMD(x: number, y: number, type: string, name: string, groupName: string): GridMessageData {
+    let gmd: GridMessageData = {
+      x: x,
+      y: y,
+      type: type,
+      name: name,
+      groupName: groupName
+    };
+
+    return gmd;
+  }
+
 
   public clearAllValues(): void {
     this.classDetail.next(null);
