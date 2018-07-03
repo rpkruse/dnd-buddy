@@ -111,9 +111,12 @@ export class PlayGameComponent implements OnInit {
     @param y: number - The y pos
   */
   public placeToken(x: number, y: number) {
-    if (this.getGridValue(x, y).type === this.token) return;
+    let gmd: GridMessageData;
 
-    let gmd: GridMessageData = this._playManager.createGMD(x, y, this.token, "", this.game.name);
+    if (this.getGridValue(x, y).type === this.token)
+      gmd = this._playManager.createGMD(x, y, "N", "", this.game.name);
+    else 
+      gmd = this._playManager.createGMD(x, y, this.token, "", this.game.name);
 
     this._messageService.sendGrid(gmd);
   }
