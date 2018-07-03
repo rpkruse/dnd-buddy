@@ -90,6 +90,7 @@ export class CreateCharacterComponent implements OnInit {
 
   public selectRace(raceUrl: string) {
     if (raceUrl === "Choose") {
+      this.selectedRace = null;
       return null;
     }
 
@@ -102,7 +103,10 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public selectSubRace(subraceUrl: string) {
-    if (subraceUrl === "Choose") return;
+    if (subraceUrl === "Choose") {
+      this.selectedSubRace = null;
+      return;
+    }
 
     this.character.race = subraceUrl;
 
@@ -288,7 +292,7 @@ export class CreateCharacterComponent implements OnInit {
     }
 
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
-      && this.selectedGame !== null && this.level !== null;
+      && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null;
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {
