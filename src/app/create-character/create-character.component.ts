@@ -119,7 +119,11 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public selectClass(classUrl: string) { //FL[(num-10)/2]
-    if (classUrl === "Choose") return;
+    if (classUrl === "Choose") {
+      this.selectedClass = null;
+      this.character.class = '';
+      return;
+    }
     this.character.class = classUrl;
     let s: Subscription;
     s = this._dndApiService.getSingleEntity<ClassDetails>(classUrl).subscribe(
