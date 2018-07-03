@@ -175,6 +175,28 @@ export class PlayGameComponent implements OnInit {
     return this._messageService.grid[y][x];
   }
 
+    /*
+    This method returns an image for a given value.
+    @param gridValue: string - The value of an image to load on the board.
+    @return GridMessageData: the path to the image
+  */
+ public getGridImage(gridValue: string): string {
+    switch (gridValue) {
+      case 'P': {
+        return 'assets/race_imgs/human.png';
+      }
+      case 'E': {
+        return 'assets/race_imgs/minotaur.png';
+      }
+      case 'N': {
+        return 'assets/textures/emptyTile.jpg';
+      }
+      case 'W': {
+        return 'assets/textures/wall.png';
+      }
+    }
+  }
+
   /*
     This method is called to get all the other players in the group (minus the current user)
     @param onlyPlayers: boolean - If we want to only return players (used for gird)

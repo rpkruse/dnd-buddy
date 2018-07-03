@@ -17,11 +17,11 @@
 
     <!-- Grid -->
     <div class="col-10" *ngIf="!this.gridHidden">
-      <table class="table table-bordered table-sm">
-        <tbody>
-          <tr *ngFor="let gridY of this._messageService.grid index as y">
-            <td *ngFor="let gridX of gridY index as x" class="text-center" [ngClass]="this.getGridClass(x, y)" (click)="this.placeToken(x, y)">
-              {{ this.getGridValue(x, y).type }}
+      <table class="table table-sm">
+        <tbody id="board">
+          <tr class="boardRow" *ngFor="let gridY of this._messageService.grid index as y">
+            <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} boardCell text-center" [ngClass]="this.getGridClass(x, y)" (click)="this.placeToken(x, y)">
+                <img class="tileObject" src="{{ this.getGridImage(this.getGridValue(x, y).type) }}" />
             </td>
           </tr>
         </tbody>

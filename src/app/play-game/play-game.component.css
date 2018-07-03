@@ -2,3 +2,48 @@
     background: transparent;
     width: 0px;
 }
+
+#board {
+    width: 80%;
+    height: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.boardRow {
+    width: 100%;
+    height: 100px;
+}
+
+.boardCell {
+    width: 9%;
+    height: 100px;
+    float: left;
+    padding:1px;
+    display:block;
+    border-radius: 10px;
+}
+
+.P {
+    background-color: greenYellow !important;
+}
+
+.E {
+    background-color: red !important;
+}
+
+.N {
+    background-color: none !important;
+}
+
+.W {
+    background-color: black !important;
+}
+
+.tileObject {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
