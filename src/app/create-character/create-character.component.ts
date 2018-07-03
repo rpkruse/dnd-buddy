@@ -89,7 +89,9 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public selectRace(raceUrl: string) {
-    if (raceUrl === "Choose") return;
+    if (raceUrl === "Choose") {
+      return null;
+    }
 
     let s: Subscription;
     s = this._dndApiService.getSingleEntity<RaceDetails>(raceUrl).subscribe(
