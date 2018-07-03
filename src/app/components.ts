@@ -5,6 +5,8 @@ import { CharacterRaceDetails } from './character-race-details/character-race-de
 
 import { GameComponent } from './game/game.component';
 import { PlayGameComponent } from './play-game/play-game.component';
+import { PlayDmComponent } from './play-dm/play-dm.component';
+import { PlayPlayerComponent } from './play-player/play-player.component';
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -17,6 +19,8 @@ export {
     CreateCharacterComponent,
     CharacterRaceDetails,
     PlayGameComponent,
+    PlayDmComponent,
+    PlayPlayerComponent,
     GameComponent,
     HomeComponent,
     LoginComponent,

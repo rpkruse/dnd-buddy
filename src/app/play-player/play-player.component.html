@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="card w-100">
+      <div class="card-header text-center">
+        {{ this.character.name }} ({{ this.user.username }})
+        <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <!-- Rolling info -->
+          <div class="col-lg-6">
+            <label>Roll:</label>
+            <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+
+            <br>
+            <label>Die:</label>
+            <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
+              <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+            </select>
+            <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
+
+            <p class="card-text">STR MOD: {{getAttrScore(this.character.abil_Score_Str)}}</p>
+            <p class="card-text">DEX MOD: {{getAttrScore(this.character.abil_Score_Dex)}}</p>
+            <p class="card-text">CON MOD: {{getAttrScore(this.character.abil_Score_Con)}}</p>
+            <p class="card-text">INT MOD: {{getAttrScore(this.character.abil_Score_Int)}}</p>
+            <p class="card-text">WIS MOD: {{getAttrScore(this.character.abil_Score_Wis)}}</p>
+            <p class="card-text">CHA MOD: {{getAttrScore(this.character.abil_Score_Cha)}}</p>
+          </div>
+
+          <div class="col-lg-6">
+            <!-- Spell Info -->
+            <div class="col-lg-6 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
+              <div class="card w-100">
+                <div class="card-header text-center">
+                  Spell Info
+                  <button type="button" class="btn btn-success float-right" (click)="openSpellBook(content)">Spell Book</button>
+                </div>
+                <ul class="list-group list-group-flush" *ngIf="this.spellSlots">
+                  <li class="list-group-item">
+                    Cantrips: {{levelDetail.spellcasting.cantrips_known}}
+                  </li>
+                  <li class="list-group-item" *ngFor="let spellSlot of this.spellSlots index as i">
+                    Level {{i+1}} Spells: {{spellSlot}}
+                    <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ^^ End of spell info-->
+            <!-- Item info -->
+            <div class="col-lg-6 float-right">
+              <div class="card w-100">
+                <div class="card-header text-center">
+                  Equipment
+                </div>
+                <div class="card-body">
+                  <div *ngIf="this.armor">
+                    <p *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+                    <p *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }}
+                      shield bonus)</p>
+                  </div>
+                  <div *ngIf="this.weapon">
+                    <p *ngIf="this.weapon">Weapon: {{ this.weapon.name }}</p>
+                    <p>Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+                    <p>Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
+        <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
+        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title text-center">{{this.classDetail.name}} Spell Book</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <ngb-tabset *ngIf="this.spellBook && this.spellBook.length">
+          <ngb-tab *ngFor="let spellLevel of this.spellBook index as i" title="Level {{i}}">
+            <ng-template ngbTabContent>
+              <ul class="list-group static-size-list half-height">
+                <li class="list-group-item" *ngFor="let spell of spellLevel.results index as j" (mouseover)="this.mouseOver = j" (mouseout)="this.mouseOver = -1">
+                  {{spell.name}}
+                  <button [@showState]="this.mouseOver === j ? 'show' : 'hide'" type="button" class="btn btn-secondary float-right" (click)="getSpellDetail(spell.url, spellInfo)">Details</button>
+                </li>
+              </ul>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+
+      <div class="col-md-6" *ngIf="this.spellDetail">
+        <div class="card w-100">
+          <div class="card-body static-size-list half-height-with-some">
+            <h5 class="card-title text-center">{{spellDetail.name}}</h5>
+            <p>Cast Time: {{spellDetail.casting_time}}</p>
+            <p>Requires Concentration: {{spellDetail.concentration}}</p>
+            <p>{{spellDetail.desc}}</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm float-right" (click)="spellDetail=null">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success col-2" (click)="d()">Close</button>
+  </div>
+</ng-template>
