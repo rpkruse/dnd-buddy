@@ -6,7 +6,7 @@
         <ngb-tab title="Races">
           <ng-template ngbTabContent class="static-size-list half-height" *ngIf="this.races && this.races.results">
             <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event)" *ngIf="this.races && this.races.results">
-              <ngb-panel title="{{ race.name }}" *ngFor="let race of this.races.results index as i">
+              <ngb-panel title="{{ race.name }}" id="{{race.url}}" *ngFor="let race of this.races.results index as i">
                 <ng-template ngbPanelContent>
                   <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
                     <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.raceDetail.subraces index as i">
@@ -76,8 +76,10 @@
               <ngb-panel title="Traits">
                 <ng-template ngbPanelContent>
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item" *ngFor="let trait of this.subrace.racial_traits">
+                    <li class="list-group-item" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
                       {{ trait.name }}
+                      <button [@showState]="this.mouseOverTrait === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
+                        (click)="getTraitDetails(trait.url, content)">Details</button>
                     </li>
                   </ul>
                 </ng-template>
@@ -152,3 +154,19 @@
   </div>
   <!-- ^^End of row -->
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header text-center">
+    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+  </div>
+
+  <div class="modal-body">
+    <body>
+      {{ this.trait.desc }}
+    </body>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+  </div>
+</ng-template>
