@@ -33,6 +33,9 @@ import { Equipment } from '../interfaces/api/equipment/equipment';
 import { EquipmentCategory } from '../interfaces/api/equipment/equipmentcategory';
 import { EquipmentCategoryDetails } from '../interfaces/api/equipment/equipmentcategorydetails';
 
+//MISC:
+import { Trait } from '../interfaces/api/trait/trait';
+
 export {
     Character,
     Game,
@@ -55,5 +58,6 @@ export {
     SpellDetails,
     Equipment,
     EquipmentCategory,
-    EquipmentCategoryDetails
+    EquipmentCategoryDetails,
+    Trait
 };

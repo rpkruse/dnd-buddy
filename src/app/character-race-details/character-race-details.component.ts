@@ -3,11 +3,13 @@
   This component is used to display all of the playable races and classes to the user. It allows them to view details on each
 */
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
 import { DndApiService } from '../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace } from '../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
@@ -42,13 +44,16 @@ export class CharacterRaceDetails implements OnInit {
   classes: Class = null;
   classDetail: ClassDetails;
 
+  trait: Trait;
+
   selectedClassIndex: number = -1;
   selectedRaceIndex: number = -1;
 
   mouseOverClass: number = -1;
   mouseOverRace: number = -1;
+  mouseOverTrait: number = -1;
   
-  constructor(private _dndApiService: DndApiService) { }
+  constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
   ngOnInit() {
     let s: Subscription = this._dndApiService.getAllEntities<Class>("classes").subscribe(
@@ -93,7 +98,7 @@ export class CharacterRaceDetails implements OnInit {
     }
 
     let num: number = toInteger(event.panelId.substr(event.panelId.length - 1));
-    num++;
+    // num++;
 
     this.getRaceDetails(num);
   }
@@ -127,6 +132,22 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
+  /*
+    This method is called when the user clicks on a trait to view. It pulls the trait from the 5e api
+    and opens a modal to display the description
+    @param url: string - The url of the trait to pull
+  */
+  public getTraitDetails(url: string, content) {
+    let s: Subscription = this._dndApiService.getSingleEntity<Trait>(url).subscribe(
+      d => this.trait = d,
+      err => console.log("unable to load trait", err),
+      () => {
+        s.unsubscribe();
+        this._modalService.open(content, { size: 'lg' });
+      }
+    );
+  }
+  
   /*
     This method appends words to each ability to make it look nicer on the DOM
   */
