@@ -1,8 +1,7 @@
 /*
   Written by: Ryan Kruse
   This component is used to show events by having a snackbar appear on the page with a message to notify the user of 
-  the level of success of an event (IE "Playlist successfully deleted"). Interval changed how interval works which causes
-  unknown side-effects to the snackbar. This will be rewritten later
+  the level of success of an event.
 */
 
 import { Component, OnInit, Input } from '@angular/core';
@@ -14,8 +13,6 @@ import { DataShareService } from '../services/services';
 
 import { MessageType, MessageOutput } from '../interfaces/interfaces';
 
-// import 'rxjs/add/operator/finally';
-// import 'rxjs/add/operator/takeWhile';
 import { takeWhile } from 'rxjs/operators';
 
 @Component({

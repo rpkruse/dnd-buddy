@@ -1,3 +1,7 @@
+/*
+  Written by: Ryan Kruse
+  This component is used to join a game that you are currently in or create a new game (the creator is the DM of that game)
+*/
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -46,6 +50,10 @@ export class GameComponent implements OnInit {
     this.selectedGame = null;
   }
 
+  /*
+    This method is called once the user enters a game name and clicks off of the input field.
+    It checks the backend to make sure it isnt a game name that is already in use
+  */
   public validateGamename(){
     if(this.gameName.length <= 0) return;
 
@@ -67,6 +75,9 @@ export class GameComponent implements OnInit {
     );
   }
 
+  /*
+    This method is called when the user clicks save game, it adds the game to the backend and makes them the DM on it
+  */
   public saveNewGame() {
     let s: Subscription;
 
@@ -131,6 +142,10 @@ export class GameComponent implements OnInit {
     );
   }
 
+  /*
+    This method is called when the DM deletes a game. Since the characters have a foreign key value to the game, we must 
+    delete the characters first 
+  */
   private removeCharactersFromGame(){
     let s: Subscription;
     let size: number = this.selectedGame.character.length;
@@ -151,7 +166,6 @@ export class GameComponent implements OnInit {
 
   public loadCharacterDetails(index: number, content) {
     this.characterDetail = this.selectedGame.character[index];
-    console.log(this.characterDetail);
     let s, j: Subscription;
 
     s = this._dndApiService.getSingleEntity<ClassDetails>(this.selectedGame.character[index].class).subscribe(
@@ -171,11 +185,8 @@ export class GameComponent implements OnInit {
 
   public openModal(content) {
     this._modalService.open(content).result.then((result) => { //On close via save
-      //this.addNeededEntitiesToDB(); //When we save, we attempt to add all needed entities to the DB
-      //this.currentStep = 1;
       this.clearCharacterDetails();
     }, (reason) => { //on close via click off
-      //this.currentStep = 1;
       this.clearCharacterDetails();
     });
   }

@@ -18,6 +18,7 @@
           </li>
         </ul>
         <div class="card-body" *ngIf="!this.characters.length">
+
           <body class="card-text text-center">No Characters</body>
         </div>
       </div>
@@ -29,24 +30,36 @@
         <div class="card-header text-center">
           <b>{{ this.selectedCharacter.name }}:</b>
           Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}
-          <img class="icon icon-sm float-right" (click)="resetSelectedCharacter()" placement="right" ngbTooltip="close" src="assets/icons/x_icon.png">
+          <img class="icon icon-sm float-right" (click)="this.selectedCharacter = null" placement="right" ngbTooltip="close" src="assets/icons/x_icon.png">
         </div>
+
         <div class="card-body">
-
-          <body class="card-text text-left">STR: {{ this.selectedCharacter.abil_Score_Str }}</body>
-
-          <body class="card-text text-left">DEX: {{ this.selectedCharacter.abil_Score_Dex }}</body>
-
-          <body class="card-text text-left">CON: {{ this.selectedCharacter.abil_Score_Con }}</body>
-
-          <body class="card-text text-left">INT: {{ this.selectedCharacter.abil_Score_Int }}</body>
-
-          <body class="card-text text-left">WIS: {{ this.selectedCharacter.abil_Score_Wis }}</body>
-
-          <body class="card-text text-left">CHA: {{ this.selectedCharacter.abil_Score_Cha }}</body>
+          <div class="col-md-4 float-left">
+            <body class="card-text text-left">STR: {{ this.selectedCharacter.abil_Score_Str }}</body>
+            <body class="card-text text-left">DEX: {{ this.selectedCharacter.abil_Score_Dex }}</body>
+            <body class="card-text text-left">CON: {{ this.selectedCharacter.abil_Score_Con }}</body>
+            <body class="card-text text-left">INT: {{ this.selectedCharacter.abil_Score_Int }}</body>
+            <body class="card-text text-left">WIS: {{ this.selectedCharacter.abil_Score_Wis }}</body>
+            <body class="card-text text-left">CHA: {{ this.selectedCharacter.abil_Score_Cha }}</body>
+          </div>
+          <div class="col-md-8 float-right">
+            <div *ngIf="this.armor">
+              <p *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+              <p *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield
+                bonus)
+              </p>
+            </div>
+            <div *ngIf="this.weapon">
+              <p *ngIf="this.weapon">Weapon: {{ this.weapon.name }}</p>
+              <p>Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+              <p>Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+            </div>
+          </div>
         </div>
+
         <div class="card-footer">
-          <img class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event)" placement="right" ngbTooltip="delete" src="assets/icons/delete_icon.png">
+          <img class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event)" placement="right" ngbTooltip="delete"
+            src="assets/icons/delete_icon.png">
         </div>
       </div>
     </div>

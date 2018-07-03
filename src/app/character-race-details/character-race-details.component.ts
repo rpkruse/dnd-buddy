@@ -1,3 +1,7 @@
+/*
+  Written by: Ryan Kruse
+  This component is used to display all of the playable races and classes to the user. It allows them to view details on each
+*/
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
@@ -60,6 +64,11 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
+  /*
+    This method is called when the use clicks a playable race type. It pulls all of the subraces from
+    our 5e database
+    @param url: string - The url of the selected race type
+  */
   public getSubrace(url: string){
     this.classDetail = null;
     let s: Subscription;
@@ -72,19 +81,28 @@ export class CharacterRaceDetails implements OnInit {
 
   }
 
-  public panelChangeEvent(event: NgbPanelChangeEvent){
+  /*
+    This method is called whenever the user changes the subrace panel they are viewing
+  */
+  public changeSubRace(event: NgbPanelChangeEvent){
+    //If we don't have a next state that means the user closed the currently open panel
     if(!event.nextState){
       this.raceDetail = null;
       this.raceDetailIndex = -1;
       return;
     }
+
     let num: number = toInteger(event.panelId.substr(event.panelId.length - 1));
     num++;
 
-    this.getRaceDetails("", num);
+    this.getRaceDetails(num);
   }
 
-  public getClassDetails(url: string, index: number) {
+  /*
+    This method is called whenever the user wants to get details of a specific class. It pulls it from the DB
+    @param url: string - The url of the class to get details on
+  */
+  public getClassDetails(url: string) {
     this.subrace = null;
     let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(url).subscribe(
       d => this.classDetail = d,
@@ -93,7 +111,12 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
-  public getRaceDetails(url: string, index: number) {
+  /*
+    This method is called when the user opens a panel on a specific race type
+    It gets all of the sub races of that type from the DB
+    @param index: number - The index of the race to get details on
+  */
+  public getRaceDetails(index: number) {
     let s: Subscription = this._dndApiService.getRaceInfo(index).subscribe(
       d => this.raceDetail = d,
       err => console.log("unable to fetch race", err),
@@ -104,6 +127,9 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
+  /*
+    This method appends words to each ability to make it look nicer on the DOM
+  */
   public fixAbilityBonuses(abilities: number[]): string[]{ //str, dex, con, int, wis, char
     let s: string[] = [];
 

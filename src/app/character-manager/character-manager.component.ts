@@ -1,12 +1,16 @@
+/*
+  Written by: Ryan Kruse
+  This component allows for the user to view their current characters, delete a character, or create a new character
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
-import {ApiService, DndApiService, DataShareService } from '../services/services';
+import { ApiService, DndApiService, DataShareService } from '../services/services';
 
-import { ClassDetails, RaceDetails, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
+import { ClassDetails, RaceDetails, Equipment, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
 import { Subscription } from 'rxjs';
-import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-character-manager',
@@ -29,8 +33,6 @@ import { NgModel } from '@angular/forms';
   ]
 })
 export class CharacterManagerComponent implements OnInit {
-  MessageType = MessageType;
-
   private user: User;
 
   characters: Character[] = [];
@@ -38,6 +40,10 @@ export class CharacterManagerComponent implements OnInit {
 
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
+
+  armor: Equipment;
+  weapon: Equipment;
+  shield: Equipment;
 
   mouseOver: number = -1;
 
@@ -55,7 +61,12 @@ export class CharacterManagerComponent implements OnInit {
     );
   }
 
-  public getCharacterDetails(character: Character){
+  /*
+    This method is called when the user clicks a character to get the details on.
+    It pulls their class, race, and equipment from the 5e api
+    @param character: Character - The character to get the details on
+  */
+  public getCharacterDetails(character: Character) {
     this.selectedCharacter = character;
     let s, j: Subscription;
 
@@ -70,22 +81,61 @@ export class CharacterManagerComponent implements OnInit {
       err => console.log("unable to get race info"),
       () => j.unsubscribe()
     );
+
+    this.getCharacterItems();
   }
 
-  public resetSelectedCharacter(){
-    this.selectedCharacter = null;
-  }
+  /*
+    This method is called when the user selects a character, it pulls any of their equipment from the 5e api
+    if they currently have some
+  */
+  private getCharacterItems() {
+    if (this.selectedCharacter.armor) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.armor).subscribe(
+        d => this.armor = d,
+        err => console.log("unable to get armor", err),
+        () => s.unsubscribe()
+      );
+    }
 
-  public confirmDeleteCharacter(content, event, character?: Character){
+    if (this.selectedCharacter.weapon) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.weapon).subscribe(
+        d => this.weapon = d,
+        err => console.log("unable to get weapon", err),
+        () => s.unsubscribe()
+      );
+    }
+
+    if (this.selectedCharacter.shield) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.shield).subscribe(
+        d => this.shield = d,
+        err => console.log("unable to get weapon", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+  
+  /*
+    This method is called when the user clicks the delete button on a character
+    it opens the a modal to confirm the delete
+    @param content - The modal
+    @param event - used to stop propagation
+    @param character?: Character - The character to delete
+  */
+  public confirmDeleteCharacter(content, event, character?: Character) {
     event.stopPropagation();
-    if(character) this.selectedCharacter = character;
+    if (character) this.selectedCharacter = character;
     this._modalService.open(content).result.then((result) => { //On close via save
       this.deleteCharacter(); //When we save, we attempt to add all needed entities to the DB
     }, (reason) => { //on close via click off
     });
   }
 
-  private deleteCharacter(){
+  /*
+    This method is called when the user clicks confirm on deleting their character. It removes them from
+    the database
+  */
+  private deleteCharacter() {
     let s: Subscription;
 
     s = this._apiService.deleteEntity<Character>("Characters", this.selectedCharacter.characterId).subscribe(
@@ -103,7 +153,7 @@ export class CharacterManagerComponent implements OnInit {
     )
   }
 
-  private triggerMessage(message: string, action: string, level: MessageType){
+  private triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,
       action: action,

@@ -22,7 +22,7 @@
           <div class="input-group-prepend">
             <label class="input-group-text">Game Name:</label>
             <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control col-9" placeholder="Game name"
-            (focusout)="validateGamename()" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
+              (focusout)="validateGamename()" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
           </div>
           <small id="usernameHelpBlock" class="form-text text-muted" *ngIf="!gamenameTaken && hasClickedOff && gameName.length">Game name is available!</small>
           <button type="button" class="btn btn-primary" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
@@ -75,21 +75,21 @@
 </ng-template>
 
 <ng-template #confirm let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">Confirmation</h4>
-    </div>
-  
-    <div class="modal-body">
-  
-      <body>Are you sure you want to the game delete:
-        <b>{{ this.selectedGame.name }}?</b>
-      </body>
-  
-      <body class="text-muted">This action cannot be undone</body>
-    </div>
-  
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
-      <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
-    </div>
-  </ng-template>
+  <div class="modal-header">
+    <h4 class="modal-title">Confirmation</h4>
+  </div>
+
+  <div class="modal-body">
+
+    <body>Are you sure you want to the game delete:
+      <b>{{ this.selectedGame.name }}?</b>
+    </body>
+
+    <body class="text-muted">This action cannot be undone</body>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+  </div>
+</ng-template>

@@ -5,7 +5,7 @@
         <!-- Races/Subraces -->
         <ngb-tab title="Races">
           <ng-template ngbTabContent class="static-size-list half-height" *ngIf="this.races && this.races.results">
-            <ngb-accordion closeOthers="true" (panelChange)="panelChangeEvent($event)" *ngIf="this.races && this.races.results">
+            <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event)" *ngIf="this.races && this.races.results">
               <ngb-panel title="{{ race.name }}" *ngFor="let race of this.races.results index as i">
                 <ng-template ngbPanelContent>
                   <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
@@ -29,7 +29,7 @@
                 {{ class.name }}
                 <div class="d-inline">
                   <button [@showState]="this.mouseOverClass === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
-                    (click)="getClassDetails(class.url, i, content)">Details</button>
+                    (click)="getClassDetails(class.url)">Details</button>
                 </div>
               </li>
             </ul>

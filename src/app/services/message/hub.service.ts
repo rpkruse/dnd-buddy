@@ -61,8 +61,8 @@ export class HubService {
     public sendConnectionNoticeToGroup(umd: UserMessageData) {
         let index: number = this.groupMembers.findIndex(x => x.umd.characterId === umd.characterId);
 
-        if(index >= 0) this.groupMembers.splice(index, 1);
-        
+        if (index >= 0) this.groupMembers.splice(index, 1);
+
         this.hubConnection.invoke("SetGroup", this.groupMembers, umd.groupName, umd.id);
 
         this.notification.emit(umd.name + " has joined the group");
@@ -85,23 +85,23 @@ export class HubService {
         this.groupMembersSubj.next(this.groupMembers);
     }
 
-    public sendRollNoticeToGroup(rmd: RollMessageData){
+    public sendRollNoticeToGroup(rmd: RollMessageData) {
         this.rollDataSubj.next(rmd);
     }
 
     /*
         This method is kinda bad b/c everyone in the lobby will spam the new person
         with everyone that has joined so far...
-        for small groups this should be a problem?
+        for small groups this should not be a problem?
     */
-    public updateLobby(users: OnlineUser[]){
-        if(this.groupMembers.length > 1) return;
+    public updateLobby(users: OnlineUser[]) {
+        if (this.groupMembers.length > 1) return;
 
         this.groupMembers = this.groupMembers.concat(users);
         this.groupMembersSubj.next(this.groupMembers);
     }
 
-    public okToStopConnection(){
+    public okToStopConnection() {
         this.hubConnection.stop();
         this._dataShareService.connected.next(false);
     }
@@ -121,12 +121,12 @@ export class HubService {
 
         this.hubConnection.invoke('JoinGroup', userMessageData);
 
-        
+
         this.groupMembers.push(this.me);
         this.groupMembersSubj.emit(this.groupMembers);
     }
 
-    public invokeRoll(rmd: RollMessageData){
+    public invokeRoll(rmd: RollMessageData) {
         this.hubConnection.invoke('SendRoll', rmd);
     }
 
@@ -134,14 +134,14 @@ export class HubService {
         this.hubConnection.invoke('SendItem', itm);
     }
 
-    public invokeLeaveGroup() { 
+    public invokeLeaveGroup() {
         this.hubConnection.invoke('LeaveGroup', this.me.umd);
         this.groupMembers = [];
         this.groupMembersSubj.next(this.groupMembers);
     }
 
 
-    private setGenericRollData(umd: UserMessageData): RollMessageData{
+    private setGenericRollData(umd: UserMessageData): RollMessageData {
         let rmd: RollMessageData;
 
         rmd = {
@@ -155,7 +155,7 @@ export class HubService {
         return rmd;
     }
 
-    private setGenericItemData(umd: UserMessageData): ItemMessageData{
+    private setGenericItemData(umd: UserMessageData): ItemMessageData {
         let imd: ItemMessageData;
 
         imd = {
