@@ -41,3 +41,7 @@ h1, h2 {
     font-family: "Kreon";
     font-size: 1.8rem;
 }
+
+.btn:not(.btn-secondary):hover{
+    background-color: #ffd553;
+}
