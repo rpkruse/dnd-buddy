@@ -29,7 +29,7 @@
     </div>
 
     <!-- Selection -->
-    <div class="col-2" *ngIf="this.isGM">
+    <div class="col-2" *ngIf="this.isGM && !this.gridHidden">
       <label class="col-4">Put:</label>
       <select class="custom-select col-5" (change)="this.token = $event.target.value">
         <option selected value="N">Empty</option>
