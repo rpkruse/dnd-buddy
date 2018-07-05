@@ -38,6 +38,10 @@ export class CreateCharacterComponent implements OnInit {
 
   rolls: number[] = [0, 0, 0, 0, 0, 0];
 
+  rollValue: number[] = [0, 0, 0, 0, 0, 0]
+  keptRolls: number[] = [0, 0, 0, 0, 0, 0];
+  stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHAR"];
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router) { }
 
   ngOnInit() {
@@ -201,6 +205,18 @@ export class CreateCharacterComponent implements OnInit {
     }
   }
 
+  /*
+    @param statIndexS: number - The index into the character's stat values (IE 0=STR 1=DEX)
+    @param rollIndex: number - The index into the rolled value (IE 5 = the last roll 0 = the first roll)
+  */
+  public assignStat(statIndexS: string, rollIndex: number) { 
+    let statIndex: number = parseInt(statIndexS);
+    if (statIndex < 0) return;
+
+    this.keptRolls[statIndex] = this.rollValue[rollIndex];
+    this.setStatString(statIndex, this.keptRolls[statIndex]);
+  }
+
   public getStatString(index: number): string {
     let raceBonusAttr: string = " +";
     if (this.selectedSubRace) {
@@ -251,6 +267,8 @@ export class CreateCharacterComponent implements OnInit {
       case 5:
         this.character.abil_Score_Cha = val;
         break;
+      default:
+        break;
     }
   }
 
@@ -279,7 +297,7 @@ export class CreateCharacterComponent implements OnInit {
     }
 
     //Save the score
-    this.setStatString(index, score);
+    this.rollValue[index] = score;
   }
 
   public keepRoll(index: number) {
@@ -292,7 +310,7 @@ export class CreateCharacterComponent implements OnInit {
 
   public canSubmitCharacter(): boolean {
     for (let i = 0; i < 6; i++) {
-      if (this.canRollAgain(i)) return false;
+      if (this.canRollAgain(i) || this.keptRolls[i] <= 0) return false;
     }
 
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
