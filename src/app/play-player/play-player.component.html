@@ -35,7 +35,7 @@
                   Spell Info
                   <button type="button" class="btn btn-success float-right" (click)="openSpellBook(content)">Spell Book</button>
                 </div>
-                <ul class="list-group list-group-flush" *ngIf="this.spellSlots">
+                <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.spellSlots">
                   <li class="list-group-item">
                     Cantrips: {{levelDetail.spellcasting.cantrips_known}}
                   </li>
@@ -50,10 +50,8 @@
             <!-- Item info -->
             <div class="col-lg-6 float-right">
               <div class="card w-100">
-                <div class="card-header text-center">
-                  Equipment
-                </div>
                 <div class="card-body">
+                  <h5 class="card-title">Equipment</h5>
                   <div *ngIf="this.armor">
                     <p *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
                     <p *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }}

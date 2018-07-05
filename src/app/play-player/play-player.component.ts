@@ -162,6 +162,7 @@ export class PlayPlayerComponent implements OnInit {
     this.levelDetail = LD;
 
     if (this.levelDetail.spellcasting) { //Update their spellbook iff they are a spell caster
+      this._playManager.initSpellBook(this.classDetail, this.character.level);
       this.spellSlots = this._playManager.setSpellSlots(this.levelDetail);
     }
   }

@@ -17,7 +17,7 @@
 
     <!-- Grid -->
     <div class="col-10" *ngIf="!this.gridHidden">
-      <table class="table table-sm">
+      <table class="table table-sm text-center">
         <tbody id="board">
           <tr class="boardRow" *ngFor="let gridY of this._messageService.grid index as y">
             <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} boardCell text-center" [ngClass]="this.getGridClass(x, y)" (click)="this.placeToken(x, y)">
@@ -48,7 +48,7 @@
 
   <div class="row">
     <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
-    <div class="card-deck mt-5 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
+    <div class="card-deck mt-3 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
       <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
         <div class="card-header text-center">{{ member.umd.name }}</div>
         <div class="card-body">

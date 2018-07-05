@@ -186,7 +186,7 @@ export class PlayGameComponent implements OnInit {
  public getGridImage(gridValue: string): string {
     switch (gridValue) {
       case 'P': {
-        return 'assets/race_imgs/human.png';
+        return 'assets/class_imgs/cleric.png';
       }
       case 'E': {
         return 'assets/race_imgs/minotaur.png';

@@ -3,27 +3,61 @@
     width: 0px;
 }
 
-#board {
-    width: 80%;
-    height: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    border-spacing: 0;
-    border-collapse: collapse;
+@media only screen 
+and (max-width: 480px) {
+    #board {
+        width: 100%;
+        height: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
+    .boardRow {
+        width: 100%;
+        height: 50px;
+    }
+    
+    .boardCell {
+        width: 9%;
+        height: 50px;
+        float: left;
+        padding:1px;
+        display:block;
+        border-radius: 10px;
+    } 
 }
 
-.boardRow {
-    width: 100%;
-    height: 100px;
-}
+@media only screen
+and (min-width: 481px){
+    .table {
+        margin: 0 auto !important;
+        width: 50%;
+    }
 
-.boardCell {
-    width: 9%;
-    height: 100px;
-    float: left;
-    padding:1px;
-    display:block;
-    border-radius: 10px;
+    #board {
+        width: 100%;
+        height: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    
+    .boardRow {
+        width: 100%;
+        height: 50px;
+    }
+    
+    .boardCell {
+        width: 10%;
+        height: 50px;
+        float: left;
+        padding:1px;
+        display:block;
+        border-radius: 10px;
+    }
 }
 
 .P {
