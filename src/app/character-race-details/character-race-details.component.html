@@ -1,6 +1,6 @@
 <div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results">
-  <div class="row mt-3">
-    <div class="col-md-6 bg-light no-padding">
+  <div class="row">
+    <div class="col-md-6 bg-light no-padding mt-3">
       <ngb-tabset justify="fill">
         <!-- Races/Subraces -->
         <ngb-tab title="Races">
@@ -8,7 +8,7 @@
             <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event)" *ngIf="this.races && this.races.results">
               <ngb-panel title="{{ race.name }}" id="{{race.url}}" *ngFor="let race of this.races.results index as i">
                 <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
+                  <ul class="list-group list-group-flush static-size-list set-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
                     <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.raceDetail.subraces index as i">
                       {{ subR.name }}
                       <button [@showState]="this.mouseOverRace === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
@@ -40,10 +40,10 @@
     <!-- ^^End of race/class tabs -->
 
     <!-- Class/Race Details -->
-    <div class="col-md-6">
+    <div class="col-md-6 mt-3">
       <!-- Race Detail -->
       <div class="col-md-12" *ngIf="this.subrace">
-        <div class="card">
+        <div class="card w-100">
           <!--<img class="card-img-top mc-auto class-img" [src]="getRaceImage(this.subrace.name)">-->
           <div class="card-header text-center">
             {{ this.subrace.name }}
@@ -75,7 +75,7 @@
               </ngb-panel>
               <ngb-panel title="Traits">
                 <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush">
+                  <ul class="list-group list-group-flush static-size-list set-height">
                     <li class="list-group-item" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
                       {{ trait.name }}
                       <button [@showState]="this.mouseOverTrait === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"

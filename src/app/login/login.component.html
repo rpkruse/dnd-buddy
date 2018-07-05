@@ -3,7 +3,7 @@
 
 <div class="container mx-auto mt-3" *ngIf="!this._storage.getValue('loggedIn') && !this.createUser">
   <div class="col-md-6 mx-auto">
-    <h1 class="text-center login-title">Sign in to continue to Dnd Buddy</h1>
+    <h1 class="text-center login-title text-light">Sign in to continue to Dnd Buddy</h1>
     <div class="account-wall">
       <form class="form-signin was-validated">
         <input [value]="username" (input)="username = $event.target.value" type="text" class="form-control" id="inputEmail3" placeholder="Username"

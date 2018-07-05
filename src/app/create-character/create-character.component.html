@@ -1,6 +1,6 @@
-<div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
+<div class="container" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
   <div class="row">
-    <div class="col-6 mx-auto mt-5">
+    <div class="col-6 mt-5">
       <form>
         <!-- Name -->
         <div class="form-group row">
@@ -60,12 +60,24 @@
 
         <!-- Stats -->
         <div class="form-group-row mt-2" *ngFor="let stat of this.rolls index as i">
-          <label class="col-md-6 col-form-label float-left">{{this.getStatString(i)}}</label>
-          <button type="button" class="btn btm-sm btn-secondary" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{getRollString(i)}}</button>
-          <button type="button" class="btn btm-sm btn-success ml-2" [disabled]="!canRollAgain(i)" (click)="keepRoll(i)">Keep</button>
+          <label class="col-md-12 col-form-label float-left">{{ this.getStatString(i) }}</label>
         </div>
       </form>
       <button type="btn" class="btn btn-primary float-right mt-2" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>
+    </div>
+
+    <!-- Roll and stat assign panel -->
+    <div class="col-md-6 mt-5 mb-5">
+      <p *ngFor="let r of this.rolls index as i">
+        Roll: {{ this.rollValue[i] }}
+        <button type="button" class="btn btm-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ getRollString(i) }}</button>
+        <button type="button" class="btn btm-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
+        <label class="col-sm-3 col-form-lable" *ngIf="!canRollAgain(i)">Assign Stat:</label>
+        <select class="custom-select col-sm-4" (change)="assignStat($event.target.value, i)" *ngIf="!canRollAgain(i)">
+          <option value="-1">Choose</option>
+          <option *ngFor="let stat of this.stats index as j" [value]="j" [disabled]="this.keptRolls[j] > 0">{{ this.stats[j] }}</option>
+        </select>
+      </p>
     </div>
   </div>
 </div>
