@@ -54,3 +54,19 @@ h1, h2 {
 .content {
     background: rgba(0, 0, 0, 0.50);
 }
+
+.noPadding {
+    padding: 0px !important;
+}
+
+.fillSpace {
+    overflow: auto;
+}
+
+.fillColor {
+    background-color: #6b6b6b;
+}
+
+.btn:hover{
+    background-color: #ffd553;
+}

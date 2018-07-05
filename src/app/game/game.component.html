@@ -2,27 +2,33 @@
   <div class="row">
 
     <!-- Viewing a game -->
-    <div class="col-md-4 mt-5">
+    <div class="col-md-4 mt-5 noPadding">
       <h2 class="header mb-0">Current Games</h2>
       <ul class="list-group list-group-flush static-size-list half-height">
         <li class="list-group-item list-group-item-action content text-light" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
           {{ i+1 }}. {{ game.name }}
         </li>
       </ul>
-      <button type="button" class="btn btn-success float-right" (click)="createGame()">New Game</button>
+      <div class="fillSpace fillColor">
+          <button type="button" class="btn float-right" (click)="createGame()">New Game</button>
+      </div>
     </div>
 
-    <div class="col-md-6 mt-5">
+    <div class="col mt-5 noPadding">
       <!-- Creating a new game -->
       <div *ngIf="this.creatingGame">
         <form>
           <div class="input-group-prepend">
             <label class="input-group-text">Game Name:</label>
-            <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control col-9 text-light header" placeholder="Game name"
-              (focusout)="validateGamename()" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
+            <input [value]="gameName" (input)="gameName = $event.target.value" type="text" class="form-control text-light header" placeholder="Game name"
+              (input)="validateGamename($event.target.value)" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
           </div>
-          <small id="usernameHelpBlock" class="form-text text-dark" *ngIf="!gamenameTaken && hasClickedOff && gameName.length">Game name is available!</small>
-          <button type="button" class="btn btn-success" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
+          <div class="fillSpace">
+              <button type="button" class="btn float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
+          </div>
+          <div>
+              <small id="usernameHelpBlock" class="form-text text-dark float-right" *ngIf="gameName.length">{{!gamenameTaken ? "Game name is available!" : "Game name is taken."}}</small>
+          </div>
         </form>
       </div>
 
@@ -39,7 +45,9 @@
           </li>
           <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
         </ul>
-        <button type="button" class="btn btn-success float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
+        <div class="fillSpace fillColor">
+            <button type="button" class="btn float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
+        </div>
       </div>
     </div>
 

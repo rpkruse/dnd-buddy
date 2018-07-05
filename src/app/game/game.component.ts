@@ -54,11 +54,11 @@ export class GameComponent implements OnInit {
     This method is called once the user enters a game name and clicks off of the input field.
     It checks the backend to make sure it isnt a game name that is already in use
   */
-  public validateGamename(){
+  public validateGamename(gameName: string){
     if(this.gameName.length <= 0) return;
 
     let s: Subscription;
-    s = this._apiService.getSingleEntity<any>("Games/check/"+ this.gameName).subscribe(
+    s = this._apiService.getSingleEntity<any>("Games/check/"+ gameName).subscribe(
       d => d = d,
       err => {
         if(err['error']['Error']){
