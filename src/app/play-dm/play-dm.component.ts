@@ -80,7 +80,11 @@ export class PlayDmComponent implements OnInit {
     @param url: string - The url of the item type to fetch from the db
   */
   public getListOfEquipment(url: string) {
-    if (url === "Choose") return;
+    if (url === "Choose") {
+      this.equipmentList = null;
+      this.equipmentItem = null;
+      return;
+    };
 
     let s: Subscription = this._playManager.getItemList(url).subscribe(
       d => this.equipmentList = d,
@@ -95,7 +99,9 @@ export class PlayDmComponent implements OnInit {
     @param url: string - The api url of the item to pull
   */
   public getEquipmentItem(url: string) {
-    if (url === "Choose") return;
+    if (url === "Choose") {
+      this.equipmentItem = null;
+    };
 
     let s: Subscription = this._playManager.getItem(url).subscribe(
       d => this.equipmentItem = d,
