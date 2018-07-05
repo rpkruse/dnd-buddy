@@ -1,6 +1,6 @@
 <div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results">
   <div class="row mt-3">
-    <div class="col-md-6">
+    <div class="col-md-6 bg-light no-padding">
       <ngb-tabset justify="fill">
         <!-- Races/Subraces -->
         <ngb-tab title="Races">
@@ -22,7 +22,7 @@
         </ngb-tab>
 
         <!-- Classes -->
-        <ngb-tab title="Classes">
+        <ngb-tab title="Classes" class="bg-primary">
           <ng-template ngbTabContent>
             <ul class="list-group static-size-list half-height-with-some" *ngIf="this.classes && this.classes.results">
               <li class="list-group-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" *ngFor="let class of this.classes.results index as i">

@@ -2,3 +2,55 @@
     background: transparent;
     width: 0px;
 }
+
+.section{
+    text-align: center;
+    margin-top: 7em;
+}
+
+.shadowblock {
+    background: rgba(0,0,0, 0.65);
+    margin-bottom: 1.2em;
+    padding: 2em 2em 2em 2em;
+}
+
+.shadowblock img {
+    width: 90%;
+}
+
+.shadowblock h4 {
+    line-height: 1.5em;
+    font-size: 1.5em;
+    text-align: center;
+}
+  
+.section {
+    margin-bottom: 7em;
+    text-align: center;
+}
+
+p, h3, h5 {
+    color: #fff6e2;  /* Cream colored */
+    font-size: 18px;
+}
+  
+h1, h2 {
+    text-align: center;
+    color: #ffd553; /* gold */
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+}
+
+.description {
+    text-align: left;
+    line-height: 1.5em;
+    font-family: "Kreon";
+    font-size: 1.8rem;
+}
+
+.header {
+    background: rgba(0,0,0,0.65);
+}
+
+.content {
+    background: rgba(0, 0, 0, 0.50);
+}

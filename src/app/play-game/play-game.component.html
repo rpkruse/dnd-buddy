@@ -5,29 +5,25 @@
       <play-dm></play-dm>
     </div>
   </div>
-
   <!-- Put our character in the middle of the screen-->
   <div class="row" *ngIf="!this.isGM && this.character">
     <div class="col-md-12 mx-auto">
       <play-player [character]="this.character"></play-player>
     </div>
   </div>
-
   <div class="row mt-4">
-
     <!-- Grid -->
     <div class="col-10" *ngIf="!this.gridHidden">
       <table class="table table-sm text-center">
         <tbody id="board">
           <tr class="boardRow" *ngFor="let gridY of this._messageService.grid index as y">
-            <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} boardCell text-center" [ngClass]="this.getGridClass(x, y)" (click)="this.placeToken(x, y)">
-                <img class="tileObject" src="{{ this.getGridImage(this.getGridValue(x, y).type) }}" />
-            </td>
+            <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} boardCell text-center" [ngClass]="this.getGridClass(x, y)"
+              (click)="this.placeToken(x, y)">
+              <img class="tileObject" src="{{ this.getGridImage(this.getGridValue(x, y).type) }}" /> </td>
           </tr>
         </tbody>
       </table>
     </div>
-
     <!-- Selection -->
     <div class="col-2" *ngIf="this.isGM && !this.gridHidden">
       <label class="col-4">Put:</label>
@@ -38,15 +34,13 @@
         <option value="W">Wall</option>
       </select>
     </div>
-
     <div class="col-2" *ngIf="!this.isGm">
-        <button type="button" class="btn btn-danger btn-sm" (click)="resetGrid()" *ngIf="this.isGM">Reset Grid</button>
+      <button type="button" class="btn btn-danger btn-sm" (click)="resetGrid()" *ngIf="this.isGM">Reset Grid</button>
       <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
       <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = false" *ngIf="this.gridHidden">Show Grid</button>
     </div>
   </div>
-
-  <div class="row">
+  <div class="row mx-auto">
     <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
     <div class="card-deck mt-3 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
       <div class="card w-100" *ngFor="let member of this.getOtherGroupMembers() index as i">
