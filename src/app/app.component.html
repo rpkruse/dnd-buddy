@@ -1,6 +1,6 @@
 <ng-progress [thick]="true" color="red" [spinner]="false"></ng-progress>
 
-<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar sticky-top navbar-expand-md header">
   <div class="nav-item">
     <!-- <h4 class="font-weight-bold text-light d-inline nav-link">Dnd Buddy</h4> -->
     <a class="nav-link text-light font-weight-bold" [routerLink]="['/home']">Dnd Buddy</a>
@@ -20,6 +20,7 @@
           <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
           <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
           <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
+          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a> 
         </div>
       </div>
     </div>

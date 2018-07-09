@@ -13,6 +13,8 @@ import { LoginComponent } from './login/login.component';
 
 import { SnackbarComponent } from './snackbar/snackbar.component';
 
+import { DmPortalComponent } from './dm-portal/dm-portal.component';
+
 export {
     AppComponent,
     CharacterManagerComponent,
@@ -24,5 +26,6 @@ export {
     GameComponent,
     HomeComponent,
     LoginComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    DmPortalComponent
 }

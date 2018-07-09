@@ -68,6 +68,10 @@ export class CharacterManagerComponent implements OnInit {
   */
   public getCharacterDetails(character: Character) {
     this.selectedCharacter = character;
+    this.armor = null;
+    this.weapon = null;
+    this.shield = null;
+    
     let s, j: Subscription;
 
     s = this._dndApiService.getSingleEntity<ClassDetails>(this.selectedCharacter.class).subscribe(

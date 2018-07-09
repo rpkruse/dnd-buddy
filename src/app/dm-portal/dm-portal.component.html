@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- List of owned games -->
+    <div class="col-md-5 mt-5">
+      <h2 class="header mb-0">Games</h2>
+      <ul class="list-group static-size-list">
+        <li class="list-group-item content text-light" (click)="loadGame(game)" *ngFor="let game of this.games | async">
+          {{ game.name }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- List of chars in selected game -->
+    <div class="col-md-5 mt-5" *ngIf="this.game">
+      <h2 class="header mb-0">Characters In: {{ this.game.name }}</h2>
+      <ul class="list-group static-size-list">
+        <li class="list-group-item content text-light" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
+          {{ character.name }}
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-12 mx-auto" *ngIf="this.character">
+      <div class="card w-100 bg-transparent">
+        <h2 class="header mb-0">
+          {{ this.character.name }}
+          <button type="button" class="btn btn-h float-right" (click)="saveCharacter()">Save</button>
+        </h2>
+
+        <div class="card-body content">
+
+          <div class="row">
+            <!-- Name/Stats -->
+            <div class="col-md-3 float-left">
+              <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
+              <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
+              <br>
+              <br>
+              <p class="text-light" *ngFor="let stat of this.stats index as i">
+                {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
+                <button type="button" class="btn btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
+                <button type="button" class="btn btn-h btn-sm d-inline ml-1" (click)="setStatValue(1, i)">+</button>
+              </p>
+            </div>
+
+            <!-- Equipment -->
+            <div class="col-md-3">
+              <p class="text-light" *ngIf="(this.armor | async) as armor">
+                Armor: {{ armor.name }} (AC {{ armor.armor_class.base }})
+              </p>
+              <p class="text-light" *ngIf="!(this.armor | async) as armor">
+                Armor: None
+              </p>
+              <p class="text-light" *ngIf="(this.weapon | async) as weapon">
+                Weapon: {{ weapon.name }} {{ weapon.damage.dice_count }}D{{weapon.damage.dice_value }} ({{weapon.damage.damage_type.name}})
+              </p>
+              <p class="text-light" *ngIf="!(this.weapon | async) as weapon">
+                Weapon: None
+              </p>
+              <p class="text-light" *ngIf="(this.shield | async) as shield">
+                Shield: {{ shield.name }} (AC {{ shield.armor_class.base }})
+              </p>
+              <p class="text-light" *ngIf="!(this.shield | async) as shield">
+                Shield: None
+              </p>
+            </div>
+
+            <!-- Give Equip. -->
+            <div class="col-md-6">
+              <label class="col-sm-4 col-form-lable text-light">Give Item (type):</label>
+              <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="equipmentTypes && equipmentTypes.results">
+                <option selected>Choose</option>
+                <option *ngFor="let eq of equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
+              </select>
+              <br>
+              <br>
+              <label class="col-sm-4 col-form-lable text-light">Give Item (item):</label>
+              <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+                <option selected>Choose</option>
+                <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
