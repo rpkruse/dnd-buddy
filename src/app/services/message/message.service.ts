@@ -66,6 +66,15 @@ export class MessageService {
     this.grid[gmd.y][gmd.x] = gmd;
   }
 
+  public loadGridData(data: string) {
+    for(let i = 0; i < this.grid.length; i++) {
+      let row = this.grid[i];
+      for (let j = 0; j < row.length; j++) {
+          this.grid[i][j].type = data.charAt((i * 10) + (j));
+      }
+    }
+  }
+
   private initGrid(): GridMessageData[][] {
     let g: GridMessageData[][] = [];
     let gmd: GridMessageData;

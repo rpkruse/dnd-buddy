@@ -28,7 +28,7 @@ export class PlayGameComponent implements OnInit {
 
   token: string = "N";
   gridHidden: boolean = false;
-  
+
   constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
     private _storageService: StorageService, private _router: Router, private _playManager: PlayManager) { }
 
@@ -45,6 +45,19 @@ export class PlayGameComponent implements OnInit {
     }else{
       this._router.navigate(['/game']);
     }
+
+    let s = this._apiService.getSingleEntity<string>('Games/state/' + this.game.gameId).subscribe(
+      d => this.game.gameState = d,
+      err => console.log('Unable to load game.', err),
+      () => {
+        s.unsubscribe();
+        this._messageService.loadGridData(this.game.gameState);
+      }
+    );
+  }
+
+  private replaceAt(string, index, replace) {
+    return string.substring(0, index) + replace + string.substring(index + 1);
   }
 
   /*
@@ -113,10 +126,22 @@ export class PlayGameComponent implements OnInit {
   public placeToken(x: number, y: number) {
     let gmd: GridMessageData;
 
-    if (this.getGridValue(x, y).type === this.token)
-      gmd = this._playManager.createGMD(x, y, "N", "", this.game.name);
-    else 
-      gmd = this._playManager.createGMD(x, y, this.token, "", this.game.name);
+    if (this.getGridValue(x, y).type === this.token) {
+      gmd = this._playManager.createGMD(x, y, 'N', '', this.game.name);
+    } else {
+      gmd = this._playManager.createGMD(x, y, this.token, '', this.game.name);
+    }
+
+    let pos = (y * 10) + (x);
+    this.game.gameState = this.replaceAt(this.game.gameState, pos, this.token);
+
+    let r: Subscription = this._apiService.putEntity<Game>('Games', this.game, this.game.gameId).subscribe(
+      d => d = d,
+      err => console.log('Unable to save game.', err),
+      () => {
+        r.unsubscribe();
+      }
+    );
 
     this._messageService.sendGrid(gmd);
   }
@@ -177,6 +202,16 @@ export class PlayGameComponent implements OnInit {
   public getGridValue(x: number, y: number): GridMessageData{
     return this._messageService.grid[y][x];
   }
+
+  /*
+    This method returns the GMD at the given cords.
+    @param x: number - The x pos
+    @param y: number - The y pos
+    @return GridMessageData: the GMD at the given cell
+  */
+ public getGridType(x: number, y: number): GridMessageData{
+  return this._messageService.grid[y][x];
+}
 
     /*
     This method returns an image for a given value.

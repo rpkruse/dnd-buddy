@@ -80,10 +80,15 @@ export class GameComponent implements OnInit {
   */
   public saveNewGame() {
     let s: Subscription;
+    let newState = '';
+    for (let x = 0; x < 100; x++) {
+      newState = newState + 'N';
+    }
 
     let g = {
       name: this.gameName,
       userId: this.user.userId,
+      gameState: newState
     };
 
     let game: Game;

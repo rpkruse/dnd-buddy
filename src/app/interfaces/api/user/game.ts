@@ -5,6 +5,7 @@ export interface Game {
     gameId: number,
     name: string,
     userId: number,
+    gameState: string
 
     character: Character[],
     user: User;
