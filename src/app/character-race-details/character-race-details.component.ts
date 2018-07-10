@@ -86,17 +86,16 @@ export class CharacterRaceDetails implements OnInit {
 
   }
 
+  public resetTabs() {
+    this.raceDetail = null;
+    this.raceDetailIndex = -1;
+    return;
+  }
+
   /*
     This method is called whenever the user changes the subrace panel they are viewing
   */
-  public changeSubRace(event: NgbPanelChangeEvent){
-    //If we don't have a next state that means the user closed the currently open panel
-    if(!event.nextState){
-      this.raceDetail = null;
-      this.raceDetailIndex = -1;
-      return;
-    }
-
+  public changeSubRace(event: NgbPanelChangeEvent) {
     let num: number = toInteger(event.panelId.substr(event.panelId.length - 1));
     // num++;
 

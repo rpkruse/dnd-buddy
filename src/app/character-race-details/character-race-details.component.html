@@ -1,11 +1,11 @@
 <div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results">
   <div class="row">
     <div class="col-md-6 bg-light no-padding mt-3 half-height">
-      <ngb-tabset justify="fill">
+      <ngb-tabset (tabChange)='resetTabs();' justify="fill">
         <!-- Races/Subraces -->
         <ngb-tab title="Races">
           <ng-template ngbTabContent class="static-size-list half-height" *ngIf="this.races && this.races.results">
-            <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event)" *ngIf="this.races && this.races.results">
+            <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event); resetTabs();" *ngIf="this.races && this.races.results">
               <ngb-panel title="{{ race.name }}" id="{{race.url}}" *ngFor="let race of this.races.results index as i">
                 <ng-template ngbPanelContent>
                   <ul class="list-group list-group-flush static-size-list set-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
