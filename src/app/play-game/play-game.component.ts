@@ -152,17 +152,23 @@ export class PlayGameComponent implements OnInit {
   */
   public resetGrid() {
     let GMD: GridMessageData;
+    this.game.gameState = '';
+    for (let y = 0; y < this._messageService.grid.length; y++) {
+      for (let x = 0; x < this._messageService.grid[y].length; x++) {
+        this.game.gameState = this.game.gameState + 'N';
 
-    for(let y=0; y<this._messageService.grid.length; y++){
-      for(let x=0; x<this._messageService.grid[y].length; x++){
-        GMD = this.getGridValue(x, y);
-
-        if (GMD.type !== "N"){
-          GMD.type = "N";
+          GMD = this._playManager.createGMD(x, y, 'N', '', this.game.name);
           this._messageService.sendGrid(GMD);
-        }
       }
     }
+
+    let r: Subscription = this._apiService.putEntity<Game>('Games', this.game, this.game.gameId).subscribe(
+      d => d = d,
+      err => console.log('Unable to save game.', err),
+      () => {
+        r.unsubscribe();
+      }
+    );
   }
 
   /*
