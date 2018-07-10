@@ -14,11 +14,14 @@
     <!-- List of chars in selected game -->
     <div class="col-md-5 mt-5" *ngIf="this.game">
       <h2 class="header mb-0">Characters In: {{ this.game.name }}</h2>
-      <ul class="list-group static-size-list">
+      <ul class="list-group static-size-list" *ngIf="this.game.character.length">
         <li class="list-group-item content text-light" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
           {{ character.name }}
         </li>
       </ul>
+      <div *ngIf="!this.game.character.length">
+        <h3 class="text-center mb-0">There are no characters in this game.</h3>
+      </div>
     </div>
 
   </div>
