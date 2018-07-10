@@ -42,6 +42,8 @@ export class DmPortalComponent implements OnInit {
   }
 
   loadGame(game: Game) {
+    this.character = null;
+
     let s: Subscription = this._apiService.getSingleEntity<Game>("Games/details/" + game.gameId).subscribe(
       d => this.game = d,
       err => console.log("unable to load game"),
