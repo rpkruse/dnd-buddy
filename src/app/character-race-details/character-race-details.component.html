@@ -1,6 +1,7 @@
 <div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results">
   <div class="row">
-    <div class="col-md-6 bg-light no-padding mt-3 half-height">
+    
+    <div class="col-md-6 bg-light no-padding mt-3">
       <ngb-tabset (tabChange)='resetTabs();' justify="fill">
         <!-- Races/Subraces -->
         <ngb-tab title="Races">
@@ -149,7 +150,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
   <!-- ^^End of row -->
