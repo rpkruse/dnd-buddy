@@ -26,7 +26,7 @@ export class ApiService {
     let headers: HttpHeaders = new HttpHeaders(
       { "Authorization": "Bearer " + this._storage.getValue("token") }
     );
-
+    
     return this._http.get(environment.api + "Auth/authUser", { headers }) as Observable<User>;
   }
 
@@ -36,11 +36,19 @@ export class ApiService {
 
 
   public getAllEntities<T>(path: string): Observable<T[]> {
-    return this._http.get(environment.api + path) as Observable<T[]>;
+    let headers: HttpHeaders = new HttpHeaders(
+      { "Authorization": "Bearer " + this._storage.getValue("token") }
+    );
+
+    return this._http.get(environment.api + path, { headers }) as Observable<T[]>;
   }
 
   public getSingleEntity<T>(path: string): Observable<T> {
-    return this._http.get(environment.api + path) as Observable<T>;
+    let headers: HttpHeaders = new HttpHeaders(
+      { "Authorization": "Bearer " + this._storage.getValue("token") }
+    );
+
+    return this._http.get(environment.api + path, { headers }) as Observable<T>;
   }
 
   public postEntity<T>(path: string, obj: any): Observable<T> {
