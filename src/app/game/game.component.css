@@ -47,6 +47,12 @@ h1, h2 {
     font-size: 1.8rem;
 }
 
+.game:hover {
+    margin-left: 2%;
+    color: #ffd553 !important; /* gold */
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+}
+
 .header {
     background: rgba(0,0,0,0.65);
 }

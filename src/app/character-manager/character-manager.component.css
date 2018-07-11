@@ -29,7 +29,7 @@ h1, h2 {
 
 .character:hover {
     margin-left: 2%;
-    color: #ffd553; /* gold */
+    color: #ffd553 !important; /* gold */
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
 }
 
@@ -56,4 +56,16 @@ hr:before {
   border-color: #ffd553; 
   border-width: 0 0 1px 0; 
   border-radius: 20px; 
+}
+
+.fillSpace {
+    overflow: auto;
+}
+
+.fillColor {
+    background-color: #6b6b6b;
+}
+
+.btn:hover{
+    background-color: #ffd553;
 }

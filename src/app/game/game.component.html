@@ -2,10 +2,10 @@
   <div class="row">
 
     <!-- Viewing a game -->
-    <div class="col-md-4 mt-5 noPadding">
+    <div class="col-md-4 mt-5">
       <h2 class="header mb-0">Current Games</h2>
-      <ul class="list-group list-group-flush static-size-list half-height">
-        <li class="list-group-item list-group-item-action content text-light" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
+      <ul class="list-group list-group-flush static-size half-height">
+        <li class="list-group-item list-group-item-action text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
           {{ i+1 }}. {{ game.name }}
         </li>
       </ul>
@@ -40,7 +40,7 @@
               *ngIf="this.selectedGame.userId === this.user.userId">
         </h2>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item content text-light" *ngFor="let character of this.selectedGame.character index as i" (click)="loadCharacterDetails(i, content)">
+          <li class="list-group-item content text-light game" *ngFor="let character of this.selectedGame.character index as i" (click)="loadCharacterDetails(i, content)">
             {{ character.name }}
           </li>
           <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>

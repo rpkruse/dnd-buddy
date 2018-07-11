@@ -3,22 +3,18 @@
 
     <!-- Character List -->
     <div class="col-md-5 mb-5">
-      <div class="card w-100">
-        <div class="card-header header">
-          <h1>Characters</h1>
-          
-        </div>
-        <ul class="list-group list-group-flush static-size half-height" *ngIf="this.characters.length">
-          <li class="list-group-item list-group-item-action content character" (click)="getCharacterDetails(character)" (mouseover)="this.mouseOver = i"
-            (mouseout)="this.mouseOver = -1" *ngFor="let character of this.characters index as i">
-            {{ character.name }}
-            <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event, character)"
-              placement="right" ngbTooltip="Delete Character" src="assets/icons/x_icon.png">
-          </li>
-        </ul>
-        <div class="card-body content text-center" *ngIf="!this.characters.length">No Characters</div>
-        <div class="header sm-padding"><img id="addIcon" class="icon" [routerLink]="['/createCharacter']" placement="right" ngbTooltip="Create Character"
-          src="assets/icons/create_icon.png"></div>
+      <h2 class="header mb-0">Characters</h2>
+      <ul class="list-group list-group-flush static-size half-height" *ngIf="this.characters.length">
+        <li class="list-group-item list-group-item-action text-light content character" (click)="getCharacterDetails(character)"
+          (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let character of this.characters index as i">
+          {{ character.name }}
+          <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="confirmDeleteCharacter(content, $event, character)"
+            placement="right" ngbTooltip="Delete Character" src="assets/icons/x_icon.png">
+        </li>
+      </ul>
+      <div class="content text-center" *ngIf="!this.characters.length">No Characters</div>
+      <div class="fillSpace fillColor">
+          <button type="button" class="btn float-right" [routerLink]="['/createCharacter']">New Character</button>
       </div>
     </div>
 
@@ -26,8 +22,10 @@
     <div class="col-md-6" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
       <div class="card w-100">
         <div class="card-header text-center header">
-          <span class="stat"><strong>{{ this.selectedCharacter.name }}:</strong>
-          <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em></span>
+          <span class="stat">
+            <strong>{{ this.selectedCharacter.name }}:</strong>
+            <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em>
+          </span>
           <img class="icon icon-sm float-right" (click)="this.selectedCharacter = null" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
         </div>
 
@@ -47,7 +45,7 @@
                 bonus)
               </p>
             </div>
-            <hr class="stat" *ngIf="this.weapon && this.armor"/>
+            <hr class="stat" *ngIf="this.weapon && this.armor" />
             <div *ngIf="this.weapon">
               <p class="text-center" *ngIf="this.weapon">Weapon: {{ this.weapon.name }}</p>
               <p class="text-center">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
