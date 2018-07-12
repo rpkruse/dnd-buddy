@@ -12,6 +12,7 @@ import { Subscription } from '../../../../node_modules/rxjs';
 })
 export class EquipmentComponent implements OnInit {
   @Input() character: Character;
+  @Input() newItem: boolean = false;
 
   armor: Equipment = null;
   shield: Equipment = null;
@@ -22,11 +23,12 @@ export class EquipmentComponent implements OnInit {
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService) { }
 
   ngOnInit() {
+    this.getItems();
   }
 
   ngOnChanges() {
     if (!this.character) return;
-    this.getItems();
+    if (this.newItem) this.getItems();
   }
 
   private getItems() {

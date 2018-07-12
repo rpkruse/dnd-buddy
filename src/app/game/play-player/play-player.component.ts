@@ -9,7 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subscription } from 'rxjs';
 
-import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, Spell, SpellDetails } from '../../interfaces/interfaces';
+import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, MessageOutput, MessageType } from '../../interfaces/interfaces';
 
 import { ApiService, PlayManager, DataShareService, MessageService } from '../../services/services';
 
@@ -57,6 +57,8 @@ export class PlayPlayerComponent implements OnInit {
   shield: Equipment;
   itemData: ItemMessageData;
 
+  gotNewItem: boolean = false;
+
   constructor(private _apiService: ApiService, private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _modal: NgbModal) { }
 
   ngOnInit() {
@@ -84,7 +86,7 @@ export class PlayPlayerComponent implements OnInit {
     if (!hidden) {
       RMD = this._playManager.createRMD(this.character.characterId, this.game.name, this.rollMax, this.roll, this.numDice);
 
-      if(this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
+      if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
     }
   }
 
@@ -96,7 +98,7 @@ export class PlayPlayerComponent implements OnInit {
     this.roll = 0;
     RMD = this._playManager.createRMD(this.character.characterId, this.game.name, 4, this.roll, 1);
 
-    if(this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
+    if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
   }
 
   /*
@@ -156,76 +158,56 @@ export class PlayPlayerComponent implements OnInit {
     @param item: Equipment - The item given to the player
   */
   private handleWeaponType(item: Equipment) {
-    let gotNewItem: boolean = false;
+    let newItem: boolean = false;
+    this.gotNewItem = false;
 
     switch (item.equipment_category) {
       case "Weapon":
         this.character.weapon = item.url;
-        gotNewItem = true;
+        newItem = true;
+        this.triggerMessage("", "Recieved new weapon!", MessageType.Notification);
         break;
       case "Armor":
         if (item.name === "Shield") {
           this.character.shield = item.url;
-          gotNewItem = true;
+          newItem = true;
+          this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
           break;
         }
         this.character.armor = item.url;
-        gotNewItem = true;
+        newItem = true;
+        this.triggerMessage("", "Recieved new armor!", MessageType.Notification);
+
         break;
       case "Shield":
         this.character.shield = item.url;
-        gotNewItem = true;
+        newItem = true;
+        this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
         break;
       default:
         return;
     }
 
-    if (!gotNewItem) return; //Only update user if we got a valid item type (armor, shield, weapon, rings, neck)
+    if (!newItem) return; //Only update user if we got a valid item type (armor, shield, weapon, rings, neck)
     let s: Subscription = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
       d => d = d,
       err => console.log("Unable to update character", err),
       () => {
         s.unsubscribe();
+        this.gotNewItem = true;
         // this.getCharacterItems();
       }
     )
   }
 
-  /*
-    This method is called onInit, it will set the equipment fields for the character to display on the DOM
-  */
-  /*private getCharacterItems() {
-    if (this.character.armor) {
-      let s: Subscription = this._playManager.getItem(this.character.armor).subscribe(
-        d => this.armor = d,
-        err => console.log("unable to get armor", err),
-        () => s.unsubscribe()
-      );
-    }
+  private triggerMessage(message: string, action: string, level: MessageType) {
+    let out: MessageOutput = {
+      message: message,
+      action: action,
+      level: level
+    };
 
-    if (this.character.weapon) {
-      let s: Subscription = this._playManager.getItem(this.character.weapon).subscribe(
-        d => this.weapon = d,
-        err => console.log("unable to get weapon", err),
-        () => s.unsubscribe()
-      );
-    }
-
-    if (this.character.shield) {
-      let s: Subscription = this._playManager.getItem(this.character.shield).subscribe(
-        d => this.shield = d,
-        err => console.log("unable to get weapon", err),
-        () => s.unsubscribe()
-      );
-    }
-  }*/
-
-  /*
-    This method returns the ability mod. you can calculate these by subtracting 10 from their value
-    and flooring the value divided by 2. Used to display on the DOM
-  */
-  public getAttrScore(attr: number) {
-    return Math.floor((attr - 10) / 2);
+    this._dataShareService.changeMessage(out);
   }
 
   private getRandomInt(min: number, max: number) {

@@ -50,7 +50,7 @@
             <!-- ^^ End of spell info-->
             <!-- Item info -->
             <div class="col-lg-6 float-right" *ngIf="this.character">
-              <app-equipment [character]="character"></app-equipment>
+              <app-equipment [character]="character" [newItem]="this.gotNewItem"></app-equipment>
             </div>
 
           </div>
