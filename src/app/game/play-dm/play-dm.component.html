@@ -9,12 +9,11 @@
       <div class="card-body content text-light">
         <!-- Rolling info -->
         <div class="row">
-          <div class="col-lg-6">
-            <div class="col-md-6 text-center">
+          <div class="col-md-6 text-center">
               <h4>Roll</h4>
               <hr class="stat mt-0" />
               <label>Roll:</label>
-              <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-3 col-lg-3">
+              <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-3">
 
               <br>
               <label>Die:</label>
@@ -22,8 +21,11 @@
                 <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
               </select>
               <div class="card-text mt-5">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</div>
-            </div>
+              <button type="button" class="btn btn-primary btn-sm float-right" (click)="rollDice(false)">Roll</button>
+              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="rollDice(true)">Hidden Roll</button>
+              <button type="button" class="btn btn-secondary btn-sm float-left" (click)="clearRoll()">Clear</button>
           </div>
+
           <!-- Item Giving -->
           <div class="col-md-6">
             <h4>Give Item</h4>
@@ -49,9 +51,9 @@
         </div>
       </div>
       <div class="card-footer header">
-        <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
+        <!--<button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
         <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
-        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
+        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>-->
       </div>
     </div>
 
