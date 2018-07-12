@@ -1,3 +1,8 @@
+::-webkit-scrollbar{
+    background: transparent;
+    width: 0px;
+}
+
 .header {
     background: rgba(0,0,0,0.65);
 }

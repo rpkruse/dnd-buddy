@@ -10,10 +10,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
 
+//Modules:
+import { ManageModule } from './manage/manage.module';
+import { GameModule } from './game/game.module';
+import { SharedModule } from './shared/shared.module';
+
 //Components:
-import { AppComponent, CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetails, 
-        PlayGameComponent, PlayDmComponent, PlayPlayerComponent, GameComponent, HomeComponent, 
-        LoginComponent, SnackbarComponent, DmPortalComponent } from './components';
+import { AppComponent, HomeComponent, LoginComponent } from './components';
 
 //Services:
 import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService, PlayManager} from './services/services';
@@ -24,18 +27,9 @@ import { NgEnterDirective } from './directives/directives';
 @NgModule({
   declarations: [
     AppComponent,
-    CreateCharacterComponent,
-    CharacterRaceDetails,
     HomeComponent,
     LoginComponent,
     NgEnterDirective,
-    GameComponent,
-    CharacterManagerComponent,
-    SnackbarComponent,
-    PlayGameComponent,
-    PlayDmComponent,
-    PlayPlayerComponent,
-    DmPortalComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +38,9 @@ import { NgEnterDirective } from './directives/directives';
     NgbModule.forRoot(),
     NgProgressModule.forRoot(),
     NgProgressHttpModule,
+    ManageModule,
+    GameModule,
+    SharedModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: true })
   ],
   providers: [

@@ -9,14 +9,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subscription } from 'rxjs';
 
-import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, Spell, SpellDetails } from '../interfaces/interfaces';
+import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, Spell, SpellDetails } from '../../interfaces/interfaces';
 
-import { ApiService, PlayManager, DataShareService, MessageService } from '../services/services';
+import { ApiService, PlayManager, DataShareService, MessageService } from '../../services/services';
 
 @Component({
   selector: 'play-player',
   templateUrl: './play-player.component.html',
-  styleUrls: ['./play-player.component.css', '../global-style.css'],
+  styleUrls: ['./play-player.component.css', '../../global-style.css'],
   animations: [
     trigger(
       'showState', [

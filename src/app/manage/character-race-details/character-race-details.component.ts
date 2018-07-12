@@ -7,9 +7,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
-import { DndApiService } from '../services/services';
+import { DndApiService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait } from '../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
@@ -17,7 +17,7 @@ import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 @Component({
   selector: 'character-race-details',
   templateUrl: './character-race-details.component.html',
-  styleUrls: ['./character-race-details.component.css', '../global-style.css'],
+  styleUrls: ['./character-race-details.component.css', '../../global-style.css'],
   animations: [
     trigger(
       'showState', [

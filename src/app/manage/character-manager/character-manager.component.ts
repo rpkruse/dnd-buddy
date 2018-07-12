@@ -7,15 +7,15 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
-import { ApiService, DndApiService, DataShareService } from '../services/services';
+import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { ClassDetails, RaceDetails, Equipment, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
+import { ClassDetails, RaceDetails, Equipment, Character, User, MessageType, MessageOutput } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-character-manager',
   templateUrl: './character-manager.component.html',
-  styleUrls: ['./character-manager.component.css', '../global-style.css'],
+  styleUrls: ['./character-manager.component.css', '../../global-style.css'],
   animations: [
     trigger(
       'showState', [

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ApiService, DndApiService, DataShareService } from '../services/services';
+import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
 import { User, Character, Game, RaceDetails, ClassDetails, 
-        Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType } from '../interfaces/interfaces';
+        Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType } from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription, Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { Subscription, Observable } from 'rxjs';
 @Component({
   selector: 'dm-portal',
   templateUrl: './dm-portal.component.html',
-  styleUrls: ['./dm-portal.component.css', '../global-style.css']
+  styleUrls: ['./dm-portal.component.css', '../../global-style.css']
 })
 export class DmPortalComponent implements OnInit {
   private isAlive: boolean = true;

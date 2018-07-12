@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ApiService, DataShareService, MessageService, StorageService, PlayManager } from '../services/services';
-import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, GridMessageData } from '../interfaces/interfaces';
+import { ApiService, DataShareService, MessageService, StorageService, PlayManager } from '../../services/services';
+import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, GridMessageData } from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { PlayPlayerComponent } from '../play-player/play-player.component';
 @Component({
   selector: 'app-play-game',
   templateUrl: './play-game.component.html',
-  styleUrls: ['./play-game.component.css', '../global-style.css']
+  styleUrls: ['./play-game.component.css', '../../global-style.css']
 })
 
 export class PlayGameComponent implements OnInit {

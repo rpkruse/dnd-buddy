@@ -10,14 +10,14 @@ import {
   User, Game, Character, ItemMessageData, RollMessageData,
   Equipment, EquipmentCategory, EquipmentCategoryDetails,
   MessageOutput, MessageType, OnlineUser
-} from '../interfaces/interfaces';
+} from '../../interfaces/interfaces';
 
-import { PlayManager, DataShareService, MessageService } from '../services/services';
+import { PlayManager, DataShareService, MessageService } from '../../services/services';
 
 @Component({
   selector: 'play-dm',
   templateUrl: './play-dm.component.html',
-  styleUrls: ['./play-dm.component.css', '../global-style.css']
+  styleUrls: ['./play-dm.component.css', '../../global-style.css']
 })
 export class PlayDmComponent implements OnInit {
   private isAlive: boolean = true;

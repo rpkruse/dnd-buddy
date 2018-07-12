@@ -5,15 +5,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ApiService, DndApiService, DataShareService } from '../services/services';
+import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-character',
   templateUrl: './create-character.component.html',
-  styleUrls: ['./create-character.component.css', '../global-style.css']
+  styleUrls: ['./create-character.component.css', '../../global-style.css']
 })
 export class CreateCharacterComponent implements OnInit {
   MessageType = MessageType;

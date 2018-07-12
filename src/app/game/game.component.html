@@ -4,13 +4,13 @@
     <!-- Viewing a game -->
     <div class="col-md-4 mt-5">
       <h2 class="header mb-0">Current Games</h2>
-      <ul class="list-group list-group-flush static-size half-height">
-        <li class="list-group-item list-group-item-action text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
+      <ul class="list-group list-group-flush static-size-list half-height">
+        <li class="list-group-item text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
           {{ i+1 }}. {{ game.name }}
         </li>
       </ul>
       <div class="fillSpace fillColor">
-          <button type="button" class="btn float-right" (click)="createGame()">New Game</button>
+        <button type="button" class="btn float-right" (click)="createGame()">New Game</button>
       </div>
     </div>
 
@@ -24,29 +24,29 @@
               (input)="validateGamename($event.target.value)" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
           </div>
           <div class="fillSpace">
-              <button type="button" class="btn float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
+            <button type="button" class="btn float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
           </div>
           <div>
-              <small id="usernameHelpBlock" class="form-text text-dark float-right" *ngIf="gameName.length">{{!gamenameTaken ? "Game name is available!" : "Game name is taken."}}</small>
+            <small id="usernameHelpBlock" class="form-text text-dark float-right" *ngIf="gameName.length">{{!gamenameTaken ? "Game name is available!" : "Game name is taken."}}</small>
           </div>
         </form>
       </div>
 
       <!-- Viewing a game -->
-      <div *ngIf="this.selectedGame">
-        <h2 class="card-header header text-center"> 
+      <div class="col-md-8" *ngIf="this.selectedGame">
+        <h2 class="header mb-0">
           {{ this.selectedGame.name }}
-          <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="right" ngbTooltip="delete" src="assets/icons/white_delete_icon.png"
-              *ngIf="this.selectedGame.userId === this.user.userId">
+          <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="left" ngbTooltip="Delete Game"
+            src="assets/icons/white_delete_icon.png" *ngIf="this.selectedGame.userId === this.user.userId">
         </h2>
-        <ul class="list-group list-group-flush">
+        <ul class="list-group list-group-flush static-size-list half-height">
           <li class="list-group-item content text-light game" *ngFor="let character of this.selectedGame.character index as i" (click)="loadCharacterDetails(i, content)">
             {{ character.name }}
           </li>
           <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
         </ul>
         <div class="fillSpace fillColor">
-            <button type="button" class="btn float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
+          <button type="button" class="btn float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
         </div>
       </div>
     </div>
@@ -85,13 +85,16 @@
 
     <body>Are you sure you want to the game delete:
       <b>{{ this.selectedGame.name }}?</b>
+      <br>
     </body>
 
-    <body class="text-muted">This action cannot be undone</body>
+    <body class="text-muted">This will also delete
+      <b>all</b> characters in the game and cannot be undone!</body>
+
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger"  (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="d()">Cancel</button>
     <button type="button" class="btn btn-success" (click)="c()">Confim</button>
   </div>
 </ng-template>

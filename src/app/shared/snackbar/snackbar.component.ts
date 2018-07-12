@@ -9,9 +9,9 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 
 import { Subject, Subscription, interval } from 'rxjs';
 
-import { DataShareService } from '../services/services';
+import { DataShareService } from '../../services/services';
 
-import { MessageType, MessageOutput } from '../interfaces/interfaces';
+import { MessageType, MessageOutput } from '../../interfaces/interfaces';
 
 import { takeWhile } from 'rxjs/operators';
 
