@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { User, Character, Game, RaceDetails, ClassDetails, 
-        Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType } from '../../interfaces/interfaces';
+import {
+  User, Character, Game, RaceDetails, ClassDetails,
+  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType
+} from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription, Observable } from 'rxjs';
@@ -26,10 +28,10 @@ export class DmPortalComponent implements OnInit {
 
   equipmentTypes: EquipmentCategory;
   equipmentList: EquipmentCategoryDetails;
+  item: Equipment;
 
-  armor: Observable<Equipment>;
-  weapon: Observable<Equipment>;
-  shield: Observable<Equipment>;
+  givenItem: boolean = false;
+  slottedItem: boolean = false;
 
   stats: string[] = ["STR: ", "DEX: ", "CON: ", "INT: ", "WIS: ", "CHA: "]
 
@@ -56,11 +58,6 @@ export class DmPortalComponent implements OnInit {
     this.race = this._dndApiService.getSingleEntity<RaceDetails>(this.character.race);
     this.class = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class);
 
-    if (this.character.armor) this.armor = this._dndApiService.getSingleEntity<Equipment>(this.character.armor);
-    if (this.character.weapon) this.weapon = this._dndApiService.getSingleEntity<Equipment>(this.character.weapon);
-    if (this.character.shield) this.shield = this._dndApiService.getSingleEntity<Equipment>(this.character.shield);
-
-    // this.equipmentTypes = this._dndApiService.getAllEntities<EquipmentCategory>("equipment-categories");
     let s: Subscription = this._dndApiService.getAllEntities<EquipmentCategory>("equipment-categories").subscribe(
       d => this.equipmentTypes = d,
       err => console.log("unable to get equipment types"),
@@ -71,17 +68,22 @@ export class DmPortalComponent implements OnInit {
   getListOfEquipment(url: string) {
     if (url === "Choose") {
       this.equipmentList = null;
+      this.slottedItem = false;
       return;
     }
 
     let s: Subscription = this._dndApiService.getSingleEntity<EquipmentCategoryDetails>(url).subscribe(
       d => this.equipmentList = d,
       err => console.log("unable to get eq type"),
-      () => s.unsubscribe()
+      () => {
+        s.unsubscribe();
+        this.slottedItem = this.equipmentList.name === "Rings";
+      }
     );
   }
 
   getItem(url: string) {
+    this.givenItem = false;
     if (url === "Choose") {
       return;
     }
@@ -90,30 +92,44 @@ export class DmPortalComponent implements OnInit {
     let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(url).subscribe(
       d => equipmentItem = d,
       err => console.log("unable to get equipment item"),
-      () => { s.unsubscribe(); this.setItem(equipmentItem); }
+      () => {
+        s.unsubscribe();
+        if (!this.slottedItem) this.setItem(equipmentItem); else this.item = equipmentItem;
+      }
     )
   }
 
-  setItem(item: Equipment) {
+  setItem(item: Equipment, slot?: string) {
     switch (item.equipment_category) {
       case "Weapon":
         this.character.weapon = item.url;
-        this.weapon = this._dndApiService.getSingleEntity<Equipment>(this.character.weapon);
+        this.givenItem = true;
         break;
       case "Armor":
         if (item.name === "Shield") {
           this.character.shield = item.url;
-          this.shield = this._dndApiService.getSingleEntity<Equipment>(this.character.shield);
+          this.givenItem = true;
           break;
         }
         this.character.armor = item.url;
-        this.armor = this._dndApiService.getSingleEntity<Equipment>(this.character.armor);
+        this.givenItem = true;
         break;
       case "Shield":
         this.character.shield = item.url;
-        this.shield = this._dndApiService.getSingleEntity<Equipment>(this.character.shield);
+        this.givenItem = true;
+
+        break;
+      case "Rings":
+        if (slot === "1") {
+          this.character.ring_1 = item.url;
+        } else if (slot === "2") {
+          this.character.ring_2 = item.url;
+        }
+
+        this.givenItem = true;
         break;
       default:
+        this.givenItem = false;
         break;
     }
   }

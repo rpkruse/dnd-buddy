@@ -38,7 +38,9 @@
 
           <div class="row">
             <!-- Name/Stats -->
-            <div class="col-md-3 float-left">
+            <div class="col-md-3 float-left text-center">
+              <h4>Set Stats</h4>
+              <hr class="stat mt-0" />
               <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
               <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
               <br>
@@ -52,40 +54,43 @@
 
             <!-- Equipment -->
             <div class="col-md-3">
-              <p class="text-light" *ngIf="(this.armor | async) as armor">
-                Armor: {{ armor.name }} (AC {{ armor.armor_class.base }})
-              </p>
-              <p class="text-light" *ngIf="!(this.armor | async) as armor">
-                Armor: None
-              </p>
-              <p class="text-light" *ngIf="(this.weapon | async) as weapon">
-                Weapon: {{ weapon.name }} {{ weapon.damage.dice_count }}D{{weapon.damage.dice_value }} ({{weapon.damage.damage_type.name}})
-              </p>
-              <p class="text-light" *ngIf="!(this.weapon | async) as weapon">
-                Weapon: None
-              </p>
-              <p class="text-light" *ngIf="(this.shield | async) as shield">
-                Shield: {{ shield.name }} (AC {{ shield.armor_class.base }})
-              </p>
-              <p class="text-light" *ngIf="!(this.shield | async) as shield">
-                Shield: None
-              </p>
+              <app-equipment [character]="this.character" [newItem]="this.givenItem"></app-equipment>
             </div>
 
             <!-- Give Equip. -->
             <div class="col-md-6">
-              <label class="col-sm-4 col-form-lable text-light">Give Item (type):</label>
+              <h4>Give Item</h4>
+              <hr class="stat mt-0" />
+              <label class="col-sm-4 col-form-lable text-light">Item (type):</label>
               <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="equipmentTypes && equipmentTypes.results">
                 <option selected>Choose</option>
                 <option *ngFor="let eq of equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
               </select>
               <br>
               <br>
-              <label class="col-sm-4 col-form-lable text-light">Give Item (item):</label>
-              <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-                <option selected>Choose</option>
-                <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-              </select>
+
+              <div *ngIf="!this.slottedItem">
+                <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
+                <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+                  <option selected>Choose</option>
+                  <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+                </select>
+              </div>
+
+              <div *ngIf="this.slottedItem">
+                <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
+                <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+                  <option selected>Choose</option>
+                  <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+                </select>
+
+                <label class="col-sm-4 col-form-lable text-light">Slot #:</label>
+                <select class="custom-select col-sm-5" (change)="setItem(this.item, $event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+                  <option selected>Choose</option>
+                  <option value="1">Slot 1</option>
+                  <option value="2">Slot 2</option>
+                </select>
+              </div>
             </div>
 
           </div>

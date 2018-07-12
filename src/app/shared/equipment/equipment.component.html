@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-12 text-light">
   <h4 class="text-center">Equipment</h4>
   <hr class="stat mt-0" />
   <!-- Armor -->
@@ -22,16 +22,40 @@
 
   <!-- Rings -->
   <div *ngIf="this.ring_1">
-    <p class="text-center">Ring 1: {{ this.ring_1.name }}</p>
+    <p class="text-center">Ring 1:
+      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, content)">{{ this.ring_1.name }}</button>
+    </p>
   </div>
   <div *ngIf="!this.ring_1">
     <p class="text-center">Ring 1: None</p>
   </div>
 
   <div *ngIf="this.ring_2">
-    <p class="text-center">Ring 2: {{ this.ring_2.name }}</p>
+    <p class="text-center">Ring 2:
+      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, content)">{{ this.ring_2.name }}</button>
+    </p>
   </div>
   <div *ngIf="!this.ring_2">
     <p class="text-center">Ring 2: None</p>
   </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title text-center">{{ this.selectedRing.name }}</h5>
+  </div>
+  <div class="modal-body">
+    <p>{{ this.selectedRing.desc }}</p>
+    <div *ngIf="this.selectedRing.charge_spells">
+      <div *ngFor="let sp of this.selectedRing.charge_spells index as i">
+        <div>{{ i+1 }}) Name: {{ sp.name }}</div>
+        <div class="ml-4">Cost: {{ sp.cost }}</div>
+        <div class="ml-4" *ngIf="sp.save">Save: {{ sp.save }}</div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success col-2" (click)="d()">Close</button>
+  </div>
+</ng-template>

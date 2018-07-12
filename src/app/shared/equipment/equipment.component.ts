@@ -1,4 +1,5 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService, DndApiService } from '../../services/services';
 
@@ -20,7 +21,9 @@ export class EquipmentComponent implements OnInit {
   ring_1: Equipment = null;
   ring_2: Equipment = null;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService) { }
+  selectedRing: Equipment;
+
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _modal: NgbModal) { }
 
   ngOnInit() {
     this.getItems();
@@ -29,6 +32,11 @@ export class EquipmentComponent implements OnInit {
   ngOnChanges() {
     if (!this.character) return;
     if (this.newItem) this.getItems();
+  }
+
+  public getRingDetails(ring: Equipment, content) {
+    this.selectedRing = ring;
+    this._modal.open(content, { size: 'lg' });
   }
 
   private getItems() {
@@ -54,6 +62,22 @@ export class EquipmentComponent implements OnInit {
       let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.shield).subscribe(
         d => this.shield = d,
         err => console.log("unable to get shield", err),
+        () => s.unsubscribe()
+      );
+    }
+
+    if (this.character.ring_1) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.ring_1).subscribe(
+        d => this.ring_1 = d,
+        err => console.log("unable to get ring_1", err),
+        () => s.unsubscribe()
+      );
+    }
+
+    if (this.character.ring_2) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.ring_2).subscribe(
+        d => this.ring_2 = d,
+        err => console.log("unable to get ring_2", err),
         () => s.unsubscribe()
       );
     }

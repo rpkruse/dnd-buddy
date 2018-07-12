@@ -6,11 +6,13 @@ export interface Equipment {
     name: string,
     equipment_category: string,
     desc?: string,
-    charge_spell?: {
-        cost: number,
-        save?: string,
-        name: string
-    },
+    charge_spells?: [
+        {
+            cost: number,
+            save?: string,
+            name: string
+        }
+    ],
     rank?: string,
     armor_category?: string,
     armor_class?: {
