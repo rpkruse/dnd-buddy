@@ -1,47 +1,54 @@
 <div class="container-fluid">
   <div class="row">
 
-    <div class="card w-100">
-      <div class="card-header text-center">
+    <div class="card w-100 bg-transparent">
+      <div class="card-header text-center header text-light">
         {{ this.user.username }} (DM)
         <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
       </div>
-      <div class="card-body">
-        <!-- Rolling -->
-        <div class="col-md-6 float-left">
-          <label>Roll:</label>
-          <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+      <div class="card-body content text-light">
+        <!-- Rolling info -->
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-md-6 text-center">
+              <h4>Roll</h4>
+              <hr class="stat mt-0" />
+              <label>Roll:</label>
+              <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-3 col-lg-3">
 
-          <br>
-          <label>Die:</label>
-          <select class="custom-select col-sm-2 col-md-3 ml-1" (change)="this.rollMax = $event.target.value">
-            <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-          </select>
-          <p class="card-text">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</p>
-        </div>
+              <br>
+              <label>Die:</label>
+              <select class="custom-select col-sm-3 ml-1" (change)="this.rollMax = $event.target.value">
+                <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+              </select>
+              <div class="card-text mt-5">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</div>
+            </div>
+          </div>
+          <!-- Item Giving -->
+          <div class="col-md-6">
+            <h4>Give Item</h4>
+            <hr class="stat mt-0" />
+            <label class="col-sm-4 col-form-lable">Item (type):</label>
+            <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="this.equipmentTypes && this.equipmentTypes.results">
+              <option selected>Choose</option>
+              <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
+            </select>
 
-        <!-- Item Giving -->
-        <div class="col-md-6 float-right">
-          <label class="col-sm-4 col-form-lable">Give Item (type):</label>
-          <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="this.equipmentTypes && this.equipmentTypes.results">
-            <option selected>Choose</option>
-            <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
-          </select>
-
-          <label class="col-sm-4 col-form-lable">Give Item (item):</label>
-          <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-            <option selected>Choose</option>
-            <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-          </select>
-          <br>
-          <label class="col-sm-4 col-form-lable">Give To (player):</label>
-          <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem">
-            <option selected>Choose</option>
-            <option *ngFor="let member of this.getOtherGroupMembers() index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
-          </select>
+            <label class="col-sm-4 col-form-lable">Item (item):</label>
+            <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+              <option selected>Choose</option>
+              <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+            </select>
+            <br>
+            <label class="col-sm-4 col-form-lable">Player:</label>
+            <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem">
+              <option selected>Choose</option>
+              <option *ngFor="let member of this.getOtherGroupMembers() index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer header">
         <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
         <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
         <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>

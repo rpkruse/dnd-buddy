@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-6">
+    <ngb-tabset *ngIf="this.spellBook && this.spellBook.length">
+      <ngb-tab *ngFor="let spellLevel of this.spellBook index as i" title="Level {{i}}">
+        <ng-template ngbTabContent>
+          <ul class="list-group static-size-list half-height">
+            <li class="list-group-item" *ngFor="let spell of spellLevel.results index as j" (mouseover)="this.mouseOver = j" (mouseout)="this.mouseOver = -1">
+              {{spell.name}}
+              <button [@showState]="this.mouseOver === j ? 'show' : 'hide'" type="button" class="btn btn-secondary float-right" (click)="getSpellDetail(spell.url)">Details</button>
+            </li>
+          </ul>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+
+  <div class="col-md-6" *ngIf="this.spellDetail">
+    <div class="card w-100">
+      <div class="card-body static-size-list half-height-with-some">
+        <h5 class="card-title text-center">{{spellDetail.name}}</h5>
+        <p>Cast Time: {{spellDetail.casting_time}}</p>
+        <p>Requires Concentration: {{spellDetail.concentration}}</p>
+        <p>{{spellDetail.desc}}</p>
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm float-right" (click)="spellDetail=null">Dismiss</button>
+    </div>
+  </div>
+</div>

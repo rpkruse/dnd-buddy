@@ -98,55 +98,6 @@ export class PlayManager {
   }
 
   /*
-    This method is called iff the character who joined can cast spells. It pulls the class spells from the api
-    and emits the spells returned (up to their current level)
-    @param cd: ClassDetails - The ClassDetails of the joined character
-    @param level: number - The level of the character
-    *Note: right now we simply return all spells (level 0-9) this will change later
-  */
-  public initSpellBook(cd: ClassDetails, level: number) {
-    let spells: Spell[] = [];
-
-    let s: Subscription;
-
-    let spell: Spell;
-
-    for (let i = 0; i <= level; i++) {
-      s = this._dndApiService.getAllEntities<Spell>("spells/" + cd.name + "/level/" + i).subscribe(
-        d => spell = d,
-        err => console.log("Unable to get page {0} of spell boo", i, err),
-        () => {
-          spells.push(spell);
-
-          if (i === level) {
-            s.unsubscribe();
-            this.spellBook.next(spells);
-          }
-        }
-      )
-    }
-  }
-
-  /*
-    This method is called when the user needs to get the details of a given spell. Once it is pulled, it emits the value
-    @param path: string - The URL of the spell to get from the 5e api
-  */
-  public getSpellDetail(path: string) {
-    let s: Subscription;
-
-    let spell: SpellDetails;
-
-    s = this._dndApiService.getSingleEntity<SpellDetails>(path).subscribe(
-      d => spell = d,
-      err => console.log("unable to get spell details"),
-      () => {
-        s.unsubscribe();
-        this.spellDetail.next(spell);
-      }
-    );
-  }
-
-  /*
     This method is called when the user is a spell caster. It assigns the number of spells the can cast of level i at character level n
     It might be reworked in the future, but for now it works
     @param LD: ClassLevels - The ClassLevels of the current character

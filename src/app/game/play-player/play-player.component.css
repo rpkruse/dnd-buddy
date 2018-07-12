@@ -2,3 +2,7 @@
     background: transparent;
     width: 0px;
 }
+
+.spell-list {
+    max-height: 15rem;
+}

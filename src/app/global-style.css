@@ -7,7 +7,7 @@
 }
 
 .half-height{
-    max-height: 35vh;
+    max-height: 20rem;
 }
 
 .half-height-with-some {
@@ -44,6 +44,45 @@
     z-index: 1; /* Add a z-index if needed */
     left: 50%; /* Center the snackbar */
     bottom: 30px; /* 30px from the bottom */
+}
+
+.stat {
+    color: #ffd553 !important; /* gold */
+}
+
+.header {
+    background: rgba(0,0,0,0.65);
+}
+
+.content {
+    background: rgba(0, 0, 0, 0.50);
+}
+
+hr { 
+    border: 0; 
+    height: 30px; 
+    border-style: solid; 
+    border-color: #ffd553; 
+    border-width: 1px 0 0 0; 
+    border-radius: 20px;
+    margin-top: 12%; 
+    margin-bottom: 0px;
+} 
+hr:before { 
+    display: block; 
+    content: ""; 
+    height: 30px; 
+    margin-top: -31px; 
+    border-style: solid; 
+    border-color: #ffd553; 
+    border-width: 0 0 1px 0; 
+    border-radius: 20px; 
+}
+
+h1, h2, h4 {
+    text-align: center;
+    color: #ffd553; /* gold */
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
 }
 
 img{

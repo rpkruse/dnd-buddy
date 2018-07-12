@@ -16,6 +16,10 @@ import { PlayPlayerComponent } from './game/play-player/play-player.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 
+//Shared Module:
+import { EquipmentComponent } from './shared/equipment/equipment.component';
+import { SpellbookComponent } from './shared/spellbook/spellbook.component';
+import { StatsComponent } from './shared/stats/stats.component';
 import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 
 export {
@@ -23,12 +27,15 @@ export {
     CharacterManagerComponent,
     CreateCharacterComponent,
     CharacterRaceDetails,
+    DmPortalComponent,
+    GameComponent,
     PlayGameComponent,
     PlayDmComponent,
     PlayPlayerComponent,
-    GameComponent,
     HomeComponent,
     LoginComponent,
-    SnackbarComponent,
-    DmPortalComponent
+    EquipmentComponent,
+    SpellbookComponent,
+    StatsComponent,
+    SnackbarComponent
 }

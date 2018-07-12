@@ -5,6 +5,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonModule } from '@angular/common';
 
+import { SharedModule } from '../shared/shared.module';
+
 //Components:
 import { PlayGameComponent, PlayDmComponent, PlayPlayerComponent, GameComponent } from '../components';
 
@@ -12,7 +14,8 @@ import { PlayGameComponent, PlayDmComponent, PlayPlayerComponent, GameComponent 
   imports: [
     CommonModule,
     RouterModule,
-    NgbModule
+    NgbModule,
+    SharedModule
   ],
   declarations: [
     PlayGameComponent, 

@@ -1,0 +1,37 @@
+<div class="col-md-12">
+  <h4 class="text-center">Equipment</h4>
+  <hr class="stat mt-0" />
+  <!-- Armor -->
+  <div *ngIf="this.armor">
+    <p class="text-center" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+    <p class="text-center" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
+  </div>
+  <div *ngIf="!this.armor">
+    <p class="text-center">Armor: None</p>
+  </div>
+
+  <!-- Weapon -->
+  <div *ngIf="this.weapon">
+    <p class="text-center">Weapon: {{ this.weapon.name }}</p>
+    <p class="text-center">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+    <p class="text-center">Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+  </div>
+  <div *ngIf="!this.weapon">
+    <p class="text-center">Weapon: None</p>
+  </div>
+
+  <!-- Rings -->
+  <div *ngIf="this.ring_1">
+    <p class="text-center">Ring 1: {{ this.ring_1.name }}</p>
+  </div>
+  <div *ngIf="!this.ring_1">
+    <p class="text-center">Ring 1: None</p>
+  </div>
+
+  <div *ngIf="this.ring_2">
+    <p class="text-center">Ring 2: {{ this.ring_2.name }}</p>
+  </div>
+  <div *ngIf="!this.ring_2">
+    <p class="text-center">Ring 2: None</p>
+  </div>
+</div>

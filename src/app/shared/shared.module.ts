@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonModule } from '@angular/common';
 
-import { SnackbarComponent } from '../components';
+import { EquipmentComponent, SpellbookComponent, StatsComponent, SnackbarComponent } from '../components';
 
 @NgModule({
   imports: [
@@ -14,9 +14,15 @@ import { SnackbarComponent } from '../components';
     NgbModule
   ],
   declarations: [
-    SnackbarComponent
+    SnackbarComponent,
+    EquipmentComponent,
+    SpellbookComponent,
+    StatsComponent
   ],
   exports: [
+    EquipmentComponent,
+    SpellbookComponent,
+    StatsComponent,
     SnackbarComponent
   ]
 })

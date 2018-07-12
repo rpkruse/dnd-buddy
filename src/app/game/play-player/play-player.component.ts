@@ -51,8 +51,6 @@ export class PlayPlayerComponent implements OnInit {
   levelDetail: ClassLevels;
 
   spellSlots: number[] = [];
-  spellBook: Spell[] = [];
-  spellDetail: SpellDetails;
 
   armor: Equipment;
   weapon: Equipment;
@@ -67,13 +65,8 @@ export class PlayPlayerComponent implements OnInit {
 
     this._playManager.classDetail.takeWhile(() => this.isAlive).subscribe(res => this.classDetail = res);
     this._playManager.levelDetail.takeWhile(() => this.isAlive).subscribe(res => this.handleLevelDetail(res));
-    this._playManager.spellBook.takeWhile(() => this.isAlive).subscribe(res => this.spellBook = res);
-    this._playManager.spellDetail.takeWhile(() => this.isAlive).subscribe(res => this.spellDetail = res);
 
     this._messageService.itemDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setItemData(res));
-
-
-    if (this.character) this.getCharacterItems();
   }
 
   /*
@@ -128,15 +121,6 @@ export class PlayPlayerComponent implements OnInit {
   }
 
   /*
-    This method is called when the user clicks the detail button on a spell in their spell book.
-    It pulls the information from the 5e api
-    @param path: string - The url of the spell to get the details for
-  */
-  public getSpellDetail(path: string) {
-    this._playManager.getSpellDetail(path);
-  }
-
-  /*
     This method is called when the user clicks the spell book button. It opens the modal displaying their class' spellbook
   */
   public openSpellBook(content) {
@@ -162,7 +146,6 @@ export class PlayPlayerComponent implements OnInit {
     this.levelDetail = LD;
 
     if (this.levelDetail.spellcasting) { //Update their spellbook iff they are a spell caster
-      this._playManager.initSpellBook(this.classDetail, this.character.level);
       this.spellSlots = this._playManager.setSpellSlots(this.levelDetail);
     }
   }
@@ -203,7 +186,7 @@ export class PlayPlayerComponent implements OnInit {
       err => console.log("Unable to update character", err),
       () => {
         s.unsubscribe();
-        this.getCharacterItems();
+        // this.getCharacterItems();
       }
     )
   }
@@ -211,7 +194,7 @@ export class PlayPlayerComponent implements OnInit {
   /*
     This method is called onInit, it will set the equipment fields for the character to display on the DOM
   */
-  private getCharacterItems() {
+  /*private getCharacterItems() {
     if (this.character.armor) {
       let s: Subscription = this._playManager.getItem(this.character.armor).subscribe(
         d => this.armor = d,
@@ -235,7 +218,7 @@ export class PlayPlayerComponent implements OnInit {
         () => s.unsubscribe()
       );
     }
-  }
+  }*/
 
   /*
     This method returns the ability mod. you can calculate these by subtracting 10 from their value
