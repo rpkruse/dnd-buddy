@@ -54,7 +54,7 @@ export class StatsComponent implements OnInit {
     if (n >= 0)
       v += "(+" + n + ")";
     else
-      v += "(-" + n + ")";
+      v += "(" + n + ")";
 
     return v;
   }
