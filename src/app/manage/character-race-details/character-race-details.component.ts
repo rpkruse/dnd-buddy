@@ -52,7 +52,9 @@ export class CharacterRaceDetails implements OnInit {
   mouseOverClass: number = -1;
   mouseOverRace: number = -1;
   mouseOverTrait: number = -1;
-  
+  subMenuActive: boolean = false;
+  raceTabActive: boolean = true;
+
   constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
   ngOnInit() {
@@ -67,6 +69,20 @@ export class CharacterRaceDetails implements OnInit {
       err => console.log("unable to fetch races"),
       () => j.unsubscribe()
     );
+  }
+
+   /*
+    Sets property on what tab is active.
+    @param tab: string - The tab to be activated.
+  */
+  public openTab(tab: string) {
+    this.subMenuActive = false;
+
+    if (tab === 'races' ) {
+      this.raceTabActive = true;
+    } else if (tab === 'classes') {
+      this.raceTabActive = false;
+    }
   }
 
   /*
@@ -95,10 +111,7 @@ export class CharacterRaceDetails implements OnInit {
   /*
     This method is called whenever the user changes the subrace panel they are viewing
   */
-  public changeSubRace(event: NgbPanelChangeEvent) {
-    let num: number = toInteger(event.panelId.substr(event.panelId.length - 1));
-    // num++;
-
+  public changeSubRace(num: number) {
     this.getRaceDetails(num);
   }
 
@@ -146,7 +159,7 @@ export class CharacterRaceDetails implements OnInit {
       }
     );
   }
-  
+
   /*
     This method appends words to each ability to make it look nicer on the DOM
   */

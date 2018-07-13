@@ -1,172 +1,187 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 <div class="container-fluid" *ngIf="this.classes && this.classes.results && this.races && this.races.results">
-  <div class="row">
-    
-    <div class="col-md-6 bg-light no-padding mt-3">
-      <ngb-tabset (tabChange)='resetTabs();' justify="fill">
-        <!-- Races/Subraces -->
-        <ngb-tab title="Races">
-          <ng-template ngbTabContent class="static-size-list half-height" *ngIf="this.races && this.races.results">
-            <ngb-accordion closeOthers="true" (panelChange)="changeSubRace($event); resetTabs();" *ngIf="this.races && this.races.results">
-              <ngb-panel title="{{ race.name }}" id="{{race.url}}" *ngFor="let race of this.races.results index as i">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list set-height" *ngIf="this.raceDetailIndex === i && this.raceDetail">
-                    <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.raceDetail.subraces index as i">
-                      {{ subR.name }}
-                      <button [@showState]="this.mouseOverRace === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
-                        (click)="getSubrace(subR.url)">Details</button>
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-            </ngb-accordion>
-          </ng-template>
-        </ngb-tab>
-
-        <!-- Classes -->
-        <ngb-tab title="Classes" class="bg-primary">
-          <ng-template ngbTabContent>
-            <ul class="list-group static-size-list half-height-with-some" *ngIf="this.classes && this.classes.results">
-              <li class="list-group-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" *ngFor="let class of this.classes.results index as i">
-                {{ class.name }}
-                <div class="d-inline">
-                  <button [@showState]="this.mouseOverClass === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
-                    (click)="getClassDetails(class.url)">Details</button>
-                </div>
+    <div class="row">
+      <div class="col-md-6 bg-light no-padding mt-3 half-height">
+         <!-- Tab links -->
+        <div class="tab">
+          <button class="fas fa-angle-left tablinks" *ngIf="this.subMenuActive" (click)="this.subMenuActive = false;"></button>
+          <button class="float-right tablinks" [class.active]="!this.raceTabActive" (click)="openTab('classes')">Classes</button>
+          <button class="float-right tablinks" [class.active]="this.raceTabActive" (click)="openTab('races')">Races</button>
+        </div>
+    <!-- Tab content -->
+        <!-- Races -->
+        <div id="raceTab" [class.hide]="!this.raceTabActive">
+          <div [class.hide]="!this.subMenuActive" id="subraces">
+            <ul id="subraceList" class="list-group list-group-flush static-size-list" *ngIf="this.raceDetail">
+              <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.raceDetail.subraces index as i">
+                {{ subR.name }}
+                <button [@showState]="this.mouseOverRace === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
+                  (click)="getSubrace(subR.url)">Details</button>
               </li>
             </ul>
-          </ng-template>
-        </ngb-tab>
-      </ngb-tabset>
-    </div>
-    <!-- ^^End of race/class tabs -->
-
-    <!-- Class/Race Details -->
-    <div class="col-md-6 mt-3">
-      <!-- Race Detail -->
-      <div class="col-md-12" *ngIf="this.subrace">
-        <div class="card w-100">
-          <!--<img class="card-img-top mc-auto class-img" [src]="getRaceImage(this.subrace.name)">-->
-          <div class="card-header text-center">
-            {{ this.subrace.name }}
-            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.subrace = null">Clear</button>
           </div>
-          <div class="card-body">
-            <p>{{ this.subrace.desc }}</p>
-            <p>
-              <b>Ability Bonuses: </b>{{ fixAbilityBonuses(this.subrace.ability_bonuses) }}</p>
-            <p>
-              <b>Age: </b>{{ this.subrace.age }}</p>
-            <p>
-              <b>Alignment: </b>{{ this.subrace.alignment }}</p>
-            <p>
-              <b>Preferred Class(es): </b>{{ this.subrace.preferred_class }}</p>
-            <p>
-              <b>Size: </b>{{ this.subrace.size }}</p>
-            <p>
-              <b>Speed: </b>{{ this.subrace.speed }}</p>
-            <ngb-accordion closeOthers="true">
-              <ngb-panel title="Languages">
-                <ng-template ngbPanelContent>
+          <div id="Races" [class.panelHide]="this.subMenuActive" class="panel tabcontent">
+            <ul id="raceList" class="list-group list-group-flush static-size-list" *ngIf="this.races.count">
+              <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" 
+                *ngFor="let subR of this.races.results index as i" (click)="changeSubRace(this.mouseOverRace + 1);this.subMenuActive = !this.subMenuActive;"> {{ subR.name }} 
+                <i class="float-right fas fa-angle-right"></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Classes -->
+        <div id="classTab" [class.hide]="this.raceTabActive" class="panel tabcontent">
+            <ul id="classlist" class="list-group list-group-flush static-size-list" *ngIf="this.classes.count">
+              <li class="list-group-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" 
+                *ngFor="let class of this.classes.results index as i" (click)="getClassDetails(class.url)"> {{ class.name }} 
+                <i class="float-right fas fa-angle-right"></i>
+              </li>
+            </ul>
+          </div>
+      </div>
+      <!-- ^^End of race/class tabs -->
+  
+      <!-- Class/Race Details -->
+      <div class="col-md-6 mt-3">
+        <!-- Race Detail -->
+        <div class="col-md-12" *ngIf="this.subrace">
+          <div class="card w-100">
+            <!--<img class="card-img-top mc-auto class-img" [src]="getRaceImage(this.subrace.name)">-->
+            <div class="card-header text-center">
+              {{ this.subrace.name }}
+              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.subrace = null">Clear</button>
+            </div>
+            <div class="card-body">
+              <p>{{ this.subrace.desc }}</p>
+              <p>
+                <b>Ability Bonuses: </b>{{ fixAbilityBonuses(this.subrace.ability_bonuses) }}</p>
+              <p>
+                <b>Age: </b>{{ this.subrace.age }}</p>
+              <p>
+                <b>Alignment: </b>{{ this.subrace.alignment }}</p>
+              <p>
+                <b>Preferred Class(es): </b>{{ this.subrace.preferred_class }}</p>
+              <p>
+                <b>Size: </b>{{ this.subrace.size }}</p>
+              <p>
+                <b>Speed: </b>{{ this.subrace.speed }}</p>
+<!-- TODO -Tyler 
+              <hr />
+              <button class="detailButton">Languages<span class="float-right glyphicon glyphicon-menu-down"></span></button>
+              <div id="languageList" class="detailList">
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item" *ngFor="let lang of this.subrace.languages">
-                      {{ lang.name }}
-                    </li>
+                      <li class="list-group-item" *ngFor="let lang of this.subrace.languages">
+                        {{ lang.name }}
+                      </li>
                   </ul>
-                </ng-template>
-              </ngb-panel>
-              <ngb-panel title="Traits">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list set-height">
-                    <li class="list-group-item" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
-                      {{ trait.name }}
-                      <button [@showState]="this.mouseOverTrait === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
-                        (click)="getTraitDetails(trait.url, content)">Details</button>
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-            </ngb-accordion>
+              </div>
+            -->
+                
+              <ngb-accordion closeOthers="true">
+                <ngb-panel title="Languages">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" *ngFor="let lang of this.subrace.languages">
+                        {{ lang.name }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel title="Traits">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush static-size-list set-height">
+                      <li class="list-group-item" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
+                        {{ trait.name }}
+                        <button [@showState]="this.mouseOverTrait === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
+                          (click)="getTraitDetails(trait.url, content)">Details</button>
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- ^^End of race detail -->
-
-      <!-- Class Detail -->
-      <div class="col-md-12" *ngIf="this.classDetail">
-        <div class="card">
-          <img class="card-img-top mc-auto class-img" [src]="getClassImage(this.classDetail.name)">
-          <div class="card-header text-center">
-            {{ this.classDetail.name }}
-            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.classDetail = null">Clear</button>
-          </div>
-          <div class="card-body">
-            <p>
-              <b>Hit Die: </b>{{ this.classDetail.hit_die }}</p>
-            <ngb-accordion closeOthers="true">
-              <!-- Prof choices -->
-              <ngb-panel title="Proficiency Choices (choose {{this.classDetail.proficiency_choices[0].choose }})">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list half-height">
-                    <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiency_choices[0].from">
-                      {{ prof.name }}
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-
-              <!-- Profs -->
-              <ngb-panel title="Proficiencies">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list half-height">
-                    <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiencies">
-                      {{ prof.name }}
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-
-              <!-- Saving Throws -->
-              <ngb-panel title="Saving Throws">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list half-height">
-                    <li class="list-group-item" *ngFor="let save of this.classDetail.saving_throws">
-                      {{ save.name }}
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-
-              <!-- subclasses -->
-              <ngb-panel title="Subclasses">
-                <ng-template ngbPanelContent>
-                  <ul class="list-group list-group-flush static-size-list half-height">
-                    <li class="list-group-item" *ngFor="let subc of this.classDetail.subclasses">
-                      {{ subc.name }}
-                    </li>
-                  </ul>
-                </ng-template>
-              </ngb-panel>
-            </ngb-accordion>
+        <!-- ^^End of race detail -->
+  
+        <!-- Class Detail -->
+        <div class="col-md-12" *ngIf="this.classDetail">
+          <div class="card">
+            <img class="card-img-top mc-auto class-img" [src]="getClassImage(this.classDetail.name)">
+            <div class="card-header text-center">
+              {{ this.classDetail.name }}
+              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.classDetail = null">Clear</button>
+            </div>
+            <div class="card-body">
+              <p>
+                <b>Hit Die: </b>{{ this.classDetail.hit_die }}</p>
+              <ngb-accordion closeOthers="true">
+                <!-- Prof choices -->
+                <ngb-panel title="Proficiency Choices (choose {{this.classDetail.proficiency_choices[0].choose }})">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush static-size-list half-height">
+                      <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiency_choices[0].from">
+                        {{ prof.name }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+  
+                <!-- Profs -->
+                <ngb-panel title="Proficiencies">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush static-size-list half-height">
+                      <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiencies">
+                        {{ prof.name }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+  
+                <!-- Saving Throws -->
+                <ngb-panel title="Saving Throws">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush static-size-list half-height">
+                      <li class="list-group-item" *ngFor="let save of this.classDetail.saving_throws">
+                        {{ save.name }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+  
+                <!-- subclasses -->
+                <ngb-panel title="Subclasses">
+                  <ng-template ngbPanelContent>
+                    <ul class="list-group list-group-flush static-size-list half-height">
+                      <li class="list-group-item" *ngFor="let subc of this.classDetail.subclasses">
+                        {{ subc.name }}
+                      </li>
+                    </ul>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
           </div>
         </div>
+  
       </div>
     </div>
+    <!-- ^^End of row -->
   </div>
-  <!-- ^^End of row -->
-</div>
-
-<ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header text-center">
-    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
-  </div>
-
-  <div class="modal-body">
-    <body>
-      {{ this.trait.desc }}
-    </body>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
-  </div>
-</ng-template>
+  
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header text-center">
+      <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    </div>
+  
+    <div class="modal-body">
+      <body>
+        {{ this.trait.desc }}
+      </body>
+    </div>
+  
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+    </div>
+  </ng-template>
