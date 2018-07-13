@@ -1,0 +1,35 @@
+.draggable {
+    cursor: move;
+    user-select: none;
+  }
+  
+  .movable:not(.dragging) {
+    transition: transform 300ms ease-in-out;
+  }
+  
+  .box {
+    background: #BADA55;
+    border: 1px solid black;
+    padding: 10px 20px;
+    display: inline-block;
+    transition: background 300ms ease-in-out,
+                  color 300ms ease-in-out;
+  
+    &.dragging {
+      background: coral;
+    }
+  
+    &.sortable.dragging {
+      background: transparent;
+      color: white;
+    }
+  }
+  
+  ul {
+      display: inline-flex;
+      margin: 0;
+      padding: 0;
+      flex-direction: column;
+  }
+  
+  

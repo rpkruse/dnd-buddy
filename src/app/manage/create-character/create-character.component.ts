@@ -10,10 +10,12 @@ import { ApiService, DndApiService, DataShareService } from '../../services/serv
 import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
+import { SortEvent } from '../../directives/sortable/sortable-list.directive';
+
 @Component({
   selector: 'app-create-character',
   templateUrl: './create-character.component.html',
-  styleUrls: ['./create-character.component.css', '../../global-style.css']
+  styleUrls: ['./create-character.component.css', './create-character.component.scss', '../../global-style.css']
 })
 export class CreateCharacterComponent implements OnInit {
   MessageType = MessageType;
@@ -37,10 +39,8 @@ export class CreateCharacterComponent implements OnInit {
   private numOfDiceToKeep: number = 3;
 
   rolls: number[] = [0, 0, 0, 0, 0, 0];
-
-  rollValue: number[] = [0, 0, 0, 0, 0, 0]
   keptRolls: number[] = [0, 0, 0, 0, 0, 0];
-  stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHAR"];
+  stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router) { }
 
@@ -122,7 +122,7 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
-  public selectClass(classUrl: string) { //FL[(num-10)/2]
+  public selectClass(classUrl: string) {
     if (classUrl === "Choose") {
       this.selectedClass = null;
       this.character.class = '';
@@ -143,7 +143,7 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public confirmCharacter() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < this.stats.length; i++) {
       this.setAttr(i);
     }
 
@@ -182,94 +182,47 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   private setAttr(index: number) {
-    let val: number = this.selectedSubRace.ability_bonuses[index];
+    let val: number = this.keptRolls[index];
+    let bonus: number = this.selectedSubRace.ability_bonuses[index];
+
     switch (index) {
       case 0:
-        this.character.abil_Score_Str += val;
+        this.character.abil_Score_Str = val + bonus;
         break;
       case 1:
-        this.character.abil_Score_Dex += val;
+        this.character.abil_Score_Dex = val + bonus;
         break;
       case 2:
-        this.character.abil_Score_Con += val;
+        this.character.abil_Score_Con = val + bonus;
         break;
       case 3:
-        this.character.abil_Score_Int += val;
+        this.character.abil_Score_Int = val + bonus;
         break;
       case 4:
-        this.character.abil_Score_Wis += val;
+        this.character.abil_Score_Wis = val + bonus;
         break;
       case 5:
-        this.character.abil_Score_Cha += val;
+        this.character.abil_Score_Cha = val + bonus;
         break;
     }
-  }
-
-  /*
-    @param statIndexS: number - The index into the character's stat values (IE 0=STR 1=DEX)
-    @param rollIndex: number - The index into the rolled value (IE 5 = the last roll 0 = the first roll)
-  */
-  public assignStat(statIndexS: string, rollIndex: number) { 
-    let statIndex: number = parseInt(statIndexS);
-    if (statIndex < 0) return;
-
-    this.keptRolls[statIndex] = this.rollValue[rollIndex];
-    this.setStatString(statIndex, this.keptRolls[statIndex]);
   }
 
   public getStatString(index: number): string {
-    let raceBonusAttr: string = " +";
+
     if (this.selectedSubRace) {
-      raceBonusAttr += this.selectedSubRace.ability_bonuses[index];
-    } else {
-      raceBonusAttr = " + 0";
+      let v: number = this.selectedSubRace.ability_bonuses[index];
+      if (v < 0) return this.selectedSubRace.ability_bonuses[index].toString();
+
+      return "+" + this.selectedSubRace.ability_bonuses[index];
     }
 
-    switch (index) {
-      case 0:
-        return "STR: " + this.character.abil_Score_Str + raceBonusAttr;
-      case 1:
-        return "DEX: " + this.character.abil_Score_Dex + raceBonusAttr;
-      case 2:
-        return "CON: " + this.character.abil_Score_Con + raceBonusAttr;
-      case 3:
-        return "INT: " + this.character.abil_Score_Int + raceBonusAttr;
-      case 4:
-        return "WIS: " + this.character.abil_Score_Wis + raceBonusAttr;
-      case 5:
-        return "CHA: " + this.character.abil_Score_Cha + raceBonusAttr;
-    }
+    return "+0";
   }
 
   public getRollString(index: number): string {
     let s: string = this.rolls[index] > 0 ? "Re-roll" : "Roll";
 
     return s;
-  }
-
-  public setStatString(index: number, val: number) {
-    switch (index) {
-      case 0:
-        this.character.abil_Score_Str = val;
-        break;
-      case 1:
-        this.character.abil_Score_Dex = val;
-        break;
-      case 2:
-        this.character.abil_Score_Con = val;
-        break;
-      case 3:
-        this.character.abil_Score_Int = val;
-        break;
-      case 4:
-        this.character.abil_Score_Wis = val;
-        break;
-      case 5:
-        this.character.abil_Score_Cha = val;
-        break;
-      default:
-        break;
-    }
   }
 
   public rollStat(index: number) {
@@ -297,7 +250,15 @@ export class CreateCharacterComponent implements OnInit {
     }
 
     //Save the score
-    this.rollValue[index] = score;
+    this.keptRolls[index] = score;
+  }
+
+  sort(event: SortEvent) {
+    const current = this.keptRolls[event.currentIndex];
+    const swapWith = this.keptRolls[event.newIndex];
+
+    this.keptRolls[event.newIndex] = current;
+    this.keptRolls[event.currentIndex] = swapWith;
   }
 
   public keepRoll(index: number) {
@@ -308,13 +269,17 @@ export class CreateCharacterComponent implements OnInit {
     return this.rolls[index] < 2;
   }
 
-  public canSubmitCharacter(): boolean {
-    for (let i = 0; i < 6; i++) {
-      if (this.canRollAgain(i) || this.keptRolls[i] <= 0) return false;
+  public finishedRolling() : boolean {
+    for (let i = 0; i < this.stats.length; i++) {
+      if (this.canRollAgain(i)) return false;
     }
 
+    return true;
+  }
+
+  public canSubmitCharacter(): boolean {
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
-      && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null;
+      && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null && this.finishedRolling();
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {

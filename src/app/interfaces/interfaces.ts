@@ -1,40 +1,40 @@
 //Our database info:
-import { Character } from '../interfaces/api/user/character';
-import { Game } from '../interfaces/api/user/game';
-import { User } from '../interfaces/api/user/user';
+import { Character } from './api/user/character';
+import { Game } from './api/user/game';
+import { User } from './api/user/user';
 
-import { Class } from '../interfaces/api/class/class';
-import { ClassDetails } from '../interfaces/api/class/classdetails';
-import { ClassLevels } from '../interfaces/api/class/classlevels';
+import { Class } from './api/class/class';
+import { ClassDetails } from './api/class/classdetails';
+import { ClassLevels } from './api/class/classlevels';
 
-import { Race } from '../interfaces/api/race/race';
-import { RaceDetails } from '../interfaces/api/race/racedetails';
-import { SubRace } from '../interfaces/api/race/subrace';
+import { Race } from './api/race/race';
+import { RaceDetails } from './api/race/racedetails';
+import { SubRace } from './api/race/subrace';
 
-import { ProficiencyChoices } from '../interfaces/api/proficiencychoices';
+import { ProficiencyChoices } from './api/proficiencychoices';
 
 //Snackbar interfaces
-import { MessageOutput } from '../interfaces/ui/messageoutput'
-import { MessageType } from '../interfaces/ui/messagetype.enum';
+import { MessageOutput } from './ui/messageoutput'
+import { MessageType } from './ui/messagetype.enum';
 
 //Message interfaces (signalR)
-import { UserMessageData } from '../interfaces/messages/usermessagedata'
-import { ItemMessageData } from '../interfaces/messages/itemmessagedata'
-import { RollMessageData } from '../interfaces/messages/rollmessagedata'
-import { GridMessageData } from '../interfaces/messages/gridmessagedata';
-import { OnlineUser } from '../interfaces/messages/onlineuser';
+import { UserMessageData } from './messages/usermessagedata'
+import { ItemMessageData } from './messages/itemmessagedata'
+import { RollMessageData } from './messages/rollmessagedata'
+import { GridMessageData } from './messages/gridmessagedata';
+import { OnlineUser } from './messages/onlineuser';
 
 //Spell Data:
-import { Spell } from '../interfaces/api/spell/spell'
-import { SpellDetails } from '../interfaces/api/spell/spelldetail'
+import { Spell } from './api/spell/spell'
+import { SpellDetails } from './api/spell/spelldetail'
 
 //Equipment Data:
-import { Equipment } from '../interfaces/api/equipment/equipment';
-import { EquipmentCategory } from '../interfaces/api/equipment/equipmentcategory';
-import { EquipmentCategoryDetails } from '../interfaces/api/equipment/equipmentcategorydetails';
+import { Equipment } from './api/equipment/equipment';
+import { EquipmentCategory } from './api/equipment/equipmentcategory';
+import { EquipmentCategoryDetails } from './api/equipment/equipmentcategorydetails';
 
 //MISC:
-import { Trait } from '../interfaces/api/trait/trait';
+import { Trait } from './api/trait/trait';
 
 export {
     Character,

@@ -24,7 +24,6 @@
         <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Race Type:</label>
           <select class="custom-select col-md-5" (change)="selectRace($event.target.value)">
-            <!-->change)="selectRace(race.name, race.url)" -->
             <option selected>Choose</option>
             <option *ngFor="let race of this.races.results index as i" [value]="race.url">{{ race.name }}</option>
           </select>
@@ -34,7 +33,6 @@
         <div class="form-group row" *ngIf="this.selectedRace">
           <label class="col-sm-4 col-form-lable">Race:</label>
           <select class="custom-select col-md-5" (change)="selectSubRace($event.target.value)">
-            <!-->change)="selectRace(race.name, race.url)" -->
             <option selected>Choose</option>
             <option *ngFor="let race of this.selectedRace.subraces index as i" [value]="race.url">{{ race.name }}</option>
           </select>
@@ -57,27 +55,37 @@
             <option *ngFor="let game of this.games index as i" [value]="i">{{ game.name }}</option>
           </select>
         </div>
-
-        <!-- Stats -->
-        <div class="form-group-row mt-2" *ngFor="let stat of this.rolls index as i">
-          <label class="col-md-12 col-form-label float-left">{{ this.getStatString(i) }}</label>
-        </div>
       </form>
-      <button type="btn" class="btn btn-primary float-right mt-2" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>
     </div>
 
     <!-- Roll and stat assign panel -->
-    <div class="col-md-6 mt-5 mb-5">
+    <div class="col-md-6 mt-5 mb-5" *ngIf="!this.finishedRolling()">
       <p *ngFor="let r of this.rolls index as i">
-        Roll: {{ this.rollValue[i] }}
-        <button type="button" class="btn btm-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ getRollString(i) }}</button>
-        <button type="button" class="btn btm-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
-        <label class="col-sm-3 col-form-lable" *ngIf="!canRollAgain(i)">Assign Stat:</label>
-        <select class="custom-select col-sm-4" (change)="assignStat($event.target.value, i)" *ngIf="!canRollAgain(i)">
-          <option value="-1">Choose</option>
-          <option *ngFor="let stat of this.stats index as j" [value]="j" [disabled]="this.keptRolls[j] > 0">{{ this.stats[j] }}</option>
-        </select>
+        Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
+        <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ getRollString(i) }}</button>
+        <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
       </p>
     </div>
+
+    <!-- Stats -->
+    <div class="col-lg-6 mt-5" *ngIf="this.finishedRolling()">
+      <div class="row">
+        <div class="col-4 col-sm-3">
+          <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
+            {{ stat }} ({{ getStatString(i) }})
+          </p>
+        </div>
+
+        <div class="col-2" *ngIf="this.finishedRolling()">
+          <ul appSortableList (sort)="sort($event)" class="list-group list-group-flush">
+            <li class="box list-group-item" *ngFor="let roll of this.keptRolls index as i" appSortable>
+              {{ roll }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
+  <button type="btn" class="btn btn-primary float-right mt-2" [disabled]="!canSubmitCharacter()" (click)="confirmCharacter()">Confirm</button>
 </div>

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 
 import { CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetails, DmPortalComponent } from '../components';
+import { SortableListDirective, SortableDirective, DraggableDirective } from '../directives/directives';
 
 @NgModule({
   imports: [
@@ -20,13 +21,19 @@ import { CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetai
     CreateCharacterComponent,
     CharacterRaceDetails,
     CharacterManagerComponent,
-    DmPortalComponent
+    DmPortalComponent,
+    SortableListDirective,
+    SortableDirective,
+    DraggableDirective
   ],
   exports: [
     CreateCharacterComponent,
     CharacterRaceDetails,
     CharacterManagerComponent,
-    DmPortalComponent
+    DmPortalComponent,
+    SortableListDirective,
+    SortableDirective,
+    DraggableDirective
   ]
 })
 export class ManageModule { }
