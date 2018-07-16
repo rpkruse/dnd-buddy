@@ -10,7 +10,7 @@ import { User } from '../interfaces/interfaces';
   styleUrls: ['./profile.component.css', '../global-style.css']
 })
 export class ProfileComponent implements OnInit {
-  private user: User;
+  user: User;
   private isAlive: boolean = true;
 
   oldUsername: string = "";
