@@ -12,8 +12,6 @@ import { Character, Game, User, ClassDetails, RaceDetails, MessageType, MessageO
 import { Subscription, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 
-
-
 @Component({
   selector: 'game',
   templateUrl: './game.component.html',

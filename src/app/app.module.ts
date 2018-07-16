@@ -23,6 +23,7 @@ import { ApiService, DndApiService, DataShareService, SessionGuard, StorageServi
 
 //Directives:
 import { NgEnterDirective } from './directives/directives';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { NgEnterDirective } from './directives/directives';
     HomeComponent,
     LoginComponent,
     NgEnterDirective,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

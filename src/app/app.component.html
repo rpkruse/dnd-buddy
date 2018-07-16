@@ -2,7 +2,6 @@
 
 <nav class="navbar sticky-top navbar-expand-md header navbar-dark">
   <div class="nav-item">
-    <!-- <h4 class="font-weight-bold text-light d-inline nav-link">Dnd Buddy</h4> -->
     <a class="nav-link text-light font-weight-bold" [routerLink]="['/home']">Dnd Buddy</a>
   </div>
 
@@ -17,16 +16,24 @@
       <div ngbDropdown placement="bottom-left">
         <div class="text-light" ngbDropdownToggle>Manage</div>
         <div ngbDropdownMenu>
+          <a class="dropdown-item" [routerLink]="['/manageCharacter']">Player Portal</a>
+          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item pl-2">
+      <div ngbDropdown placement="bottom-left">
+        <div class="text-light" ngbDropdownToggle>Create</div>
+        <div ngbDropdownMenu>
           <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
-          <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
           <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
-          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a> 
         </div>
       </div>
     </div>
     <div class="nav-item">
       <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
     </div>
+
   </div>
 
   <!-- Content always outside of the collapse -->
@@ -34,7 +41,7 @@
     <div ngbDropdown placement="bottom-right" *ngIf="this.getUser()">
       <h6 class="font-weight-bold text-light" ngbDropdownToggle>{{ this.getUser().username }}</h6>
       <div ngbDropdownMenu>
-        <!--<button class="dropdown-item" [routerLink]="['/profile']">Profile</button>-->
+        <button class="dropdown-item" [routerLink]="['/profile']" [disabled]="true">Profile</button>
         <button class="dropdown-item " [routerLink]="['/login']" (click)="this.logout()">Logout</button>
       </div>
     </div>

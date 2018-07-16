@@ -1,4 +1,6 @@
+//Misc:
 import { AppComponent } from './app.component';
+import { ProfileComponent } from './profile/profile.component';
 
 //Manage Module:
 import { CharacterManagerComponent } from './manage/character-manager/character-manager.component';
@@ -24,6 +26,7 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 
 export {
     AppComponent,
+    ProfileComponent,
     CharacterManagerComponent,
     CreateCharacterComponent,
     CharacterRaceDetails,

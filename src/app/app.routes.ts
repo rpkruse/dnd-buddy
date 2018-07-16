@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 
-import { CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetails, PlayGameComponent, GameComponent, HomeComponent, LoginComponent, DmPortalComponent } from './components';
+import { CharacterManagerComponent, CreateCharacterComponent, CharacterRaceDetails, PlayGameComponent, GameComponent, HomeComponent, ProfileComponent, LoginComponent, DmPortalComponent } from './components';
 
 import { SessionGuard, UserResolver } from './services/services';
 
 export const rootRouterConfig: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: HomeComponent },
+    { path: 'profile', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: ProfileComponent },
     { path: 'game', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: GameComponent },
     { path: 'playGame', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: PlayGameComponent },
     { path: 'manageCharacter', canActivate: [ SessionGuard ], resolve: { user: UserResolver }, component: CharacterManagerComponent },
