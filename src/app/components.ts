@@ -13,6 +13,7 @@ import { GameComponent } from './game/game.component';
 import { PlayGameComponent } from './game/play-game/play-game.component';
 import { PlayDmComponent } from './game/play-dm/play-dm.component';
 import { PlayPlayerComponent } from './game/play-player/play-player.component';
+import { PlayChatComponent } from './game/play-chat/play-chat.component';
 
 //App Module:
 import { HomeComponent } from './home/home.component';
@@ -35,6 +36,7 @@ export {
     PlayGameComponent,
     PlayDmComponent,
     PlayPlayerComponent,
+    PlayChatComponent,
     HomeComponent,
     LoginComponent,
     EquipmentComponent,

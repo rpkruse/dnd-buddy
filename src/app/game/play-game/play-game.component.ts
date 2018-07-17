@@ -7,8 +7,6 @@ import { User, Game, Character, OnlineUser, UserMessageData, RollMessageData, Gr
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
 
-import { PlayDmComponent } from '../play-dm/play-dm.component';
-import { PlayPlayerComponent } from '../play-player/play-player.component';
 
 @Component({
   selector: 'app-play-game',
@@ -27,7 +25,7 @@ export class PlayGameComponent implements OnInit {
   isGM: boolean = false;
 
   token: string = "N";
-  gridHidden: boolean = false;
+  gridHidden: boolean = true;
 
   constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
     private _storageService: StorageService, private _router: Router, private _playManager: PlayManager) { }

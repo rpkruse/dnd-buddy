@@ -22,7 +22,6 @@ import { AppComponent, HomeComponent, LoginComponent } from './components';
 import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService, PlayManager} from './services/services';
 
 //Directives:
-import { NgEnterDirective } from './directives/directives';
 import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
@@ -30,7 +29,6 @@ import { ProfileComponent } from './profile/profile.component';
     AppComponent,
     HomeComponent,
     LoginComponent,
-    NgEnterDirective,
     ProfileComponent,
   ],
   imports: [

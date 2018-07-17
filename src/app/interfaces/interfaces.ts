@@ -22,6 +22,7 @@ import { UserMessageData } from './messages/usermessagedata'
 import { ItemMessageData } from './messages/itemmessagedata'
 import { RollMessageData } from './messages/rollmessagedata'
 import { GridMessageData } from './messages/gridmessagedata';
+import { ChatMessageData } from './messages/chatmessagedata';
 import { OnlineUser } from './messages/onlineuser';
 
 //Spell Data:
@@ -53,6 +54,7 @@ export {
     ItemMessageData,
     RollMessageData,
     GridMessageData,
+    ChatMessageData,
     OnlineUser,
     Spell,
     SpellDetails,

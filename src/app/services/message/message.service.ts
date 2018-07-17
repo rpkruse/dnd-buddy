@@ -5,7 +5,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { OnlineUser, UserMessageData, ItemMessageData, RollMessageData, GridMessageData } from '../../interfaces/interfaces';
+import { OnlineUser, UserMessageData, ItemMessageData, RollMessageData, GridMessageData, ChatMessageData } from '../../interfaces/interfaces';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HubService } from '../message/hub.service';
 
@@ -16,6 +16,7 @@ export class MessageService {
   private gridSize: number = 10; //nxn
 
   public groupMembers: OnlineUser[] = [];
+  public chatMessages: Subject<ChatMessageData[]> = new BehaviorSubject<ChatMessageData[]>([]);
   public rollDataSubj: Subject<RollMessageData> = new BehaviorSubject<RollMessageData>(null);
   public itemDataSubj: Subject<ItemMessageData> = new BehaviorSubject<ItemMessageData>(null);
 
@@ -24,8 +25,8 @@ export class MessageService {
   constructor(private _hub: HubService) {
     this.grid = this.initGrid();
 
-    this._hub.notification.subscribe(res => this.notify(res));
     this._hub.groupMembersSubj.subscribe(res => this.groupMembers = res);
+    this._hub.chatMsgSubj.subscribe(res => this.chatMessages.next(res));
 
     this._hub.rollDataSubj.subscribe(res => this.rollDataSubj.next(res));
     this._hub.itemDataSubj.subscribe(res => this.itemDataSubj.next(res));
@@ -55,10 +56,13 @@ export class MessageService {
     this._hub.invokeGrid(gmd);
   }
 
+  public sendMessage(cmd: ChatMessageData, privateMessage: boolean) {
+    this._hub.invokeGroupMessage(cmd, privateMessage);
+  }
+
   public leaveGroup() {
     this._hub.invokeLeaveGroup();
   }
-
 
   private updateGrid(gmd: GridMessageData) {
     if (!gmd) return;
@@ -94,9 +98,5 @@ export class MessageService {
     }
 
     return g;
-  }
-
-  public notify(msg: string) {
-    console.log(msg);
   }
 }

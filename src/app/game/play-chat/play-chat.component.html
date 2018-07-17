@@ -1,0 +1,43 @@
+<div class="container">
+
+  <div class="content" [ngClass]="this.hidden ? 'chatbox-hidden' : 'chatbox-show'">
+    <div class="row">
+      <div class="col-12">
+        <div class="top-bar header">
+          <h1 class="float-left">Messages</h1>
+          <button type="button" class="btn btn-s btn-sm float-right" (click)="this.hidden = !this.hidden">{{ this.hidden ? 'Show' : 'Hide' }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="chatbody" *ngIf="!this.hidden">
+          <div #chatMessageBox class="messages">
+            <ul class="list-group list-group-flush chat" *ngIf="this.chatMessages && this.chatMessages.length">
+              <li [ngClass]="this.isUsersMessage(msg) ? 'message-self' : 'message-other'" class="message"
+                *ngFor="let msg of this.chatMessages index as i">
+                <p [ngClass]="getMessageColor(msg)" *ngIf="isUsersMessage(msg)" class="float-right mr-2">{{ msg.message }}</p>
+                <p [ngClass]="getMessageColor(msg)" *ngIf="!isUsersMessage(msg)"><b>{{ msg.username }}: </b>{{ msg.message }}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="!this.hidden">
+      <div class="col-12 align-self-end">
+        <div class="message-input input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">{{ this.sendTo }}:</span>
+          </div>
+          <input (ngEnter)="this.sendMessage($event)" type="text" class="form-control" [value]="this.message" (input)="this.message = $event.target.value"
+            placeholder="Message">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-s" (click)="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
