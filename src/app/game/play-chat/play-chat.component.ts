@@ -102,65 +102,92 @@ export class PlayChatComponent implements OnInit {
   private parseMessage() {
     let split: string[] = this.message.split(/(\/s|\/w|\/r|\/h)/g).filter(x => x.length > 0);
 
-    //Help Menu:
-    if (split[0] === '/h') {
-      this.addHelpMenu();
-      this.message = "";
-      return;
-    }
-
-    //Send message (no /<command>):
-    if (split.length == 1) {
-      this.message = split[0];
-      return;
-    }
+    this.message = "";
 
     //Split the command and message
-    split[0] = split[0].trim();
-    split[1] = split[1].trim();
+    if (split.length == 1) split[0] = split[0].trim();
 
-    let isReply: boolean = split[0] === '/r';
+    if (split.length > 1) split[1] = split[1].trim();
 
-    //If we are replying, attempt to find someone to reply to otherwise ignore
-    if (isReply) {
-      for (let i = this.chatMessages.length - 1; i >= 0; i--) {
-        let msg: ChatMessageData = this.chatMessages[i];
-        if (msg.username === this.user.username) continue;
-
-        if (msg.isPrivate) {
-          this.sendTo = msg.username;
-          this.privateMessage = true;
-          this.message = split[1];
+    switch (split[0]) {
+      case '/s': //Group
+        this.sendMessageToGroup(split[1]);
+        return;
+      case '/r': //Reply
+        this.replyToMessage(split[1]);
+        return;
+      case '/w': //Whisper
+        this.sendPrivateMessage(split[1].split(/([A-Za-z]+)\s/).filter(x => x.length > 0));
+        return;
+      case '/c': //Clear
+        this.clearChatMessages();
+        return;
+      case '/h': //Help
+        this.addHelpMenu();
+        this.message = "";
+        return;
+      default: //Send to group
+        if (this.sendTo !== "Group") { //If we are replying to a whisper without /w || /r
+          this.sendPrivateMessage(split);
+          return;
         }
+        this.sendMessageToGroup(split[0]);
+        return;
+    }
+  }
+
+  /*
+    This method is called when the user does the /r command, it finds the last person 
+    to send them a private message and replies to them with the given input
+    @param messageToSend: string - The message to reply with
+  */
+  private replyToMessage(messageToSend: string) {
+    for (let i = this.chatMessages.length - 1; i >= 0; i--) {
+      let msg: ChatMessageData = this.chatMessages[i];
+      if (msg.username === this.user.username) continue; //Skip our own messages
+
+      if (msg.isPrivate) {
+        this.sendTo = msg.username;
+        this.privateMessage = true;
+        this.message = messageToSend;
+        return;
       }
-      return;
+    }
+  }
+
+  /*
+    This method is called when the user does the /w command OR enters a message while this.sendTo != "Group"
+    @param messageToSend: string[] - An array of strings [0] -> the username to whisper [1+] the message to send
+  */
+  private sendPrivateMessage(messageToSend: string[]) {
+    let username: string;
+    let msg: string = "";
+
+    if (messageToSend.length > 1) { // (/w) command
+      username = messageToSend[0].trim();
+      for (let i = 1; i < messageToSend.length; i++) {
+        msg += messageToSend[i];
+        if (i !== messageToSend.length - 1) msg += " ";
+      }
+    } else { //sending text while whispering (IE no /w command)
+      username = this.sendTo;
+      msg = messageToSend[0];
     }
 
-    let isPrivate: boolean = split[0] === '/w';
+    this.message = msg;
+    this.sendTo = username;
+    this.privateMessage = true;
+  }
 
-    //If private, try to find user to send to else ignore
-    if (isPrivate) {
-      let msgD: string[] = split[1].split(/([A-Za-z]+)\s/).filter(x => x.length > 0);
-
-      let username: string = msgD[0].trim();
-
-      let index: number = -1;
-
-      let msg: string = "";
-      for (let i = 1; i < msgD.length; i++) {
-        msg += msgD[i];
-        if (i !== msgD.length - 1) msg += " ";
-      }
-
-      this.message = msg;
-
-      this.sendTo = username;
-      this.privateMessage = true;
-    } else { //Switching to global so send to all
-      this.message = split[1];
-      this.privateMessage = false;
-      this.sendTo = "Group";
-    }
+  /*
+    This method is called when the user uses the /s command or sends a message with this.sendTo == "Group"
+    it sends a message to everyone in the game
+    @param messageToSend: string - The message to send to the group
+  */
+  private sendMessageToGroup(messageToSend: string) {
+    this.message = messageToSend;
+    this.privateMessage = false;
+    this.sendTo = "Group";
   }
 
   /*
@@ -169,6 +196,15 @@ export class PlayChatComponent implements OnInit {
   */
   private getNewChatMessage(msgs: ChatMessageData[]) {
     this.chatMessages = msgs;
+  }
+
+  /*
+    This method is called when the user uses the /c command, it clears all chat messages
+    and resets their sendTo to "Group"
+  */
+  private clearChatMessages() {
+    this.chatMessages = [];
+    this.sendTo = "Group";
   }
 
   /*
@@ -193,13 +229,14 @@ export class PlayChatComponent implements OnInit {
   public getMessageColor(msg: ChatMessageData): string {
     if (!msg) return;
 
-    if (msg.isPrivate) return 'message-purple';
+    if (msg.isPrivate) return 'message-whisper';
 
-    return 'message-black';
+    return 'message-standard';
   }
 
   /*
     This method is called when the user types '/h' to get the help menu
+    **Rewrite me**
   */
   private addHelpMenu() {
     let cmd: ChatMessageData = {
@@ -224,10 +261,19 @@ export class PlayChatComponent implements OnInit {
       connectionId: "",
       groupName: "",
       isPrivate: true,
-      message: "/h - to get help menu",
+      message: "/c - to clear chat",
       username: "Chat Bot"
     };
     this.chatMessages.push(cmd3);
+
+    let cmd4: ChatMessageData = {
+      connectionId: "",
+      groupName: "",
+      isPrivate: true,
+      message: "/h - to get help menu",
+      username: "Chat Bot"
+    };
+    this.chatMessages.push(cmd4);
   }
 
   ngOnDestroy() {

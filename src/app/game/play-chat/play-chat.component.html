@@ -3,7 +3,7 @@
   <div class="content" [ngClass]="this.hidden ? 'chatbox-hidden' : 'chatbox-show'">
     <div class="row">
       <div class="col-12">
-        <div class="top-bar header">
+        <div class="header">
           <h1 class="float-left">Messages</h1>
           <button type="button" class="btn btn-s btn-sm float-right" (click)="this.hidden = !this.hidden">{{ this.hidden ? 'Show' : 'Hide' }}</button>
         </div>
@@ -11,13 +11,13 @@
     </div>
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 border border-bottom-0 border-left-0 border-right-0">
         <div class="chatbody" *ngIf="!this.hidden">
           <div #chatMessageBox class="messages">
-            <ul class="list-group list-group-flush chat" *ngIf="this.chatMessages && this.chatMessages.length">
-              <li [ngClass]="this.isUsersMessage(msg) ? 'message-self' : 'message-other'" class="message"
+            <ul class="w-100 no-padding list-group" *ngIf="this.chatMessages && this.chatMessages.length">
+              <li [ngClass]="this.isUsersMessage(msg) ? 'message-self align-self-end mr-2' : 'message-other'" class="message list-group-item bg-transparent"
                 *ngFor="let msg of this.chatMessages index as i">
-                <p [ngClass]="getMessageColor(msg)" *ngIf="isUsersMessage(msg)" class="float-right mr-2">{{ msg.message }}</p>
+                <p [ngClass]="getMessageColor(msg)" *ngIf="isUsersMessage(msg)">{{ msg.message }}</p>
                 <p [ngClass]="getMessageColor(msg)" *ngIf="!isUsersMessage(msg)"><b>{{ msg.username }}: </b>{{ msg.message }}</p>
               </li>
             </ul>
@@ -25,6 +25,7 @@
         </div>
       </div>
     </div>
+
     <div class="row" *ngIf="!this.hidden">
       <div class="col-12 align-self-end">
         <div class="message-input input-group">
@@ -34,7 +35,7 @@
           <input (ngEnter)="this.sendMessage($event)" type="text" class="form-control" [value]="this.message" (input)="this.message = $event.target.value"
             placeholder="Message">
           <div class="input-group-append">
-            <button type="button" class="btn btn-s" (click)="sendMessage()">Send</button>
+            <button type="button" class="btn btn-primary" (click)="sendMessage()">Send</button>
           </div>
         </div>
       </div>
