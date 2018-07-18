@@ -203,7 +203,7 @@ export class PlayChatComponent implements OnInit {
     and resets their sendTo to "Group"
   */
   private clearChatMessages() {
-    this.chatMessages = [];
+    this._messageService.clearChatMessages();
     this.sendTo = "Group";
   }
 

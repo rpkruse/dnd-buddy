@@ -79,6 +79,10 @@ export class MessageService {
     }
   }
 
+  public clearChatMessages() {
+    this._hub.clearChatMessages();
+  }
+
   private initGrid(): GridMessageData[][] {
     let g: GridMessageData[][] = [];
     let gmd: GridMessageData;

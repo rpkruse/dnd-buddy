@@ -183,6 +183,10 @@ export class HubService {
         this.chatMsgSubj.next(this.chatMsgs);
     }
 
+    public clearChatMessages() {
+        this.chatMsgs = [];
+        this.chatMsgSubj.emit(this.chatMsgs);
+    }
 
     private setGenericRollData(umd: UserMessageData): RollMessageData {
         let rmd: RollMessageData;
