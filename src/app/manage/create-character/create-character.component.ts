@@ -10,8 +10,6 @@ import { ApiService, DndApiService, DataShareService } from '../../services/serv
 import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
-import { SortEvent } from '../../directives/sortable/sortable-list.directive';
-
 @Component({
   selector: 'app-create-character',
   templateUrl: './create-character.component.html',
@@ -38,9 +36,11 @@ export class CreateCharacterComponent implements OnInit {
   private numOfDice: number = 6;
   private numOfDiceToKeep: number = 3;
 
-  rolls: number[] = [0, 0, 0, 0, 0, 0];
-  keptRolls: number[] = [0, 0, 0, 0, 0, 0];
+  rolls: number[] = [0, 0, 0, 0, 0, 0]; //Count for the rolls (>=2 cannot roll again)
+  keptRolls: number[] = [0, 0, 0, 0, 0, 0]; //The actual roll values
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
+
+  boxIndex: number = -1;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router) { }
 
@@ -253,12 +253,22 @@ export class CreateCharacterComponent implements OnInit {
     this.keptRolls[index] = score;
   }
 
-  sort(event: SortEvent) {
-    const current = this.keptRolls[event.currentIndex];
-    const swapWith = this.keptRolls[event.newIndex];
+  public clickBox(index: number) {
+    if (this.boxIndex === index) {
+      this.boxIndex = -1;
+      return;
+    }
 
-    this.keptRolls[event.newIndex] = current;
-    this.keptRolls[event.currentIndex] = swapWith;
+    if (this.boxIndex > -1) {
+      let f: number = this.keptRolls[this.boxIndex];
+      this.keptRolls[this.boxIndex] = this.keptRolls[index];
+      this.keptRolls[index] = f;
+
+      this.boxIndex = -1;
+      return;
+    }
+
+    this.boxIndex = index;
   }
 
   public keepRoll(index: number) {

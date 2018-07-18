@@ -8,21 +8,12 @@
   }
   
   .box {
-    background: #BADA55;
+    background: #BADA55 !important;
     border: 1px solid black;
     padding: 11px 20px;
     display: inline-block;
     transition: background 300ms ease-in-out,
                   color 300ms ease-in-out;
-  
-    &.dragging {
-      background: coral;
-    }
-  
-    &.sortable.dragging {
-      background: transparent;
-      color: white;
-    }
   }
   
   ul {
@@ -32,4 +23,12 @@
       flex-direction: column;
   }
   
-  
+.box-clicked {
+  background: grey !important;
+}
+
+@media (min-width: 400px) {
+  .box:hover {
+    background: grey !important;
+  }
+}
