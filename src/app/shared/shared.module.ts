@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 
 import { EquipmentComponent, SpellbookComponent, StatsComponent, SnackbarComponent } from '../components';
 
+import { NgEnterDirective } from '../directives/directives';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -17,13 +20,15 @@ import { EquipmentComponent, SpellbookComponent, StatsComponent, SnackbarCompone
     SnackbarComponent,
     EquipmentComponent,
     SpellbookComponent,
-    StatsComponent
+    StatsComponent,
+    NgEnterDirective
   ],
   exports: [
     EquipmentComponent,
     SpellbookComponent,
     StatsComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    NgEnterDirective
   ]
 })
 export class SharedModule { }

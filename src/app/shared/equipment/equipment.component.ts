@@ -31,7 +31,7 @@ export class EquipmentComponent implements OnInit {
 
   ngOnChanges() {
     if (!this.character) return;
-    if (this.newItem) this.getItems();
+    if (this.newItem || this.character) this.getItems();
   }
 
   public getRingDetails(ring: Equipment, content) {

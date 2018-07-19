@@ -73,6 +73,6 @@ h1, h2 {
     background-color: #6b6b6b;
 }
 
-.btn:hover{
+.btn:not(.btn-secondary):hover{
     background-color: #ffd553;
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-import { ApiService } from '../../services/services';
-import { Character } from '../../interfaces/interfaces';
+import { DndApiService } from '../../services/services';
+import { Character, ClassDetails, ClassLevels } from '../../interfaces/interfaces';
+import { Subscription } from '../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-stats',
@@ -11,20 +12,49 @@ import { Character } from '../../interfaces/interfaces';
 export class StatsComponent implements OnInit {
   @Input() character: Character;
 
-  constructor(private _apiService: ApiService) { }
+  levelInfo: ClassLevels;
+
+  stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
+
+  constructor(private _dndApiService: DndApiService) { }
 
   ngOnInit() {
+    let cd: ClassDetails;
+    let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class).subscribe(
+      d => cd = d,
+      err => console.log("unable to get class details", err),
+      () => {
+        s.unsubscribe();
+        this.getLevelDetails(cd);
+        for (let i = 0; i < this.stats.length; i++) {
+          for (let j = 0; j < cd.saving_throws.length; j++) {
+            if (this.stats[i] === cd.saving_throws[j].name) {
+              let fixed: string = "*" + this.stats[i] + ":";
+              this.stats[i] = fixed;
+            }
+          }
+        }
+      }
+    );
   }
 
-  public getAttrScore(attr: number): string{
+  private getLevelDetails(cd: ClassDetails) {
+    let s: Subscription = this._dndApiService.getLevelInfo(cd.class_levels.class, this.character.level).subscribe(
+      d => this.levelInfo = d,
+      err => console.log("unable to get level info", err),
+      () => s.unsubscribe()
+    );
+  }
+
+  public getAttrScore(attr: number): string {
     let v: string = "";
 
     let n: number = Math.floor((attr - 10) / 2);
 
-    if(n >= 0)
+    if (n >= 0)
       v += "(+" + n + ")";
     else
-      v += "(-" + n + ")";
+      v += "(" + n + ")";
 
     return v;
   }

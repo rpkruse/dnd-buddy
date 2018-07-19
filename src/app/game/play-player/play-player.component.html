@@ -11,11 +11,11 @@
           <div class="col-lg-6">
 
             <div class="row">
-              <div class="col-md-6 text-center">
+              <div class="col-sm-6 text-center">
                 <h4>Roll</h4>
                 <hr class="stat mt-0" />
                 <label>Roll:</label>
-                <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-xs-1 col-sm-1 col-md-3 col-lg-3">
+                <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-3">
 
                 <br>
                 <label>Die:</label>
@@ -23,9 +23,12 @@
                   <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
                 </select>
                 <div class="card-text mt-5">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</div>
+                <button type="button" class="btn btn-primary btn-sm float-right" (click)="rollDice(false)">Roll</button>
+                <button type="button" class="btn btn-secondary btn-sm float-right" (click)="rollDice(true)">Hidden Roll</button>
+                <button type="button" class="btn btn-secondary btn-sm float-left" (click)="clearRoll()">Clear</button>
               </div>
 
-              <div class="col-md-6 text-center">
+              <div class="col-sm-6 text-center">
                 <app-stats [character]="this.character"></app-stats>
               </div>
             </div>
@@ -33,33 +36,35 @@
 
           <div class="col-lg-6">
             <!-- Spell Info -->
-            <div class="col-lg-6 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
-              <h4 class="text-center">Spell Info</h4>
-              <hr class="stat mt-0">
-              <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
-                <li class="list-group-item text-light content">
-                  Cantrips: {{levelDetail.spellcasting.cantrips_known}}
-                  <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
-                </li>
-                <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
-                  Level {{i+1}} Spells: {{spellSlot}}
-                  <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
-                </li>
-              </ul>
-            </div>
-            <!-- ^^ End of spell info-->
-            <!-- Item info -->
-            <div class="col-lg-6 float-right" *ngIf="this.character">
-              <app-equipment [character]="character" [newItem]="this.gotNewItem"></app-equipment>
+            <div class="row">
+              <div class="col-sm-6 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
+                <h4 class="text-center">Spell Info</h4>
+                <hr class="stat mt-0">
+                <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
+                  <li class="list-group-item text-light content">
+                    Cantrips: {{levelDetail.spellcasting.cantrips_known}}
+                    <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
+                  </li>
+                  <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
+                    Level {{i+1}} Spells: {{spellSlot}}
+                    <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
+                  </li>
+                </ul>
+              </div>
+              <!-- ^^ End of spell info-->
+              <!-- Item info -->
+              <div class="col-sm-6 float-right" *ngIf="this.character">
+                <app-equipment [character]="character" [newItem]="this.gotNewItem"></app-equipment>
+              </div>
             </div>
 
           </div>
         </div>
       </div>
       <div class="card-footer header">
-        <button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
+        <!--<button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
         <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
-        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>
+        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>-->
       </div>
     </div>
   </div>

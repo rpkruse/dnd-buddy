@@ -10,10 +10,12 @@ export interface ClassDetails {
         url: string,
         name: string
     },
-    saving_throws: {
-        url: string,
-        name: string
-    },
+    saving_throws: [
+        {
+            url: string,
+            name: string
+        }
+    ],
     starting_equipment: {
         url: string,
         class: string

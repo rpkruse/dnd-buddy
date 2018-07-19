@@ -8,8 +8,8 @@ export interface ClassLevels {
     feature_choices: any[],
     features: Results,
     spellcasting?: {
-        cantrips_known: 2,
-		spells_known: 3,
+        cantrips_known: number,
+		spells_known: number,
 		spell_slots_level_1: number,
 		spell_slots_level_2: number,
 		spell_slots_level_3: number,

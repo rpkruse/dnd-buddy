@@ -68,10 +68,8 @@ export class CharacterManagerComponent implements OnInit {
   */
   public getCharacterDetails(character: Character) {
     this.selectedCharacter = character;
-    this.armor = null;
-    this.weapon = null;
-    this.shield = null;
-    
+  
+  
     let s, j: Subscription;
 
     s = this._dndApiService.getSingleEntity<ClassDetails>(this.selectedCharacter.class).subscribe(
@@ -86,37 +84,6 @@ export class CharacterManagerComponent implements OnInit {
       () => j.unsubscribe()
     );
 
-    this.getCharacterItems();
-  }
-
-  /*
-    This method is called when the user selects a character, it pulls any of their equipment from the 5e api
-    if they currently have some
-  */
-  private getCharacterItems() {
-    if (this.selectedCharacter.armor) {
-      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.armor).subscribe(
-        d => this.armor = d,
-        err => console.log("unable to get armor", err),
-        () => s.unsubscribe()
-      );
-    }
-
-    if (this.selectedCharacter.weapon) {
-      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.weapon).subscribe(
-        d => this.weapon = d,
-        err => console.log("unable to get weapon", err),
-        () => s.unsubscribe()
-      );
-    }
-
-    if (this.selectedCharacter.shield) {
-      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.selectedCharacter.shield).subscribe(
-        d => this.shield = d,
-        err => console.log("unable to get weapon", err),
-        () => s.unsubscribe()
-      );
-    }
   }
   
   /*

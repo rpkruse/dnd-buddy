@@ -19,6 +19,8 @@ export class DmPortalComponent implements OnInit {
   private isAlive: boolean = true;
   private user: User;
 
+  mouseOver: number = -1;
+
   games: Observable<Game[]>;
   game: Game;
 

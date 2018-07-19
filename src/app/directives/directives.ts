@@ -4,6 +4,13 @@
 */
 import { NgEnterDirective } from './ng-enter.directive';
 
+import { SortableListDirective } from './sortable/sortable-list.directive';
+import { DraggableDirective } from './draggable.directive';
+import { SortableDirective } from './sortable/sortable.directive';
+
 export {
-    NgEnterDirective
+    NgEnterDirective,
+    SortableListDirective,
+    DraggableDirective,
+    SortableDirective
 }

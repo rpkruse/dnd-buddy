@@ -32,6 +32,10 @@
     -webkit-box-shadow: 3px 3px 5px 6px #ccc;
 }
 
+.btn-s {
+    background: #c4bfbf
+}
+
 #snackbar {
     min-width: 250px; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */

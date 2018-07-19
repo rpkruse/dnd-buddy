@@ -1,4 +1,6 @@
+//Misc:
 import { AppComponent } from './app.component';
+import { ProfileComponent } from './profile/profile.component';
 
 //Manage Module:
 import { CharacterManagerComponent } from './manage/character-manager/character-manager.component';
@@ -11,6 +13,7 @@ import { GameComponent } from './game/game.component';
 import { PlayGameComponent } from './game/play-game/play-game.component';
 import { PlayDmComponent } from './game/play-dm/play-dm.component';
 import { PlayPlayerComponent } from './game/play-player/play-player.component';
+import { PlayChatComponent } from './game/play-chat/play-chat.component';
 
 //App Module:
 import { HomeComponent } from './home/home.component';
@@ -24,6 +27,7 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 
 export {
     AppComponent,
+    ProfileComponent,
     CharacterManagerComponent,
     CreateCharacterComponent,
     CharacterRaceDetails,
@@ -32,6 +36,7 @@ export {
     PlayGameComponent,
     PlayDmComponent,
     PlayPlayerComponent,
+    PlayChatComponent,
     HomeComponent,
     LoginComponent,
     EquipmentComponent,

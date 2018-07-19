@@ -2,8 +2,7 @@
 
 <nav class="navbar sticky-top navbar-expand-md header navbar-dark">
   <div class="nav-item">
-    <!-- <h4 class="font-weight-bold text-light d-inline nav-link">Dnd Buddy</h4> -->
-    <a class="nav-link text-light font-weight-bold" [routerLink]="['/home']">Dnd Buddy</a>
+    <a class="nav-link text-light font-weight-bold text-hover" [routerLink]="['/home']">Dnd Buddy</a>
   </div>
 
   <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarSupportedContent"
@@ -15,26 +14,34 @@
     <!-- Inside navbar content here -->
     <div class="nav-item">
       <div ngbDropdown placement="bottom-left">
-        <div class="text-light" ngbDropdownToggle>Manage</div>
+        <div class="text-light text-hover" ngbDropdownToggle>Manage</div>
+        <div ngbDropdownMenu>
+          <a class="dropdown-item" [routerLink]="['/manageCharacter']">Player Portal</a>
+          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item pl-md-3">
+      <div ngbDropdown placement="bottom-left">
+        <div class="text-light text-hover" ngbDropdownToggle>Create</div>
         <div ngbDropdownMenu>
           <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Characters</a>
-          <a class="dropdown-item" [routerLink]="['/manageCharacter']">View Characters</a>
           <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
-          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a> 
         </div>
       </div>
     </div>
     <div class="nav-item">
-      <a class="nav-link text-light" [routerLink]="['/game']">Games</a>
+      <a class="nav-link text-light text-hover" [routerLink]="['/game']">Games</a>
     </div>
+
   </div>
 
   <!-- Content always outside of the collapse -->
   <div class="nav-item ml-auto no-padding" style="margin: 0" *ngIf="this.isLoggedIn()">
     <div ngbDropdown placement="bottom-right" *ngIf="this.getUser()">
-      <h6 class="font-weight-bold text-light" ngbDropdownToggle>{{ this.getUser().username }}</h6>
+      <h6 class="font-weight-bold text-light text-hover" ngbDropdownToggle>{{ this.getUser().username }}</h6>
       <div ngbDropdownMenu>
-        <!--<button class="dropdown-item" [routerLink]="['/profile']">Profile</button>-->
+        <button class="dropdown-item" [routerLink]="['/profile']" [disabled]="true">Profile</button>
         <button class="dropdown-item " [routerLink]="['/login']" (click)="this.logout()">Logout</button>
       </div>
     </div>

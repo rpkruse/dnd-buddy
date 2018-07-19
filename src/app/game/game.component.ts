@@ -9,8 +9,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService, DndApiService, DataShareService, StorageService } from '../services/services';
 import { Character, Game, User, ClassDetails, RaceDetails, MessageType, MessageOutput } from '../interfaces/interfaces';
-import { Subscription } from 'rxjs';
-
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators/debounceTime';
 
 @Component({
   selector: 'game',
@@ -34,6 +34,8 @@ export class GameComponent implements OnInit {
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
 
+  gameNameChanged: Subject<string> = new Subject<string>();
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal, private _router: Router, private _storageService: StorageService) { }
 
   ngOnInit() {
@@ -43,6 +45,8 @@ export class GameComponent implements OnInit {
       err => console.log("Unable to get games"),
       () => s.unsubscribe()
     );
+
+    let j: Subscription = this.gameNameChanged.pipe(debounceTime(500)).subscribe(res => this.validateGamename(res));
   }
 
   public createGame() {
@@ -188,6 +192,13 @@ export class GameComponent implements OnInit {
     this.openModal(content);
   }
 
+  public typeGameName(name: string) {
+    if (!name.length) return;
+
+    this.gameName = name;
+    this.gameNameChanged.next(this.gameName);
+  }
+  
   public openModal(content) {
     this._modalService.open(content).result.then((result) => { //On close via save
       this.clearCharacterDetails();

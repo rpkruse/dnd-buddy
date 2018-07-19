@@ -9,19 +9,21 @@ import { SharedModule } from '../shared/shared.module';
 
 //Components:
 import { PlayGameComponent, PlayDmComponent, PlayPlayerComponent, GameComponent } from '../components';
+import { PlayChatComponent } from './play-chat/play-chat.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     NgbModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
     PlayGameComponent, 
     PlayDmComponent, 
     PlayPlayerComponent, 
-    GameComponent
+    GameComponent, 
+    PlayChatComponent,
   ],
   exports: [
     PlayGameComponent, 
