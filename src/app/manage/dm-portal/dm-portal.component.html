@@ -4,7 +4,7 @@
     <!-- List of owned games -->
     <div class="col-md-5 mt-5">
       <h2 class="header mb-0">Games</h2>
-      <ul class="list-group static-size-list">
+      <ul class="list-group static-size-list short">
         <li class="list-group-item content text-light game" (click)="loadGame(game)" *ngFor="let game of this.games | async">
           {{ game.name }}
         </li>
@@ -14,7 +14,7 @@
     <!-- List of chars in selected game -->
     <div class="col-md-5 mt-5" *ngIf="this.game">
       <h2 class="header mb-0">Characters In: {{ this.game.name }}</h2>
-      <ul class="list-group static-size-list" *ngIf="this.game.character.length">
+      <ul class="list-group static-size-list short" *ngIf="this.game.character.length">
         <li class="list-group-item content text-light character" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
           {{ character.name }}
         </li>
@@ -54,43 +54,12 @@
 
             <!-- Equipment -->
             <div class="col-md-3">
-              <app-equipment [character]="this.character" [newItem]="this.givenItem"></app-equipment>
+              <app-equipment [character]="this.character" [dmPortal]="true"></app-equipment>
             </div>
 
             <!-- Give Equip. -->
-            <div class="col-md-6">
-              <h4>Give Item</h4>
-              <hr class="stat mt-0" />
-              <label class="col-sm-4 col-form-lable text-light">Item (type):</label>
-              <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="equipmentTypes && equipmentTypes.results">
-                <option selected>Choose</option>
-                <option *ngFor="let eq of equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
-              </select>
-              <br>
-              <br>
-
-              <div *ngIf="!this.slottedItem">
-                <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
-                <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-                  <option selected>Choose</option>
-                  <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-                </select>
-              </div>
-
-              <div *ngIf="this.slottedItem">
-                <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
-                <select class="custom-select col-sm-5" (change)="getItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-                  <option selected>Choose</option>
-                  <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-                </select>
-
-                <label class="col-sm-4 col-form-lable text-light">Slot #:</label>
-                <select class="custom-select col-sm-5" (change)="setItem(this.item, $event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-                  <option selected>Choose</option>
-                  <option value="1">Slot 1</option>
-                  <option value="2">Slot 2</option>
-                </select>
-              </div>
+            <div class="col-md-6 text-light">
+              <app-giveitem [character]="this.character" [users]="[]"></app-giveitem>
             </div>
 
           </div>

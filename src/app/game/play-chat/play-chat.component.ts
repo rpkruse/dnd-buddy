@@ -17,7 +17,7 @@ export class PlayChatComponent implements OnInit {
   user: User;
   game: Game;
 
-  hidden: boolean = false;
+  hidden: boolean = true;
   privateMessage: boolean = false;
   message: string = "";
   sendTo: string = "Group";

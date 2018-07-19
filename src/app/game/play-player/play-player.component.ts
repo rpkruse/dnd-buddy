@@ -9,9 +9,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subscription } from 'rxjs';
 
-import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, MessageOutput, MessageType } from '../../interfaces/interfaces';
+import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, MessageOutput, MessageType, Item, ItemType } from '../../interfaces/interfaces';
 
-import { ApiService, PlayManager, DataShareService, MessageService } from '../../services/services';
+import { PlayManager, DataShareService, MessageService, ItemManager } from '../../services/services';
 
 @Component({
   selector: 'play-player',
@@ -57,9 +57,9 @@ export class PlayPlayerComponent implements OnInit {
   shield: Equipment;
   itemData: ItemMessageData;
 
-  gotNewItem: boolean = false;
+  gotNewItem: ItemType;
 
-  constructor(private _apiService: ApiService, private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _modal: NgbModal) { }
+  constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
@@ -158,46 +158,50 @@ export class PlayPlayerComponent implements OnInit {
     @param item: Equipment - The item given to the player
   */
   private handleWeaponType(item: Equipment) {
-    let newItem: boolean = false;
-    this.gotNewItem = false;
+    let newItem: ItemType = null;
+    this.gotNewItem = ItemType.None;
 
     switch (item.equipment_category) {
       case "Weapon":
         this.character.weapon = item.url;
-        newItem = true;
+        newItem = ItemType.Weapon;
         this.triggerMessage("", "Recieved new weapon!", MessageType.Notification);
         break;
       case "Armor":
         if (item.name === "Shield") {
           this.character.shield = item.url;
-          newItem = true;
+          newItem = ItemType.Shield;
           this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
           break;
         }
         this.character.armor = item.url;
-        newItem = true;
+        newItem = ItemType.Armor;
         this.triggerMessage("", "Recieved new armor!", MessageType.Notification);
 
         break;
       case "Shield":
         this.character.shield = item.url;
-        newItem = true;
+        newItem = ItemType.Shield;
         this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
         break;
       default:
+        // newItem = ItemType.Bag;
+        this.addItemToBag(item);
         return;
     }
 
-    if (!newItem) return; //Only update user if we got a valid item type (armor, shield, weapon, rings, neck)
-    let s: Subscription = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
-      d => d = d,
-      err => console.log("Unable to update character", err),
-      () => {
-        s.unsubscribe();
-        this.gotNewItem = true;
-        // this.getCharacterItems();
-      }
-    )
+    this._itemManager.updateCharacterEquipment(this.character, newItem);
+  }
+
+  private addItemToBag(eq: Equipment) {
+    let item = {
+      name: eq.name,
+      url: eq.url,
+      count: 1,
+      characterId: this.character.characterId,
+    };
+
+    this._itemManager.addItem(item, item.url);
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {
@@ -216,7 +220,6 @@ export class PlayPlayerComponent implements OnInit {
 
   ngOnDestroy() {
     this.isAlive = false;
-
   }
 
 }

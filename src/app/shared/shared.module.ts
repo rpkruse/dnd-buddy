@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { EquipmentComponent, SpellbookComponent, StatsComponent, SnackbarComponent } from '../components';
 
 import { NgEnterDirective } from '../directives/directives';
+import { GiveitemComponent } from './giveitem/giveitem.component';
 
 
 @NgModule({
@@ -21,12 +22,14 @@ import { NgEnterDirective } from '../directives/directives';
     EquipmentComponent,
     SpellbookComponent,
     StatsComponent,
-    NgEnterDirective
+    NgEnterDirective,
+    GiveitemComponent
   ],
   exports: [
     EquipmentComponent,
     SpellbookComponent,
     StatsComponent,
+    GiveitemComponent,
     SnackbarComponent,
     NgEnterDirective
   ]

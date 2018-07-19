@@ -1,9 +1,14 @@
+::-webkit-scrollbar{
+    background: transparent;
+    width: 0px;
+}
+
 .static-size-list{
     overflow-y: scroll;
 }
 
 .short{
-    max-height: 20vh;
+    max-height: 10rem;
 }
 
 .half-height{

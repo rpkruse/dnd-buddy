@@ -1,0 +1,43 @@
+<div class="col-md-12">
+  <h4>Give Item</h4>
+  <hr class="stat mt-0" />
+  <label class="col-sm-4 col-form-lable">Item (type):</label>
+  <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="this.equipmentTypes && this.equipmentTypes.results">
+    <option selected>Choose</option>
+    <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
+  </select>
+
+  <div *ngIf="!this.slottedItem">
+    <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
+    <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+      <option selected>Choose</option>
+      <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="this.slottedItem">
+    <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
+    <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
+      <option selected>Choose</option>
+      <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
+    </select>
+
+    <label class="col-sm-4 col-form-lable text-light">Slot #:</label>
+    <select class="custom-select col-sm-5" (change)="setSlot($event.target.value)" *ngIf="this.equipmentItem">
+      <option selected>Choose</option>
+      <option value="1">Slot 1</option>
+      <option value="2">Slot 2</option>
+    </select>
+  </div>
+  <br>
+
+  <div *ngIf="this.users && this.users.length">
+    <label class="col-sm-4 col-form-lable">Player:</label>
+    <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem">
+      <option selected>Choose</option>
+      <option *ngFor="let member of this.users index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
+    </select>
+  </div>
+
+  <button type="button" class="btn btn-success float-right" (click)="giveItem()" [disabled]="!this.finished">Give Item</button>
+</div>
