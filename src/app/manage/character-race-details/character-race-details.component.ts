@@ -54,6 +54,12 @@ export class CharacterRaceDetails implements OnInit {
   mouseOverTrait: number = -1;
   subMenuActive: boolean = false;
   raceTabActive: boolean = true;
+  languageListActive: boolean = false;
+  traitsListActive: boolean = false;
+  proficiencyChoiceListActive: boolean = false;
+  proficiencyListActive: boolean = false;
+  savingThrowsListActive: boolean = false;
+  subclassesListActive: boolean = false;
 
   constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
@@ -83,6 +89,30 @@ export class CharacterRaceDetails implements OnInit {
     } else if (tab === 'classes') {
       this.raceTabActive = false;
     }
+  }
+
+  public toggleLanguageList() {
+    this.languageListActive = !this.languageListActive;
+  }
+
+  public toggleTraitsList() {
+    this.traitsListActive = !this.traitsListActive;
+  }
+
+  public toggleProficiencyChoiceList() {
+    this.proficiencyChoiceListActive = !this.proficiencyChoiceListActive;
+  }
+
+  public toggleProficiencyList() {
+    this.proficiencyListActive = !this.proficiencyListActive;
+  }
+
+  public toggleSavingThrowsList() {
+    this.savingThrowsListActive = !this.savingThrowsListActive;
+  }
+
+  public toggleSubClassesList() {
+    this.subclassesListActive = !this.subclassesListActive;
   }
 
   /*
