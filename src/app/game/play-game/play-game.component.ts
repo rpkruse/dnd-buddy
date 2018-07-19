@@ -97,8 +97,8 @@ export class PlayGameComponent implements OnInit {
 
     if(!this.isGM)
       this._playManager.initClassDetails(this.character);
-    else
-      this._playManager.initGMInfo();
+    // else
+      // this._playManager.initGMInfo();
   }
 
   /* 

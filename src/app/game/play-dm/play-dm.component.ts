@@ -7,7 +7,7 @@ import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
 
 import {
-  User, Game, Character, ItemMessageData, RollMessageData,
+  User, Game, ItemMessageData, RollMessageData,
   Equipment, EquipmentCategory, EquipmentCategoryDetails,
   MessageOutput, MessageType, OnlineUser
 } from '../../interfaces/interfaces';
@@ -41,8 +41,6 @@ export class PlayDmComponent implements OnInit {
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
     this._dataShareService.game.takeWhile(() => this.isAlive).subscribe(res => this.game = res);
-
-    this._playManager.equipmentCategories.takeWhile(() => this.isAlive).subscribe(res => this.equipmentTypes = res);
   }
 
   /*
@@ -76,48 +74,12 @@ export class PlayDmComponent implements OnInit {
   }
 
   /*
-    This method is called when the GM clicks on a item type (IE armor, weapon) it returns all items of that type from the DB
-    @param url: string - The url of the item type to fetch from the db
-  */
-  public getListOfEquipment(url: string) {
-    if (url === "Choose") {
-      this.equipmentList = null;
-      this.equipmentItem = null;
-      return;
-    };
-
-    let s: Subscription = this._playManager.getItemList(url).subscribe(
-      d => this.equipmentList = d,
-      err => console.log("unable to get equipment list", err),
-      () => s.unsubscribe()
-    );
-  }
-
-  /*
-    This method is called when the DM selects a specific item (IE sword, axe, chain mail) it will pull the details of this item
-    from the api
-    @param url: string - The api url of the item to pull
-  */
-  public getEquipmentItem(url: string) {
-    if (url === "Choose") {
-      this.equipmentItem = null;
-    };
-
-    let s: Subscription = this._playManager.getItem(url).subscribe(
-      d => this.equipmentItem = d,
-      err => console.log("Unable to get equipment item", err),
-      () => s.unsubscribe()
-    );
-  }
-
-  /*
     This method is called once the DM selects a player to give the item to, it will send the message via signalR
     @param id: string - The connection ID of the player to give the item to
   */
-  public selectPlayer(id: string) {
-    if (id === "Choose") return;
+  public selectPlayer(IMD: ItemMessageData) {
+    if (!IMD) return;
 
-    let IMD: ItemMessageData = this._playManager.createIMD(id, this.game.name, this.equipmentItem.url);
     this._messageService.sendItem(IMD);
     this.triggerMessage("", "Item given!", MessageType.Success);
   }

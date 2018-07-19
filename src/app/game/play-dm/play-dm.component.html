@@ -27,27 +27,10 @@
           </div>
 
           <!-- Item Giving -->
-          <div class="col-md-6">
-            <h4>Give Item</h4>
-            <hr class="stat mt-0" />
-            <label class="col-sm-4 col-form-lable">Item (type):</label>
-            <select class="custom-select col-sm-5" (change)="getListOfEquipment($event.target.value)" *ngIf="this.equipmentTypes && this.equipmentTypes.results">
-              <option selected>Choose</option>
-              <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
-            </select>
-
-            <label class="col-sm-4 col-form-lable">Item (item):</label>
-            <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-              <option selected>Choose</option>
-              <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-            </select>
-            <br>
-            <label class="col-sm-4 col-form-lable">Player:</label>
-            <select class="custom-select col-sm-5" (change)="selectPlayer($event.target.value)" *ngIf="this.equipmentItem">
-              <option selected>Choose</option>
-              <option *ngFor="let member of this.getOtherGroupMembers() index as i" [value]="member.umd.id">{{ member.umd.name }}</option>
-            </select>
+          <div class="col-md-6" *ngIf="this.getOtherGroupMembers().length">
+            <app-giveitem [users]="this.getOtherGroupMembers()" [character]="null" (imd)="selectPlayer($event)"></app-giveitem>
           </div>
+
         </div>
       </div>
       <div class="card-footer header">

@@ -26,21 +26,7 @@ export class PlayManager {
   public spellBook: Subject<Spell[]> = new BehaviorSubject<Spell[]>(null); //The class' spells
   public spellDetail: Subject<SpellDetails> = new BehaviorSubject<SpellDetails>(null); //The detail of a given spell
 
-  public equipmentCategories: Subject<EquipmentCategory> = new BehaviorSubject<EquipmentCategory>(null); //The types of items you can give (Armor, Weapon, Mount, etc)
-
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService) { }
-
-  /*
-    This method is called when the GM joins the game, it pulls all of the item types they can give
-    from the 5e api
-  */
-  public initGMInfo() {
-    let j: Subscription = this._dndApiService.getAllEntities<EquipmentCategory>("equipment-categories").subscribe(
-      d => this.equipmentCategories.next(d),
-      err => console.log(err),
-      () => j.unsubscribe()
-    )
-  }
 
   /*
     This method is called when a player joins the game, it pulls all of their class details from the 5e api
@@ -80,14 +66,6 @@ export class PlayManager {
         this.levelDetail.next(ld);
       }
     );
-  }
-
-  /*
-    This method is called by the GM it returns the list of items you can get from a category of items (IE armor, weapons)
-    @return Observable<EquipmentCategoryDetails>
-  */
-  public getItemList(url: string): Observable<EquipmentCategoryDetails> {
-    return this._dndApiService.getSingleEntity<EquipmentCategoryDetails>(url);
   }
 
   /*

@@ -19,7 +19,7 @@ import { SharedModule } from './shared/shared.module';
 import { AppComponent, HomeComponent, LoginComponent } from './components';
 
 //Services:
-import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService, PlayManager} from './services/services';
+import { ApiService, DndApiService, DataShareService, SessionGuard, StorageService, UserResolver, HubService, MessageService, PlayManager, ItemManager} from './services/services';
 
 //Directives:
 import { ProfileComponent } from './profile/profile.component';
@@ -52,7 +52,8 @@ import { ProfileComponent } from './profile/profile.component';
     UserResolver,
     HubService,
     MessageService,
-    PlayManager
+    PlayManager,
+    ItemManager
   ],
   bootstrap: [AppComponent]
 })

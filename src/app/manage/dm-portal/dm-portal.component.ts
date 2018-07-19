@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ApiService, DndApiService, DataShareService } from '../../services/services';
+import { ApiService, DndApiService, DataShareService, ItemManager } from '../../services/services';
 
 import {
-  User, Character, Game, RaceDetails, ClassDetails,
-  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType
+  User, Character, Item, Game, RaceDetails, ClassDetails,
+  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType, ItemType
 } from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
@@ -32,12 +32,11 @@ export class DmPortalComponent implements OnInit {
   equipmentList: EquipmentCategoryDetails;
   item: Equipment;
 
-  givenItem: boolean = false;
   slottedItem: boolean = false;
 
   stats: string[] = ["STR: ", "DEX: ", "CON: ", "INT: ", "WIS: ", "CHA: "]
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService) { }
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _itemManager: ItemManager) { }
 
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
@@ -65,75 +64,6 @@ export class DmPortalComponent implements OnInit {
       err => console.log("unable to get equipment types"),
       () => s.unsubscribe()
     )
-  }
-
-  getListOfEquipment(url: string) {
-    if (url === "Choose") {
-      this.equipmentList = null;
-      this.slottedItem = false;
-      return;
-    }
-
-    let s: Subscription = this._dndApiService.getSingleEntity<EquipmentCategoryDetails>(url).subscribe(
-      d => this.equipmentList = d,
-      err => console.log("unable to get eq type"),
-      () => {
-        s.unsubscribe();
-        this.slottedItem = this.equipmentList.name === "Rings";
-      }
-    );
-  }
-
-  getItem(url: string) {
-    this.givenItem = false;
-    if (url === "Choose") {
-      return;
-    }
-
-    let equipmentItem: Equipment;
-    let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(url).subscribe(
-      d => equipmentItem = d,
-      err => console.log("unable to get equipment item"),
-      () => {
-        s.unsubscribe();
-        if (!this.slottedItem) this.setItem(equipmentItem); else this.item = equipmentItem;
-      }
-    )
-  }
-
-  setItem(item: Equipment, slot?: string) {
-    switch (item.equipment_category) {
-      case "Weapon":
-        this.character.weapon = item.url;
-        this.givenItem = true;
-        break;
-      case "Armor":
-        if (item.name === "Shield") {
-          this.character.shield = item.url;
-          this.givenItem = true;
-          break;
-        }
-        this.character.armor = item.url;
-        this.givenItem = true;
-        break;
-      case "Shield":
-        this.character.shield = item.url;
-        this.givenItem = true;
-
-        break;
-      case "Rings":
-        if (slot === "1") {
-          this.character.ring_1 = item.url;
-        } else if (slot === "2") {
-          this.character.ring_2 = item.url;
-        }
-
-        this.givenItem = true;
-        break;
-      default:
-        this.givenItem = false;
-        break;
-    }
   }
 
   saveCharacter() {

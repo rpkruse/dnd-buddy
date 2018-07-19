@@ -23,7 +23,7 @@
   <!-- Rings -->
   <div *ngIf="this.ring_1">
     <p class="text-center">Ring 1:
-      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, content)">{{ this.ring_1.name }}</button>
+      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">{{ this.ring_1.name }}</button>
     </p>
   </div>
   <div *ngIf="!this.ring_1">
@@ -32,15 +32,26 @@
 
   <div *ngIf="this.ring_2">
     <p class="text-center">Ring 2:
-      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, content)">{{ this.ring_2.name }}</button>
+      <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name }}</button>
     </p>
   </div>
   <div *ngIf="!this.ring_2">
     <p class="text-center">Ring 2: None</p>
   </div>
+
+  <div *ngIf="this.items && this.items.length">
+    <!-- <h5 class="mx-auto text-center bag">Bag:</h5> -->
+    <ul class="list-group static-size-list short">
+      <li class="list-group-item content"  (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
+        {{ item.name }} (x{{ item.count }})
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right" (click)="addItemCount(item, i)" *ngIf="dmPortal">+</button>
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right" (click)="removeItemCount(i)">-</button>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #ringModal let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h5 class="modal-title text-center">{{ this.selectedRing.name }}</h5>
   </div>

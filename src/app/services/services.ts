@@ -14,6 +14,7 @@ import { MessageService } from './message/message.service';
 
 //Managers
 import { PlayManager } from './manager/playmanager.service';
+import { ItemManager } from './manager/itemmanager.service';
 
 export {
     ApiService,
@@ -24,5 +25,6 @@ export {
     UserResolver,
     HubService,
     MessageService,
-    PlayManager
+    PlayManager,
+    ItemManager
 };

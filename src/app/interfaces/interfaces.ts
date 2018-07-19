@@ -1,6 +1,8 @@
 //Our database info:
 import { Character } from './api/user/character';
 import { Game } from './api/user/game';
+import { Item } from './api/item/item';
+import { ItemType } from './api/item/itemtype.enum';
 import { User } from './api/user/user';
 
 import { Class } from './api/class/class';
@@ -40,6 +42,8 @@ import { Trait } from './api/trait/trait';
 export {
     Character,
     Game,
+    Item,
+    ItemType,
     User,
     Class,
     ClassDetails,
