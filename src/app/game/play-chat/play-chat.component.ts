@@ -35,9 +35,9 @@ export class PlayChatComponent implements OnInit {
     this.scrollToBottom();
   }
 
-  /*
-    This method is called when the user sends a message to the group or individual
-  */
+  /**
+   * Called when the user sends a message to the group or individual
+   */
   public sendMessage() {
     if (!this.message.length) return; //If we don't have a message to send we return
 
@@ -54,11 +54,13 @@ export class PlayChatComponent implements OnInit {
     this.message = "";
   }
 
-  /*
-    This method is called when we need to create a new chat message data object
-    @param username: string - The user we want to send a private message to
-    @return ChatMessageData
-  */
+  /**
+   * Called when we need to create a new chat message data object
+   * 
+   * @param {string} username The user we want to send a private message to
+   * 
+   * @returns A new ChatMessageData object 
+   */
   private createCMD(username: string): ChatMessageData {
     let cmd: ChatMessageData;
     let index;
@@ -81,23 +83,36 @@ export class PlayChatComponent implements OnInit {
     return cmd;
   }
 
-  /*
-    This method is called when we need to get the connection id from a user that 
-    we want to send a private message to
-    @index: number - The index of the member in the group members array
-    @return string - The connection id of member at index "index"
-  */
+  /**
+   * Called when we need to get the connection id from a user that
+   * we want to send a private message to
+   * 
+   * @param {number} index The index of the member in the group members array
+   * 
+   * @returns The connection id of the member at index "index"
+   */
   private getGroupMemberID(index: number): string {
     return this._messageService.groupMembers[index].umd.id;
   }
 
-  /*
-    This method is called whenever the user attempts to send a message it has the following command options:
-      none send to last chat type
-      /s Global Chat
-      /w Whisper (private chat)
-      /r reply
-      /h help
+ /**
+  * Called whenever the user attempts to send a message, it has the following command options
+  * 
+  * "" - Send to the last chat type
+  * 
+  * 
+  * "/s" - Send to global chat
+  * 
+  * 
+  * "/w" - Whisper (private chat)
+  * 
+  * 
+  * "/r" - Reply
+  * 
+  * "/c" - Clear chat
+  * 
+  * 
+  * "/h" - Help
   */
   private parseMessage() {
     let split: string[] = this.message.split(/(\/s|\/w|\/r|\/h)/g).filter(x => x.length > 0);
@@ -136,11 +151,12 @@ export class PlayChatComponent implements OnInit {
     }
   }
 
-  /*
-    This method is called when the user does the /r command, it finds the last person 
-    to send them a private message and replies to them with the given input
-    @param messageToSend: string - The message to reply with
-  */
+  /**
+   * Called when the user does the /r command, it finds the last person 
+   * to send them a private message and replies to them with the given input
+   * 
+   * @param {string} messageToSend The message to reply with
+   */
   private replyToMessage(messageToSend: string) {
     for (let i = this.chatMessages.length - 1; i >= 0; i--) {
       let msg: ChatMessageData = this.chatMessages[i];
@@ -155,10 +171,11 @@ export class PlayChatComponent implements OnInit {
     }
   }
 
-  /*
-    This method is called when the user does the /w command OR enters a message while this.sendTo != "Group"
-    @param messageToSend: string[] - An array of strings [0] -> the username to whisper [1+] the message to send
-  */
+  /**
+   * Called when the user does the /w command OR enters a message while this.sendTo != "Group"
+   * 
+   * @param {string[]} messageToSend An array of strings [0] -> the username to whisper [1+] the message to send
+   */
   private sendPrivateMessage(messageToSend: string[]) {
     let username: string;
     let msg: string = "";
@@ -179,46 +196,52 @@ export class PlayChatComponent implements OnInit {
     this.privateMessage = true;
   }
 
-  /*
-    This method is called when the user uses the /s command or sends a message with this.sendTo == "Group"
-    it sends a message to everyone in the game
-    @param messageToSend: string - The message to send to the group
-  */
+  /**
+   * Called when the user uses the /s command or sends a message with this.sendTo == "Group"
+   * it sends a messsage to everyone in the game
+   * 
+   * @param {string} messageToSend The message to send to the group
+   */
   private sendMessageToGroup(messageToSend: string) {
     this.message = messageToSend;
     this.privateMessage = false;
     this.sendTo = "Group";
   }
 
-  /*
-    This method is called when we get a new chat message, it updates our list for the DOM
-    @param msgs: ChatMessageData[] - An array of chat messages
-  */
+  /**
+   * Called when we get a new chat message, it updates our list for the DOM
+   * 
+   * @param {ChatMessageData[]} msgs An array of chat messages 
+   */
   private getNewChatMessage(msgs: ChatMessageData[]) {
     this.chatMessages = msgs;
   }
 
-  /*
-    This method is called when the user uses the /c command, it clears all chat messages
-    and resets their sendTo to "Group"
-  */
+  /**
+   * Called when the user uses the /c command, it clears all chat messages and
+   * resets their sendTo to "Group"
+   */
   private clearChatMessages() {
     this._messageService.clearChatMessages();
     this.sendTo = "Group";
   }
 
-  /*
-    This method is called everytime the page is updated. It will scroll our message list to the bottom
-  */
+  /**
+   * Called everytime the page is updated. It auto scrolls our message list (chat) to the bottom
+   */
   private scrollToBottom() {
     try {
       this.chatMessageContainer.nativeElement.scrollTop = this.chatMessageContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
 
-  /*
-    Returns if the message is our own or not
-  */
+  /**
+   * Called to check we own a message or not
+   * 
+   * @param {ChatMessageData} msg The message to check
+   * 
+   * @returns If we are the owner of the message or not 
+   */
   public isUsersMessage(msg: ChatMessageData): boolean {
     return msg.username === this.user.username;
   }
@@ -226,6 +249,12 @@ export class PlayChatComponent implements OnInit {
   /*
     Sets text color based on message type (private or not)
   */
+
+  /**
+   * Sets text color based on message type (private or not)
+   * 
+   * @param {ChatMessageData} msg The message to check 
+   */
   public getMessageColor(msg: ChatMessageData): string {
     if (!msg) return;
 
@@ -234,10 +263,11 @@ export class PlayChatComponent implements OnInit {
     return 'message-standard';
   }
 
-  /*
-    This method is called when the user types '/h' to get the help menu
-    **Rewrite me**
-  */
+  /**
+   * Called whenever the user types /h. It displays the help menu
+   * 
+   * [Todo] Rewrite me
+   */
   private addHelpMenu() {
     let cmd: ChatMessageData = {
       connectionId: "",

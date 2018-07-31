@@ -70,20 +70,22 @@ export class EquipmentComponent implements OnInit {
     // if (this.character) this.getItems();
   }
 
-  /*
-    This method is called when the DM gives the player an item either in the game or
-    from the DM portal page. If it is from the portal we wait to add it to the backend
-    until the DM clicks save
-    @index: number - The index of the item in the item list
-  */
+  /**
+   * Called when the DM gives the player an item either in the game or from the DM portal page. 
+   * If it is from the portal we wait to add it to the backend until the DM clicks save
+   * 
+   * @param {Item} item The item to add 
+   * @param {number} index The index of the item in the item list 
+   */
   public addItemCount(item: Item, index: number) {
     this._itemManager.addItem(item, item.url, index);
   }
 
-  /*
-    This method is called when the DM removes an item or a player uses an item
-    @index: number - The index of the item in the item list
-  */
+  /**
+   * Called when the DM removes an item or a player uses an item
+   * 
+   * @param {number} index The index of the item in the item list 
+   */
   public removeItemCount(index: number) {
     this._itemManager.removeItem(index);
   }

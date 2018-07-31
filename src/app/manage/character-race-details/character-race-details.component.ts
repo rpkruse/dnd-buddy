@@ -77,14 +77,15 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
-   /*
-    Sets property on what tab is active.
-    @param tab: string - The tab to be activated.
-  */
+  /**
+   * Sets property on what tab is active
+   * 
+   * @param {string} tab The tab to be activated 
+   */
   public openTab(tab: string) {
     this.subMenuActive = false;
 
-    if (tab === 'races' ) {
+    if (tab === 'races') {
       this.raceTabActive = true;
     } else if (tab === 'classes') {
       this.raceTabActive = false;
@@ -115,12 +116,12 @@ export class CharacterRaceDetails implements OnInit {
     this.subclassesListActive = !this.subclassesListActive;
   }
 
-  /*
-    This method is called when the use clicks a playable race type. It pulls all of the subraces from
-    our 5e database
-    @param url: string - The url of the selected race type
-  */
-  public getSubrace(url: string){
+  /**
+   * Called when the user clicks a playable race type. IT pulls all of the subraces from our DB
+   * 
+   * @param {string} url The url of the selected race type 
+   */
+  public getSubrace(url: string) {
     this.classDetail = null;
     let s: Subscription;
 
@@ -138,17 +139,20 @@ export class CharacterRaceDetails implements OnInit {
     return;
   }
 
-  /*
-    This method is called whenever the user changes the subrace panel they are viewing
-  */
+  /**
+   * Called whenever the user changes the subrace panel they are viewing
+   * 
+   * @param {number} num The panel number to change to 
+   */
   public changeSubRace(num: number) {
     this.getRaceDetails(num);
   }
 
-  /*
-    This method is called whenever the user wants to get details of a specific class. It pulls it from the DB
-    @param url: string - The url of the class to get details on
-  */
+  /**
+   * Called when the user wants to get details of a specific class. It pulls it from the DB
+   * 
+   * @param {string} url The url of the class to get detailson
+   */
   public getClassDetails(url: string) {
     this.subrace = null;
     let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(url).subscribe(
@@ -158,27 +162,29 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
-  /*
-    This method is called when the user opens a panel on a specific race type
-    It gets all of the sub races of that type from the DB
-    @param index: number - The index of the race to get details on
-  */
+  /**
+   * Called when the user opens a panel on a specific race type. It gets
+   * all of the sub races of that type from the DB
+   * 
+   * @param {number} index The index of the race to get details on 
+   */
   public getRaceDetails(index: number) {
     let s: Subscription = this._dndApiService.getRaceInfo(index).subscribe(
       d => this.raceDetail = d,
       err => console.log("unable to fetch race", err),
       () => {
         s.unsubscribe();
-        this.raceDetailIndex =  this.raceDetailIndex === (index-1) ?  -1 : (index-1);
+        this.raceDetailIndex = this.raceDetailIndex === (index - 1) ? -1 : (index - 1);
       }
     );
   }
 
-  /*
-    This method is called when the user clicks on a trait to view. It pulls the trait from the 5e api
-    and opens a modal to display the description
-    @param url: string - The url of the trait to pull
-  */
+  /**
+   * Called when the user clicks on a trait to view. It pulls the trait from the 5e api and opens the modal to display
+   * 
+   * @param {string} url The url of the trait to pull
+   * @param {any} content The modal 
+   */
   public getTraitDetails(url: string, content) {
     let s: Subscription = this._dndApiService.getSingleEntity<Trait>(url).subscribe(
       d => this.trait = d,
@@ -190,10 +196,12 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
-  /*
-    This method appends words to each ability to make it look nicer on the DOM
-  */
-  public fixAbilityBonuses(abilities: number[]): string[]{ //str, dex, con, int, wis, char
+  /**
+   * Appends words to each ability to make it look nicer on the DOM
+   * 
+   * @param {number[]} abilities The ability numbers to fix 
+   */
+  public fixAbilityBonuses(abilities: number[]): string[] { //str, dex, con, int, wis, char
     let s: string[] = [];
 
     s[0] = "str: " + abilities[0];

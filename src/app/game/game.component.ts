@@ -54,20 +54,22 @@ export class GameComponent implements OnInit {
     this.selectedGame = null;
   }
 
-  /*
-    This method is called once the user enters a game name and clicks off of the input field.
-    It checks the backend to make sure it isnt a game name that is already in use
-  */
-  public validateGamename(gameName: string){
-    if(this.gameName.length <= 0) return;
+  /**
+   * Called when the user enters a game name and clicks off the input field.
+   * It checks the backend to make sure it isn't a game name that is already in use
+   * 
+   * @param {string} gameName The name of the game 
+   */
+  public validateGamename(gameName: string) {
+    if (this.gameName.length <= 0) return;
 
     let s: Subscription;
-    s = this._apiService.getSingleEntity<any>("Games/check/"+ gameName).subscribe(
+    s = this._apiService.getSingleEntity<any>("Games/check/" + gameName).subscribe(
       d => d = d,
       err => {
-        if(err['error']['Error']){
+        if (err['error']['Error']) {
           this.gamenameTaken = true;
-        }else{
+        } else {
           this.hasClickedOff = true;
         }
       },
@@ -79,9 +81,9 @@ export class GameComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called when the user clicks save game, it adds the game to the backend and makes them the DM on it
-  */
+  /**
+   * Called when the user clicks save game, it adds the game to the backend and makes them the DM on it
+   */
   public saveNewGame() {
     let s: Subscription;
     let newState = '';
@@ -109,6 +111,11 @@ export class GameComponent implements OnInit {
     )
   }
 
+  /**
+   * Called when the user clicks on a game. It gets all of the details for that game and displays them
+   * 
+   * @param {Game} game The game to get details for 
+   */
   public loadGame(game: Game) {
     this.creatingGame = false;
     let s: Subscription;
@@ -120,21 +127,34 @@ export class GameComponent implements OnInit {
     );
   }
 
-  public joinGame(){
+  /**
+   * Called when the user clicks join game. It either has them join as a player
+   * or as a DM
+   */
+  public joinGame() {
     this._dataShareService.changeGame(this.selectedGame);
     this._storageService.setValue('game', this.selectedGame);
     this._router.navigate(['./playGame']);
   }
 
-  public confirmDeleteGame(confirm){
-    this._modalService.open(confirm).result.then((result) => {
-      if(this.selectedGame.character.length > 0) this.removeCharactersFromGame(); else this.deleteGame();
-    }, (reason) => {
+  /**
+   * Called when the user clicks confirm (or cancel) on the confirm delete modal
+   * 
+   * @param {any} confirm The action the user took (confirm/cancel/click off) 
+   */
+  public confirmDeleteGame(confirm) {
+    this._modalService.open(confirm).result.then((result) => { //confirm
+      if (this.selectedGame.character.length > 0) this.removeCharactersFromGame(); else this.deleteGame();
+    }, (reason) => { //cancel or click off, do nothing
 
     });
   }
 
-  private deleteGame(){
+  /**
+   * Called when the user clicks the delete game button, it opens a modala asking 
+   * the user to confirm their action
+   */
+  private deleteGame() {
     let s: Subscription;
     s = this._apiService.deleteEntity<Game>("Games", this.selectedGame.gameId).subscribe(
       d => d = d,
@@ -151,20 +171,19 @@ export class GameComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called when the DM deletes a game. Since the characters have a foreign key value to the game, we must 
-    delete the characters first 
-  */
-  private removeCharactersFromGame(){
+  /**
+   * Called when the DM deletes a game. Since the characters have a foreign key value to the game, we must delete the characters first
+   */
+  private removeCharactersFromGame() {
     let s: Subscription;
     let size: number = this.selectedGame.character.length;
-    for(let i=0; i<size; i++){
+    for (let i = 0; i < size; i++) {
       let c: Character = this.selectedGame.character[i];
       s = this._apiService.deleteEntity("Characters", c.characterId).subscribe(
         d => d = d,
         err => console.log(err),
         () => {
-          if(i === size- 1){
+          if (i === size - 1) {
             s.unsubscribe();
             this.deleteGame();
           }
@@ -173,6 +192,13 @@ export class GameComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the user clicks on a character in the game. It brings up a modal showing that
+   * character's stats/info
+   * 
+   * @param {number} index The index of the selected character 
+   * @param {any} content The modal
+   */
   public loadCharacterDetails(index: number, content) {
     this.characterDetail = this.selectedGame.character[index];
     let s, j: Subscription;
@@ -198,7 +224,7 @@ export class GameComponent implements OnInit {
     this.gameName = name;
     this.gameNameChanged.next(this.gameName);
   }
-  
+
   public openModal(content) {
     this._modalService.open(content).result.then((result) => { //On close via save
       this.clearCharacterDetails();
@@ -212,7 +238,7 @@ export class GameComponent implements OnInit {
     this.raceDetail = null;
   }
 
-  private triggerMessage(message: string, action: string, level: MessageType){
+  private triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,
       action: action,

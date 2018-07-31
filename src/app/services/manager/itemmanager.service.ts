@@ -109,6 +109,7 @@ export class ItemManager {
       err => console.log("Unable to update character", err),
       () => {
         s.unsubscribe();
+        console.log(this.newItem);
         this.newItem.next(type);
       }
     )

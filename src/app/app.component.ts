@@ -1,3 +1,8 @@
+/**
+ * [TODO]:
+ *  1) Allow for users to equip gear from their bags
+ *  2) Give players XP, allow for GM to give all players in their game XP
+ */
 import { Component, OnInit } from '@angular/core';
 
 import { SnackbarComponent } from './components';

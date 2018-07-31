@@ -1,3 +1,8 @@
+/**
+ * Written by: Ryan Kruse
+ * 
+ * This component allows for the DM to modify player's in their game. They can change their ability scores and give them gear
+ */
 import { Component, OnInit } from '@angular/core';
 
 import { ApiService, DndApiService, DataShareService, ItemManager } from '../../services/services';
@@ -44,6 +49,11 @@ export class DmPortalComponent implements OnInit {
     this.games = this._apiService.getAllEntities<Game>("Games/gm/" + this.user.userId);
   }
 
+  /**
+   * Called when the DM clicks a game to load, it pulls it from the backend
+   * 
+   * @param {Game} game The game to get details on 
+   */
   loadGame(game: Game) {
     this.character = null;
 
@@ -54,6 +64,11 @@ export class DmPortalComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the DM clicks a character in a game to load
+   * 
+   * @param {Character} character The character to load 
+   */
   selectCharacter(character: Character) {
     this.character = character;
     this.race = this._dndApiService.getSingleEntity<RaceDetails>(this.character.race);
@@ -66,6 +81,9 @@ export class DmPortalComponent implements OnInit {
     )
   }
 
+  /**
+   * Called when the DM clicks save on a character, it updates them in the DB
+   */
   saveCharacter() {
     let s: Subscription;
 
@@ -79,6 +97,13 @@ export class DmPortalComponent implements OnInit {
     );
   }
 
+  /**
+   * Called to get the ability score of the character
+   * 
+   * @param {number} index The index of the stat to get 
+   * 
+   * @returns The value of the ability score at index "index"
+   */
   getStatValue(index: number): number {
     switch (index) {
       case 0:
@@ -98,6 +123,12 @@ export class DmPortalComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the DM increases or decreases the stat of a character
+   * 
+   * @param {number} val The value to increase the stat by 
+   * @param {number} index The index of the stat
+   */
   setStatValue(val: number, index: number) {
     switch (index) {
       case 0:
@@ -123,6 +154,13 @@ export class DmPortalComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns the ability modifier value for a given stat: FL((val - 10)/2)
+   * 
+   * @param {number} attrVal The value of the attribute
+   * 
+   * @returns The ability mod. value 
+   */
   getModValue(attrVal: number): string {
     let v: number = Math.floor((attrVal - 10) / 2);
 

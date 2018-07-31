@@ -43,11 +43,12 @@ export class PlayDmComponent implements OnInit {
     this._dataShareService.game.takeWhile(() => this.isAlive).subscribe(res => this.game = res);
   }
 
-  /*
-    This method is called whenever the user clicks the roll button, it will roll n number die and send the value rolled
-    to all other users in the game iff hidden is false
-    @param hidden: boolean - if the value rolled should be sent to all users or not
-  */
+  /**
+   * Called whenever the user clicks the roll button, it will roll n number die and send the value rolled
+   * to all other users in the game iff hiden is false
+   * 
+   * @param {boolean} hidden If the value rolled should be sent to all users or not 
+   */
   public rollDice(hidden: boolean) {
     let RMD: RollMessageData
     let max: number = this.rollMax * this.numDice; //The max number we can roll
@@ -62,9 +63,9 @@ export class PlayDmComponent implements OnInit {
     }
   }
 
-  /*  
-    This method is called when the user clicks the clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
-  */
+  /**
+   * Called when the user clicks clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
+   */
   public clearRoll() {
     let RMD: RollMessageData;
     this.roll = 0;
@@ -73,10 +74,11 @@ export class PlayDmComponent implements OnInit {
     if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
   }
 
-  /*
-    This method is called once the DM selects a player to give the item to, it will send the message via signalR
-    @param id: string - The connection ID of the player to give the item to
-  */
+  /**
+   * Called once the DM selects a player to give a item to, it will send the message via signalR
+   * 
+   * @param {ItemMessageData} IMD The item message data object to send  
+   */
   public selectPlayer(IMD: ItemMessageData) {
     if (!IMD) return;
 
@@ -84,15 +86,24 @@ export class PlayDmComponent implements OnInit {
     this.triggerMessage("", "Item given!", MessageType.Success);
   }
 
-  /*
-    This method is called to filter ourself out of the connected memebers (so that we cannot select ourself)
-    @return OnlineUser[] - An array of all connected players (that are not us)
-  */
+  /**
+   * Called to filter ourself out of the connected members (so that we cannot select ourself)
+   * 
+   * @returns An array of all connected players excluding ourself
+   */
   public getOtherGroupMembers(): OnlineUser[] {
     return this._messageService.groupMembers.filter(x => x.umd.characterId > 0);
   }
 
-  private getRandomInt(min: number, max: number) {
+  /**
+   * Gets a random number between two values
+   * 
+   * @param {number} min The min value 
+   * @param {number} max The max value
+   * 
+   * @returns A number between min and max, both inclusive
+   */
+  private getRandomInt(min: number, max: number): number{
     return Math.floor(min + Math.random() * (max + 1 - min));
   }
 

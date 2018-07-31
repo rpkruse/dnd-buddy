@@ -71,11 +71,12 @@ export class PlayPlayerComponent implements OnInit {
     this._messageService.itemDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setItemData(res));
   }
 
-  /*
-    This method is called whenever the user clicks the roll button, it will roll n number die and send the value rolled
-    to all other users in the game iff hidden is false
-    @param hidden: boolean - if the value rolled should be sent to all users or not
-  */
+  /**
+   * Called whenever the user clicks the roll button, it will roll n number die and send the value rolled
+   * to all other users in the game iff hiden is false
+   * 
+   * @param {boolean} hidden If the value rolled should be sent to all users or not 
+   */
   public rollDice(hidden: boolean) {
     let RMD: RollMessageData
     let max: number = this.rollMax * this.numDice; //The max number we can roll
@@ -90,9 +91,9 @@ export class PlayPlayerComponent implements OnInit {
     }
   }
 
-  /*  
-    This method is called when the user clicks the clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
-  */
+  /**
+   * Called when the user clicks clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
+   */
   public clearRoll() {
     let RMD: RollMessageData;
     this.roll = 0;
@@ -101,11 +102,12 @@ export class PlayPlayerComponent implements OnInit {
     if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
   }
 
-  /*
-    This method is called when the user gets a ping from signalR saying that they got a new item. It gets the item data from the API
-    and updates their character
-    @param item: ItemMessageData - The item url sent from signalR
-  */
+  /**
+   * Called when the user gets a ping from signalR saying that they got a new item. It gets the item data from the API
+   * and updates their character
+   * 
+   * @param {ItemMessageData} item The item data sent from signalR 
+   */
   public setItemData(item: ItemMessageData) {
     if (item === null) return;
 
@@ -122,26 +124,30 @@ export class PlayPlayerComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called when the user clicks the spell book button. It opens the modal displaying their class' spellbook
-  */
+  /**
+   * Called when the user clicks the spell book button. It opens the modal displaying their class's spellbook
+   * 
+   * @param {any} content The modal
+   */
   public openSpellBook(content) {
     this._modal.open(content, { size: 'lg' });
   }
 
-  /*
-    This method is called when the user clicks the cast spell button, it removes a count from their total number of spells
-    the can cast at that level
-    @param index: number - The spell level we are casting
-  */
+  /**
+   * Called when the user clicks the cast spell button, it removes a count from their total number of spells
+   * they can canst at that level
+   * 
+   * @param {number} index The spell level we are casting 
+   */
   public castSpell(index: number) {
     this.spellSlots[index]--;
   }
 
-  /*
-    This method is called when our play manager returns the level details of the current character
-    @LD: ClassLevels - The current stats of the character at their given level
-  */
+  /**
+   * Called when our play manager returns the level details of the current character
+   * 
+   * @param {ClassLevels} LD The current stats of the character at their given level 
+   */
   private handleLevelDetail(LD: ClassLevels) {
     if (LD === null) return;
 
@@ -152,11 +158,13 @@ export class PlayPlayerComponent implements OnInit {
     }
   }
 
-  /*
-    This method is called whenever the user is given an item, it will check to see what type of item it is and
-    update the character based on that.
-    @param item: Equipment - The item given to the player
-  */
+  /**
+   * Called whenever the user is given an item, it will check to see what type of item it is and update the
+   * character based on that
+   * [ToDo] Don't auto equip an item
+   * 
+   * @param {Equipment} item The item given to the player 
+   */
   private handleWeaponType(item: Equipment) {
     let newItem: ItemType = null;
     this.gotNewItem = ItemType.None;
@@ -184,6 +192,15 @@ export class PlayPlayerComponent implements OnInit {
         newItem = ItemType.Shield;
         this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
         break;
+      case "Rings":
+        /*if (slot === "1") {
+          this.character.ring_1 = item.url;
+          newItem = ItemType.Ring_1
+        } else if (slot === "2") {
+          this.character.ring_2 = item.url;
+          newItem = ItemType.Ring_2
+        }*/
+        break;
       default:
         // newItem = ItemType.Bag;
         this.addItemToBag(item);
@@ -193,6 +210,11 @@ export class PlayPlayerComponent implements OnInit {
     this._itemManager.updateCharacterEquipment(this.character, newItem);
   }
 
+  /**
+   * Called when the user gets an item that cannot be equipped it adds it to their bag
+   * 
+   * @param {Equipment} eq The item to add to the character's bag 
+   */
   private addItemToBag(eq: Equipment) {
     let item = {
       name: eq.name,
@@ -214,6 +236,14 @@ export class PlayPlayerComponent implements OnInit {
     this._dataShareService.changeMessage(out);
   }
 
+  /**
+  * Gets a random number between two values
+  * 
+  * @param {number} min The min value 
+  * @param {number} max The max value
+  * 
+  * @returns A number between min and max, both inclusive
+  */
   private getRandomInt(min: number, max: number) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   }

@@ -17,13 +17,17 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  /*
-    0 -> Game page
-    1 -> Character info page
-    2 -> User Characters
-  */
-  public moveToPage(pageNum: number){ 
-    switch(pageNum){
+  /**
+   * 0 -> Game page
+   * 
+   * 1 -> Character info page
+   * 
+   * 2 -> User Characters
+   * 
+   * @param {number} pageNum The page to move to  
+   */
+  public moveToPage(pageNum: number) {
+    switch (pageNum) {
       case 0:
         this._router.navigate(['./game']);
         break;

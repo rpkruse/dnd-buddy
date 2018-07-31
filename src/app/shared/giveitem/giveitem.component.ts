@@ -1,3 +1,7 @@
+/*
+  TODO:
+    MAKE ITEMS GO STRAIGHT TO THE BAG AND ALLOW FOR THE PLAYER TO EQUIP THEM!!
+*/
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { DndApiService, ItemManager } from '../../services/services';
@@ -37,10 +41,11 @@ export class GiveitemComponent implements OnInit {
     )
   }
 
-  /*
-    This method is called when the GM clicks on a item type (IE armor, weapon) it returns all items of that type from the DB
-    @param url: string - The url of the item type to fetch from the db
-  */
+  /**
+   * Called when the GM clicks on an item type (IE armor, weapon) it returns all items of that type from the DB
+   * 
+   * @param {string} url The url of the item type to fetch fro the DB 
+   */
   public getListOfEquipment(url: string) {
     this.equipmentList = null;
     this.equipmentItem = null;
@@ -60,11 +65,11 @@ export class GiveitemComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called when the DM selects a specific item (IE sword, axe, chain mail) it will pull the details of this item
-    from the api
-    @param url: string - The api url of the item to pull
-  */
+  /**
+   * Called when the DM selects a specific item (IE sword, axe, chain mail) it will pull the details of this item from the API
+   * 
+   * @param {string} url The url of the item to pull 
+   */
   public getEquipmentItem(url: string) {
     this.equipmentItem = null;
     this.finished = false;
@@ -92,10 +97,11 @@ export class GiveitemComponent implements OnInit {
     this.finished = !this.users.length;
   }
 
-  /*
-   This method is called once the DM selects a player to give the item to, it will send the message via signalR
-   @param id: string - The connection ID of the player to give the item to
- */
+  /**
+   * Called once the DM selects a player to give the item to, it will send the message via signalR
+   * 
+   * @param {string} userId The connection ID of the player to give the item to 
+   */
   public selectPlayer(userId: string) {
     let UMD: UserMessageData;
 

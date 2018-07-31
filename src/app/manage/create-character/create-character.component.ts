@@ -36,8 +36,15 @@ export class CreateCharacterComponent implements OnInit {
   private numOfDice: number = 6;
   private numOfDiceToKeep: number = 3;
 
-  rolls: number[] = [0, 0, 0, 0, 0, 0]; //Count for the rolls (>=2 cannot roll again)
-  keptRolls: number[] = [0, 0, 0, 0, 0, 0]; //The actual roll values
+  /**
+   * Count for the rolls (rolls[n] >= 2 --> cannot roll again)
+   */
+  rolls: number[] = [0, 0, 0, 0, 0, 0];
+
+  /**
+   * The actual value rolled [6, 18]
+   */
+  keptRolls: number[] = [0, 0, 0, 0, 0, 0];
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
   boxIndex: number = -1;
@@ -142,6 +149,10 @@ export class CreateCharacterComponent implements OnInit {
     this.selectedGame = this.games[index];
   }
 
+  /**
+   * Called when the user clicks create on their character. It adds the race mods. to their ability score rolls
+   * and adds them to the backend/game they selected
+   */
   public confirmCharacter() {
     for (let i = 0; i < this.stats.length; i++) {
       this.setAttr(i);
@@ -181,6 +192,11 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when we are creating a character, it adds the race's mods. to the ability score
+   * 
+   * @param {number} index The stat index to add a value to 
+   */
   private setAttr(index: number) {
     let val: number = this.keptRolls[index];
     let bonus: number = this.selectedSubRace.ability_bonuses[index];
@@ -225,6 +241,11 @@ export class CreateCharacterComponent implements OnInit {
     return s;
   }
 
+  /**
+   * Called when the user rolls on a stat
+   * 
+   * @param {number} index The index we rolled on 
+   */
   public rollStat(index: number) {
     this.rolls[index]++;
 
@@ -271,10 +292,22 @@ export class CreateCharacterComponent implements OnInit {
     this.boxIndex = index;
   }
 
+  /**
+   * Called when the user clicks the keep roll button
+   * 
+   * @param {number} index The index of the roll 
+   */
   public keepRoll(index: number) {
     this.rolls[index] = 2;
   }
 
+  /**
+   * Called to check if we can roll a stat again
+   * 
+   * @param {number} index The index of the roll
+   *  
+   * @returns If we can reroll a stat
+   */
   public canRollAgain(index: number): boolean {
     return this.rolls[index] < 2;
   }

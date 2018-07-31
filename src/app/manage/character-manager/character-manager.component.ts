@@ -49,6 +49,9 @@ export class CharacterManagerComponent implements OnInit {
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal) { }
 
+  /**
+   * Gets all of the user's characters
+   */
   ngOnInit() {
     this._dataShareService.user.subscribe(res => this.user = res);
 
@@ -61,11 +64,12 @@ export class CharacterManagerComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called when the user clicks a character to get the details on.
-    It pulls their class, race, and equipment from the 5e api
-    @param character: Character - The character to get the details on
-  */
+  /**
+   * Called when the user clicks a character to get the details on.
+   * It pulls their class, race, and equipment from the api
+   * 
+   * @param {Character} character The character to get details for 
+   */
   public getCharacterDetails(character: Character) {
     this.selectedCharacter = character;
   
@@ -86,13 +90,14 @@ export class CharacterManagerComponent implements OnInit {
 
   }
   
-  /*
-    This method is called when the user clicks the delete button on a character
-    it opens the a modal to confirm the delete
-    @param content - The modal
-    @param event - used to stop propagation
-    @param character?: Character - The character to delete
-  */
+  /**
+   * Called when the user clicks the delete button on a character
+   * it opens a modal to confirm the delete
+   * 
+   * @param {any} content The modal 
+   * @param {any} event Used to stop propagation
+   * @param {Character} character The character to delete
+   */
   public confirmDeleteCharacter(content, event, character?: Character) {
     event.stopPropagation();
     if (character) this.selectedCharacter = character;
@@ -102,10 +107,9 @@ export class CharacterManagerComponent implements OnInit {
     });
   }
 
-  /*
-    This method is called when the user clicks confirm on deleting their character. It removes them from
-    the database
-  */
+  /**
+   * Called when the user clicks confirm on deleting their character. It removes them from the DB
+   */
   private deleteCharacter() {
     let s: Subscription;
 

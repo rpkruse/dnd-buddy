@@ -27,20 +27,20 @@ export class PlayGameComponent implements OnInit {
   token: string = "N";
   gridHidden: boolean = true;
 
-  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService, 
+  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, public _messageService: MessageService,
     private _storageService: StorageService, private _router: Router, private _playManager: PlayManager) { }
 
   ngOnInit() {
     this.game = this._storageService.getValue('game');
 
     this._dataShareService.user.subscribe(res => this.user = res);
-    this._dataShareService.connected.takeWhile(() => this.isAlive).subscribe(res => {if(res) this.getInfoToJoin();});
+    this._dataShareService.connected.takeWhile(() => this.isAlive).subscribe(res => { if (res) this.getInfoToJoin(); });
     this._messageService.rollDataSubj.takeWhile(() => this.isAlive).subscribe(res => this.setRollData(res));
 
-    if(this.game){      
+    if (this.game) {
       this._messageService.setConnection();
       this._dataShareService.changeGame(this.game);
-    }else{
+    } else {
       this._router.navigate(['/game']);
     }
 
@@ -54,18 +54,14 @@ export class PlayGameComponent implements OnInit {
     );
   }
 
-  private replaceAt(string, index, replace) {
-    return string.substring(0, index) + replace + string.substring(index + 1);
-  }
-
-  /*
-    This method is called once we are connected to the group in signalR. It pulls or character from the DB iff we are not the DM
-  */
-  private getInfoToJoin(){
+  /**
+   * Called to start the connection to signalR
+   */
+  private getInfoToJoin() {
     let s: Subscription;
 
     let charId: number = this.game.userId === this.user.userId ? -1 : this.game.character[this.game.character.findIndex(u => u.userId === this.user.userId)].characterId;
-    if(charId < 0){
+    if (charId < 0) {
       this.isGM = true;
       this.joinGame(this.user.username + " (DM)", -1);
       return;
@@ -83,44 +79,46 @@ export class PlayGameComponent implements OnInit {
 
   }
 
-  /*
-    This method is called once we are connected to sigalR.
-    If we are the GM it gets all information we need from the api
-    If we are th player it gets our class details from the api
-    @param name: string - The name of the character or DM
-    @param charId: number - The character ID of the current player (-1 if DM)
-  */
-  private joinGame(name: string, charId: number){
+  /**
+   * Called once we are connected to signalR. If we are the DM it gets all of the needed DM info.
+   * If we are the player it gets our class details from the api
+   * 
+   * @param {string} name The name of the character or DM 
+   * @param {number} charId The character id of the current player (-1 if DM)
+   */
+  private joinGame(name: string, charId: number) {
     let umd: UserMessageData = this._playManager.createUMD(name, charId, this.game.name);
     this._messageService.joinGroup(umd);
     this.hasJoined = true;
 
-    if(!this.isGM)
+    if (!this.isGM)
       this._playManager.initClassDetails(this.character);
     // else
-      // this._playManager.initGMInfo();
+    // this._playManager.initGMInfo();
   }
 
-  /* 
-    This method is called when we get a message from SignalR saying that someone has rolled a new value
-    it updates their value to display on the DOM
-    @param rmd: RollMessageData - The roll message data of a player's roll
-  */
-  public setRollData(rmd: RollMessageData){
-    if(rmd === null) return;
+  /**
+   * Called when we get a message from signalR saying that someone has rolled a new value
+   * it updates their value to display on the DOM
+   * 
+   * @param {RollMessageData} rmd The roll message data of the player's roll 
+   */
+  public setRollData(rmd: RollMessageData) {
+    if (rmd === null) return;
 
     let index: number = this._messageService.groupMembers.findIndex(x => x.rmd.charId === rmd.charId);
-    if(index < 0) return;
+    if (index < 0) return;
 
     this._messageService.groupMembers[index].rmd = rmd;
   }
 
-  /*
-    This method is called when the DM clicks on a tile in our grid
-    it places the token on the tile and notifies everyone in the group
-    @param x: number - The x pos
-    @param y: number - The y pos
-  */
+  /**
+   * Called when the dM clicks on a tile in our grid. It places the token on the tile
+   * and notifies everyone in the group
+   * 
+   * @param {number} x The x pos on the grid 
+   * @param {number} y The y pos on the grid
+   */
   public placeToken(x: number, y: number) {
     let gmd: GridMessageData;
 
@@ -144,10 +142,9 @@ export class PlayGameComponent implements OnInit {
     this._messageService.sendGrid(gmd);
   }
 
-  /*
-    This method is called when the DM clicks reset it will remove all values in the grid
-    that are not empty
-  */
+  /**
+   * Called when the DM clicks reset. It removes all values in the grid that are non-empty
+   */
   public resetGrid() {
     let GMD: GridMessageData;
     this.game.gameState = '';
@@ -155,8 +152,8 @@ export class PlayGameComponent implements OnInit {
       for (let x = 0; x < this._messageService.grid[y].length; x++) {
         this.game.gameState = this.game.gameState + 'N';
 
-          GMD = this._playManager.createGMD(x, y, 'N', '', this.game.name);
-          this._messageService.sendGrid(GMD);
+        GMD = this._playManager.createGMD(x, y, 'N', '', this.game.name);
+        this._messageService.sendGrid(GMD);
       }
     }
 
@@ -169,16 +166,17 @@ export class PlayGameComponent implements OnInit {
     );
   }
 
-  /*
-    This method is called to dynamically display the cells background
-    @param x: number - The x pos
-    @param y: number - The y pos
-  */
+  /**
+   * Called to dynamically display the cells background
+   * 
+   * @param {number} x The x pos on the grid 
+   * @param {number} y The y pos on the grid 
+   */
   public getGridClass(x: number, y: number) {
     let gmd: GridMessageData = this._messageService.grid[y][x];
 
     let color: string;
-    switch(gmd.type) {
+    switch (gmd.type) {
       case "P": //Player
         color = 'bg-primary';
         break;
@@ -196,33 +194,18 @@ export class PlayGameComponent implements OnInit {
     return color;
   }
 
-
-  /*
-    This method returns the GMD at the given cords.
-    @param x: number - The x pos
-    @param y: number - The y pos
-    @return GridMessageData: the GMD at the given cell
-  */
-  public getGridValue(x: number, y: number): GridMessageData{
+  public getGridValue(x: number, y: number): GridMessageData {
     return this._messageService.grid[y][x];
   }
 
-  /*
-    This method returns the GMD at the given cords.
-    @param x: number - The x pos
-    @param y: number - The y pos
-    @return GridMessageData: the GMD at the given cell
-  */
- public getGridType(x: number, y: number): GridMessageData{
-  return this._messageService.grid[y][x];
-}
-
-    /*
-    This method returns an image for a given value.
-    @param gridValue: string - The value of an image to load on the board.
-    @return GridMessageData: the path to the image
-  */
- public getGridImage(gridValue: string): string {
+  /**
+   * Returns an image for a given grid value
+   * 
+   * @param {string} gridValue The value of an image to load on the grid
+   * 
+   * @returns The path to the image 
+   */
+  public getGridImage(gridValue: string): string {
     switch (gridValue) {
       case 'P': {
         return 'assets/class_imgs/cleric.png';
@@ -239,22 +222,28 @@ export class PlayGameComponent implements OnInit {
     }
   }
 
-  /*
-    This method is called to get all the other players in the group (minus the current user)
-    @param onlyPlayers: boolean - If we want to only return players (used for gird)
-    @return OnlineUser[] - An array of all connected players minus us
-  */
-  public getOtherGroupMembers(onlyPlayers?: boolean): OnlineUser[]{
-    if(this.isGM || onlyPlayers)
+  /**
+   * Called to get all the other players in the group (minus the current user)
+   * 
+   * @param {boolean} onlyPlayers If we want to only return players (used for grid)
+   * 
+   * @returns An array of all connected players minus us 
+   */
+  public getOtherGroupMembers(onlyPlayers?: boolean): OnlineUser[] {
+    if (this.isGM || onlyPlayers)
       return this._messageService.groupMembers.filter(x => x.umd.characterId > 0); //Filter the GM out
     else
       return this._messageService.groupMembers.filter(x => x.umd.characterId !== this.character.characterId); //filter ourself out
   }
 
+  private replaceAt(string, index, replace) {
+    return string.substring(0, index) + replace + string.substring(index + 1);
+  }
+
   /*
     When we leave the page we want to unsub, disconnect from signalR group, and clear all of our values
   */
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.isAlive = false;
     this.hasJoined = false;
     this._messageService.leaveGroup();
