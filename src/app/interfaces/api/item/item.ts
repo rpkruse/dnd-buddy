@@ -5,6 +5,7 @@ export interface Item {
     name: string,
     url: string,
     count: number,
+    canEquip: boolean,
     characterId: number,
     character: Character
 }

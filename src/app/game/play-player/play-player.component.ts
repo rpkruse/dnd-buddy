@@ -52,13 +52,6 @@ export class PlayPlayerComponent implements OnInit {
 
   spellSlots: number[] = [];
 
-  armor: Equipment;
-  weapon: Equipment;
-  shield: Equipment;
-  itemData: ItemMessageData;
-
-  gotNewItem: ItemType;
-
   constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
@@ -111,10 +104,8 @@ export class PlayPlayerComponent implements OnInit {
   public setItemData(item: ItemMessageData) {
     if (item === null) return;
 
-    this.itemData = item;
-
     let rItem: Equipment;
-    let s: Subscription = this._playManager.getItem(this.itemData.item).subscribe(
+    let s: Subscription = this._playManager.getItem(item.item).subscribe(
       d => rItem = d,
       err => console.log("Unable to get item", err),
       () => {
@@ -166,48 +157,27 @@ export class PlayPlayerComponent implements OnInit {
    * @param {Equipment} item The item given to the player 
    */
   private handleWeaponType(item: Equipment) {
-    let newItem: ItemType = null;
-    this.gotNewItem = ItemType.None;
-
+    let canEq: boolean = false;
     switch (item.equipment_category) {
       case "Weapon":
-        this.character.weapon = item.url;
-        newItem = ItemType.Weapon;
-        this.triggerMessage("", "Recieved new weapon!", MessageType.Notification);
+        canEq = true;
         break;
       case "Armor":
-        if (item.name === "Shield") {
-          this.character.shield = item.url;
-          newItem = ItemType.Shield;
-          this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
-          break;
-        }
-        this.character.armor = item.url;
-        newItem = ItemType.Armor;
-        this.triggerMessage("", "Recieved new armor!", MessageType.Notification);
-
+        canEq = true;
         break;
       case "Shield":
-        this.character.shield = item.url;
-        newItem = ItemType.Shield;
-        this.triggerMessage("", "Recieved new shield!", MessageType.Notification);
+        canEq = true;
         break;
       case "Rings":
-        /*if (slot === "1") {
-          this.character.ring_1 = item.url;
-          newItem = ItemType.Ring_1
-        } else if (slot === "2") {
-          this.character.ring_2 = item.url;
-          newItem = ItemType.Ring_2
-        }*/
+        canEq = true;
         break;
       default:
-        // newItem = ItemType.Bag;
-        this.addItemToBag(item);
-        return;
+        canEq = false;
+        break;
     }
 
-    this._itemManager.updateCharacterEquipment(this.character, newItem);
+    this.addItemToBag(item, canEq);
+    this._messageService.sendItem(null); //reset so we don't double up
   }
 
   /**
@@ -215,11 +185,12 @@ export class PlayPlayerComponent implements OnInit {
    * 
    * @param {Equipment} eq The item to add to the character's bag 
    */
-  private addItemToBag(eq: Equipment) {
+  private addItemToBag(eq: Equipment, canEquip: boolean) {
     let item = {
       name: eq.name,
       url: eq.url,
       count: 1,
+      canEquip: canEquip,
       characterId: this.character.characterId,
     };
 

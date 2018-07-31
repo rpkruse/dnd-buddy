@@ -47,6 +47,10 @@ export class MessageService {
   }
 
   public sendItem(itm: ItemMessageData) {
+    if (!itm) {
+      this.itemDataSubj.next(null);
+      return;
+    }
     this._hub.invokeItem(itm);
   }
 

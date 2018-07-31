@@ -31,6 +31,8 @@ export class GiveitemComponent implements OnInit {
 
   finished: boolean = false;
 
+  canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
+
   constructor(private _dndApiService: DndApiService, private _itemManager: ItemManager) { }
 
   ngOnInit() {
@@ -60,7 +62,7 @@ export class GiveitemComponent implements OnInit {
       err => console.log("unable to get equipment list", err),
       () => {
         s.unsubscribe();
-        this.slottedItem = this.equipmentList.name === "Rings"
+        // this.slottedItem = this.equipmentList.name === "Rings"
       }
     );
   }
@@ -138,51 +140,17 @@ export class GiveitemComponent implements OnInit {
   }
 
   setItem(item: Equipment, slot?: string) {
-    let newItem: ItemType = ItemType.None;
+    let cq = this.canEquip.findIndex(x => x === item.equipment_category) >= 0;
 
-    switch (item.equipment_category) {
-      case "Weapon":
-        this.character.weapon = item.url;
-        newItem = ItemType.Weapon;
-        break;
-      case "Armor":
-        if (item.name === "Shield") {
-          this.character.shield = item.url;
-          newItem = ItemType.Shield;
-          break;
-        }
-        this.character.armor = item.url;
-        newItem = ItemType.Armor;
-        break;
-      case "Shield":
-        this.character.shield = item.url;
-        newItem = ItemType.Shield;
-
-        break;
-      case "Rings":
-        if (slot === "1") {
-          this.character.ring_1 = item.url;
-          newItem = ItemType.Ring_1
-        } else if (slot === "2") {
-          this.character.ring_2 = item.url;
-          newItem = ItemType.Ring_2
-        }
-        break;
-      default:
-        this.createNewItem(item);
-        this._itemManager.newItem.next(newItem);
-        return;
-    }
-
-    this._itemManager.updateCharacterEquipment(this.character, newItem);
-
+    this.createNewItem(item, cq);
   }
 
-  private createNewItem(eq: Equipment) {
+  private createNewItem(eq: Equipment, canEquip: boolean) {
     let nItem = {
       name: eq.name,
       url: eq.url,
       count: 1,
+      canEquip: canEquip,
       characterId: this.character.characterId
     }
 

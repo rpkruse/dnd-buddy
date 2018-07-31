@@ -34,7 +34,7 @@ export class EquipmentComponent implements OnInit {
   @Input() dmPortal: boolean = false; //If true, then we can add items with a "+" button
 
   private isAlive: boolean = true;
-  
+
   items: Item[] = [];
 
   armor: Equipment = null;
@@ -44,6 +44,7 @@ export class EquipmentComponent implements OnInit {
   ring_2: Equipment = null;
 
   selectedRing: Equipment;
+  slotSwapIndex: number = 0;
 
   lastCharID: number = -1;
 
@@ -90,9 +91,133 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.removeItem(index);
   }
 
+  /**
+   * 
+   * @param {Item} item The item to equip
+   * @param ringEquipModal Modal
+   */
+  public getItemToEquip(item: Item, ringEquipModal) {
+    // console.log(item);
+    let eq: Equipment;
+    let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(item.url).subscribe(
+      d => eq = d,
+      err => console.log("unable to get item"),
+      () => {
+        s.unsubscribe();
+        this.equipItem(eq, item, ringEquipModal);
+      }
+    );
+  }
+
+  public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
+    let newItem: ItemType = null;
+
+    oldItem.count = 1;
+    switch (item.equipment_category) {
+      case "Weapon":
+        if (this.weapon) {
+          oldItem.url = this.weapon.url;
+          oldItem.name = this.weapon.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.weapon = item.url;
+        newItem = ItemType.Weapon;
+        break;
+      case "Armor":
+        if (item.name === "Shield") {
+          if (this.shield) {
+            oldItem.url = this.shield.url;
+            oldItem.name = this.shield.name;
+          } else {
+            oldItem.count = 0;
+          }
+
+          this.character.shield = item.url;
+          newItem = ItemType.Shield;
+          break;
+        }
+        if (this.armor) {
+          oldItem.url = this.armor.url;
+          oldItem.name = this.armor.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.armor = item.url;
+        newItem = ItemType.Armor;
+        break;
+      case "Shield":
+        if (this.shield) {
+          oldItem.url = this.shield.url;
+          oldItem.name = this.shield.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.shield = item.url;
+        newItem = ItemType.Shield;
+        break;
+      case "Rings":
+        this.selectedRing = item;
+        if (this.ring_1 === null) {
+          this.character.ring_1 = item.url;
+          newItem = ItemType.Ring_1;
+          oldItem.count = 0;
+        } else if (this.ring_2 === null) {
+          this.character.ring_2 = item.url;
+          newItem = ItemType.Ring_2;
+          oldItem.count = 0;
+        } else {
+          this._modal.open(ringEquipModal).result.then((result) => { //On close via swap
+            this.swapRings(oldItem);
+          }, (reason) => { //on close via click off
+          });
+          return;
+        }
+        break;
+      default:
+        return;
+    }
+
+    this._itemManager.updateItem(oldItem, "Item swapped!");
+    this._itemManager.updateCharacterEquipment(this.character, newItem);
+  }
+
   public getRingDetails(ring: Equipment, ringModal) {
     this.selectedRing = ring;
     this._modal.open(ringModal, { size: 'lg' });
+  }
+
+  public selectRingSlot(ringNum: string) {
+    if (ringNum === "Choose") {
+      this.slotSwapIndex = 0;
+      return;
+    }
+
+    this.slotSwapIndex = parseInt(ringNum);
+  }
+
+  public swapRings(oldItem: Item) {
+    let newItem: ItemType = null;
+
+    if (this.slotSwapIndex == 1) {
+      oldItem.url = this.ring_1.url;
+      oldItem.name = this.ring_1.name;
+
+      this.character.ring_1 = this.selectedRing.url;
+      newItem = ItemType.Ring_1;
+    } else {
+      oldItem.url = this.ring_2.url;
+      oldItem.name = this.ring_2.name;
+
+      this.character.ring_2 = this.selectedRing.url;
+      newItem = ItemType.Ring_2;
+    }
+
+    this._itemManager.updateItem(oldItem, "Item swapped!");
+    this._itemManager.updateCharacterEquipment(this.character, newItem);
   }
 
   private getItems(newItem: ItemType) {

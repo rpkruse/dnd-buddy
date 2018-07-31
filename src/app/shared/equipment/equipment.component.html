@@ -39,13 +39,18 @@
     <p class="text-center">Ring 2: None</p>
   </div>
 
-  <div *ngIf="this.items && this.items.length">
+  <div class="mx-auto" *ngIf="this.items && this.items.length">
     <!-- <h5 class="mx-auto text-center bag">Bag:</h5> -->
     <ul class="list-group static-size-list short">
-      <li class="list-group-item content"  (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
+      <li class="list-group-item content" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
         {{ item.name }} (x{{ item.count }})
-        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right" (click)="addItemCount(item, i)" *ngIf="dmPortal">+</button>
-        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right" (click)="removeItemCount(i)">-</button>
+
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
+          (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
+          (click)="removeItemCount(i)">-</button>
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 float-right"
+          (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
       </li>
     </ul>
   </div>
@@ -68,5 +73,21 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-success col-2" (click)="d()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #ringEquipModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title text-center">Swap With</h5>
+  </div>
+  <div class="modal-body">
+    <select class="custom-select col-sm-5" (change)="selectRingSlot($event.target.value)">
+      <option selected>Choose</option>
+      <option [value]="1">{{ this.ring_1.name }}</option>
+      <option [value]="2">{{ this.ring_2.name }}</option>
+    </select>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success col-2" (click)="c()" [disabled]="slotSwapIndex === 0">Swap</button>
   </div>
 </ng-template>

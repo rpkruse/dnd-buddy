@@ -86,7 +86,12 @@ export class ItemManager {
     }
   }
 
-  private updateItem(item: Item, action: string) {
+  public updateItem(item: Item, action: string) {
+    if (item.count <= 0) {
+      let i: number = this.items.findIndex(x => x.itemId === item.itemId);
+      this.removeItem(i);
+      return;
+    }
     let s: Subscription = this._apiService.putEntity("Items", item, item.itemId).subscribe(
       d => d = d,
       err => this.triggerMessage("", "Unable to update bag", MessageType.Failure),
@@ -109,7 +114,6 @@ export class ItemManager {
       err => console.log("Unable to update character", err),
       () => {
         s.unsubscribe();
-        console.log(this.newItem);
         this.newItem.next(type);
       }
     )
