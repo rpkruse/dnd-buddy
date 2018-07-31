@@ -19,6 +19,7 @@ export interface Character {
     neck: string,
     ring_1: string,
     ring_2: string,
+    xp: number,
     userId: number,
     gameId: number,
     user: User,

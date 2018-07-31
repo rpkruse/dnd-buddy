@@ -7,8 +7,9 @@ import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput } from '../../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-create-character',
@@ -92,6 +93,7 @@ export class CreateCharacterComponent implements OnInit {
       neck: null,
       ring_1: null,
       ring_2: null,
+      xp: 0,
       userId: this.user.userId || null,
       gameId: null,
       user: this.user,
@@ -175,10 +177,23 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Wis: this.character.abil_Score_Wis,
       abil_Score_Cha: this.character.abil_Score_Cha,
       level: this.level,
+      xp: 0,
       userId: this.character.user.userId,
       gameId: this.character.gameId,
     }
+    let xp: XP;
+    let s: Subscription = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "xp/" + c.level).subscribe(
+      d => xp = d,
+      err => console.log(err),
+      () => {
+        s.unsubscribe();
+        c.xp = xp.xp;
+        this.saveCharacter(c);
+      }
+    );
+  }
 
+  private saveCharacter(c) {
     let s: Subscription;
     let returnedChar: Character;
     s = this._apiService.postEntity<Character>("Characters", c).subscribe(

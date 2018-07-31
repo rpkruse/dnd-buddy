@@ -1,5 +1,6 @@
 <h4>Stats</h4>
 <hr class="stat mt-0" />
+<p class="card-text">Level {{ this.character.level }}, {{ this.character.xp | number}} xp</p>
 <p class="card-text" *ngIf="levelInfo">Prof Bonus: {{ this.levelInfo.prof_bonus }}</p>
 <p class="card-text">{{ this.stats[0] }} {{ this.character.abil_Score_Str }} {{getAttrScore(this.character.abil_Score_Str)}}</p>
 <p class="card-text">{{ this.stats[1] }} {{ this.character.abil_Score_Dex }} {{getAttrScore(this.character.abil_Score_Dex)}}</p>

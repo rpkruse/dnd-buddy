@@ -13,22 +13,24 @@ export class StatsComponent implements OnInit {
   @Input() character: Character;
 
   levelInfo: ClassLevels;
+  lastCharID: number = -1;
+
+  cd: ClassDetails;
 
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
   constructor(private _dndApiService: DndApiService) { }
 
   ngOnInit() {
-    let cd: ClassDetails;
     let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class).subscribe(
-      d => cd = d,
+      d => this.cd = d,
       err => console.log("unable to get class details", err),
       () => {
         s.unsubscribe();
-        this.getLevelDetails(cd);
+        this.getLevelDetails(this.cd);
         for (let i = 0; i < this.stats.length; i++) {
-          for (let j = 0; j < cd.saving_throws.length; j++) {
-            if (this.stats[i] === cd.saving_throws[j].name) {
+          for (let j = 0; j < this.cd.saving_throws.length; j++) {
+            if (this.stats[i] === this.cd.saving_throws[j].name) {
               let fixed: string = "*" + this.stats[i] + ":";
               this.stats[i] = fixed;
             }
@@ -36,6 +38,17 @@ export class StatsComponent implements OnInit {
         }
       }
     );
+  }
+
+  ngOnChanges() {
+    if (!this.character) return;
+
+    if (this.character.characterId != this.lastCharID) {
+      this.lastCharID = this.character.characterId;
+      this.getLevelDetails(this.cd);
+    }
+
+    // if (this.character) this.getItems();
   }
 
   private getLevelDetails(cd: ClassDetails) {
