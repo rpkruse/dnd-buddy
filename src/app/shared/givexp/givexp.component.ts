@@ -28,6 +28,9 @@ export class GivexpComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Called when the DM clicks the add new XP button. It adds a new xpItem to our list
+   */
   public createNewItem() {
     let x: XpItem = {
       amount: null,
@@ -37,6 +40,12 @@ export class GivexpComponent implements OnInit {
     this.xpItems.push(x);
   }
 
+  /**
+   * Called when the DM clicks "-" || "+" to add the multi. amount for an xp item
+   * 
+   * @param {number} dir The amount to move [-1, 1]
+   * @param {number} index The index of the item to change 
+   */
   public changeTimes(dir: number, index: number){
     this.xpItems[index].times += dir;
 
@@ -45,6 +54,10 @@ export class GivexpComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the DM clicks the give xp button. It adds it all together
+   * and outputs the total value to parent component
+   */
   public giveXp() {
     let total: number = 0;
 

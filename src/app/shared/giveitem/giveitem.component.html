@@ -7,28 +7,13 @@
     <option *ngFor="let eq of this.equipmentTypes.results index as i" [value]="eq.url">{{ eq.name }}</option>
   </select>
 
-  <div *ngIf="!this.slottedItem">
+  <div>
     <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
     <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
       <option selected>Choose</option>
       <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
     </select>
   </div>
-
-  <!--<div *ngIf="this.slottedItem">
-    <label class="col-sm-4 col-form-lable text-light">Item (item):</label>
-    <select class="custom-select col-sm-5" (change)="getEquipmentItem($event.target.value)" *ngIf="this.equipmentList && this.equipmentList.equipment">
-      <option selected>Choose</option>
-      <option *ngFor="let eq of this.equipmentList.equipment index as i" [value]="eq.url">{{ eq.name }}</option>
-    </select>
-
-    <label class="col-sm-4 col-form-lable text-light">Slot #:</label>
-    <select class="custom-select col-sm-5" (change)="setSlot($event.target.value)" *ngIf="this.equipmentItem">
-      <option selected>Choose</option>
-      <option value="1">Slot 1</option>
-      <option value="2">Slot 2</option>
-    </select>
-  </div>-->
   <br>
 
   <div *ngIf="this.users && this.users.length">

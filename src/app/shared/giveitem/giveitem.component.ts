@@ -22,9 +22,6 @@ export class GiveitemComponent implements OnInit {
   equipmentList: EquipmentCategoryDetails;
   equipmentItem: Equipment;
 
-  slottedItem: boolean = false;
-  private slot: string;
-
   finished: boolean = false;
 
   canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
@@ -56,10 +53,7 @@ export class GiveitemComponent implements OnInit {
     let s: Subscription = this._dndApiService.getSingleEntity<EquipmentCategoryDetails>(url).subscribe(
       d => this.equipmentList = d,
       err => console.log("unable to get equipment list", err),
-      () => {
-        s.unsubscribe();
-        // this.slottedItem = this.equipmentList.name === "Rings"
-      }
+      () => s.unsubscribe()
     );
   }
 
@@ -80,23 +74,13 @@ export class GiveitemComponent implements OnInit {
       err => console.log("Unable to get equipment item", err),
       () => {
         s.unsubscribe();
-        this.finished = !this.slottedItem && !this.users.length;
+        this.finished = !this.users.length;
       }
     );
   }
 
-  public setSlot(slot: string) {
-    if (slot === "Choose") {
-      return;
-    }
-
-    this.slot = slot;
-
-    this.finished = !this.users.length;
-  }
-
   /**
-   * Called once the DM selects a player to give the item to, it will send the message via signalR
+   * Called once the DM selects a player to give the item to, it will send the message via signalR (ONLY IN PLAY_GAME)
    * 
    * @param {string} userId The connection ID of the player to give the item to 
    */
@@ -121,9 +105,12 @@ export class GiveitemComponent implements OnInit {
     this.finished = true;
   }
 
+  /**
+   * Called only from the DM portal, it gives the selected item to a player
+   */
   public giveItem() {
     if (this.character) {
-      this.setItem(this.equipmentItem, this.slot);
+      this.setItem(this.equipmentItem);
     } else {
       this.imd.next(this.imdToSend);
     }
@@ -131,11 +118,14 @@ export class GiveitemComponent implements OnInit {
     this.imdToSend = null;
     this.equipmentList = null;
     this.equipmentItem = null;
-    this.slottedItem = false;
     this.finished = false;
   }
 
-  setItem(item: Equipment, slot?: string) {
+  /**
+   * Called from DM protal after we give an item, it lets us know if they can equipt the item or not
+   * @param {Equipment} item The item to give 
+   */
+  setItem(item: Equipment) {
     let cq = this.canEquip.some(x => x === item.equipment_category);
 
     this.createNewItem(item, cq);

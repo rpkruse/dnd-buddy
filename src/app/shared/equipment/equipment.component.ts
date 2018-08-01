@@ -67,8 +67,6 @@ export class EquipmentComponent implements OnInit {
       this.resetValues();
       this.loadAllItems();
     }
-
-    // if (this.character) this.getItems();
   }
 
   /**
@@ -109,6 +107,13 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user attempts to swap their equipped item with one in their bag 
+   * 
+   * @param {Equipment} item The new equipment to wear 
+   * @param {Item} oldItem The old equipment item to put into our bag 
+   * @param {any} ringEquipModal The ring modal 
+   */
   public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
     let newItem: ItemType = null;
 
@@ -185,11 +190,22 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.updateCharacterEquipment(this.character, newItem);
   }
 
+  /**
+   * Called when the user clicks on a ring to view. It opens a modal with the ring's details
+   * 
+   * @param {Equipment} ring The ring to view 
+   * @param {any} ringModal The ring modal 
+   */
   public getRingDetails(ring: Equipment, ringModal) {
     this.selectedRing = ring;
     this._modal.open(ringModal, { size: 'lg' });
   }
 
+  /**
+   * Called when the user attempts to equip a ring while wearing two
+   * 
+   * @param {string} ringNum The ring slot to swap to 
+   */
   public selectRingSlot(ringNum: string) {
     if (ringNum === "Choose") {
       this.slotSwapIndex = 0;
@@ -199,6 +215,11 @@ export class EquipmentComponent implements OnInit {
     this.slotSwapIndex = parseInt(ringNum);
   }
 
+  /**
+   * Called to swap a given ring slot with a new ring
+   * 
+   * @param {Item} oldItem The old ring to swap out 
+   */
   public swapRings(oldItem: Item) {
     let newItem: ItemType = null;
 
@@ -220,6 +241,11 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.updateCharacterEquipment(this.character, newItem);
   }
 
+  /**
+   * Called whenever the user is given a new item, it pulls it from the backend and updates the DOM
+   * 
+   * @param {ItemType} newItem The new item type given 
+   */
   private getItems(newItem: ItemType) {
     switch (newItem) {
       case ItemType.Armor:

@@ -30,9 +30,9 @@
         </div>
 
         <!-- Subrace -->
-        <div class="form-group row" *ngIf="this.selectedRace">
+        <div class="form-group row">
           <label class="col-sm-4 col-form-lable">Race:</label>
-          <select class="custom-select col-md-5" (change)="selectSubRace($event.target.value)">
+          <select class="custom-select col-md-5" (change)="selectSubRace($event.target.value)" *ngIf="this.selectedRace">
             <option selected>Choose</option>
             <option *ngFor="let race of this.selectedRace.subraces index as i" [value]="race.url">{{ race.name }}</option>
           </select>
