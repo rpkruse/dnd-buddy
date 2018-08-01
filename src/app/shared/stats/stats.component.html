@@ -1,12 +1,14 @@
-<h4>Stats</h4>
-<hr class="stat mt-0" />
-<p class="card-text">Level {{ this.character.level }}, {{ this.character.xp | number}} xp</p>
-<p class="card-text" *ngIf="levelInfo">Prof Bonus: {{ this.levelInfo.prof_bonus }}</p>
-<p class="card-text">{{ this.stats[0] }} {{ this.character.abil_Score_Str }} {{getAttrScore(this.character.abil_Score_Str)}}</p>
-<p class="card-text">{{ this.stats[1] }} {{ this.character.abil_Score_Dex }} {{getAttrScore(this.character.abil_Score_Dex)}}</p>
-<p class="card-text">{{ this.stats[2] }} {{ this.character.abil_Score_Con }} {{getAttrScore(this.character.abil_Score_Con)}}</p>
-<p class="card-text">{{ this.stats[3] }} {{ this.character.abil_Score_Int }} {{getAttrScore(this.character.abil_Score_Int)}}</p>
-<p class="card-text">{{ this.stats[4] }} {{ this.character.abil_Score_Wis }} {{getAttrScore(this.character.abil_Score_Wis)}}</p>
-<p class="card-text">{{ this.stats[5] }} {{ this.character.abil_Score_Cha }} {{getAttrScore(this.character.abil_Score_Cha)}}</p>
+<div *ngIf="this.character && this.levelInfo">
+  <h4>Stats</h4>
+  <hr class="stat mt-0" />
+  <p class="card-text">Level {{ this.character.level }}, {{ this.character.xp | number}} xp</p>
+  <p class="card-text" *ngIf="levelInfo">Prof Bonus: {{ this.levelInfo.prof_bonus }}</p>
+  <p class="card-text">{{ this.stats[0] }} {{ this.character.abil_Score_Str }} {{getAttrScore(this.character.abil_Score_Str)}}</p>
+  <p class="card-text">{{ this.stats[1] }} {{ this.character.abil_Score_Dex }} {{getAttrScore(this.character.abil_Score_Dex)}}</p>
+  <p class="card-text">{{ this.stats[2] }} {{ this.character.abil_Score_Con }} {{getAttrScore(this.character.abil_Score_Con)}}</p>
+  <p class="card-text">{{ this.stats[3] }} {{ this.character.abil_Score_Int }} {{getAttrScore(this.character.abil_Score_Int)}}</p>
+  <p class="card-text">{{ this.stats[4] }} {{ this.character.abil_Score_Wis }} {{getAttrScore(this.character.abil_Score_Wis)}}</p>
+  <p class="card-text">{{ this.stats[5] }} {{ this.character.abil_Score_Cha }} {{getAttrScore(this.character.abil_Score_Cha)}}</p>
 
-<p class="text-muted float-right">*proficiency in stat</p>
+  <p class="text-muted">*proficiency in stat</p>
+</div>

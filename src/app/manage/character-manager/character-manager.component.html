@@ -2,7 +2,7 @@
   <div class="row mt-5">
 
     <!-- Character List -->
-    <div class="col-md-5 mb-5">
+    <div class="col-md-3 mb-5">
       <h2 class="header mb-0">Characters</h2>
       <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.characters.length">
         <li class="list-group-item text-light content character" (click)="getCharacterDetails(character)" (mouseover)="this.mouseOver = i"
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Character detail -->
-    <div class="col-md-6" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
+    <div class="col-md-9" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
       <div class="card w-100 bg-transparent">
         <div class="card-header text-center header">
           <span class="stat">

@@ -9,6 +9,8 @@ import { EquipmentComponent, SpellbookComponent, StatsComponent, SnackbarCompone
 
 import { NgEnterDirective } from '../directives/directives';
 import { GiveitemComponent } from './giveitem/giveitem.component';
+import { GivexpComponent } from './givexp/givexp.component';
+import { RollComponent } from './roll/roll.component';
 
 
 @NgModule({
@@ -23,13 +25,17 @@ import { GiveitemComponent } from './giveitem/giveitem.component';
     SpellbookComponent,
     StatsComponent,
     NgEnterDirective,
-    GiveitemComponent
+    GiveitemComponent,
+    GivexpComponent,
+    RollComponent
   ],
   exports: [
     EquipmentComponent,
     SpellbookComponent,
     StatsComponent,
     GiveitemComponent,
+    GivexpComponent,
+    RollComponent,
     SnackbarComponent,
     NgEnterDirective
   ]

@@ -8,36 +8,25 @@
       <div class="card-body content text-light">
         <div class="row">
           <!-- Rolling info -->
-          <div class="col-lg-6">
-
-            <div class="row">
-              <div class="col-sm-6 text-center">
-                <h4>Roll</h4>
-                <hr class="stat mt-0" />
-                <label>Roll:</label>
-                <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-3">
-
-                <br>
-                <label>Die:</label>
-                <select class="custom-select col-sm-3 ml-1" (change)="this.rollMax = $event.target.value">
-                  <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-                </select>
-                <div class="card-text mt-5">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</div>
-                <button type="button" class="btn btn-primary btn-sm float-right" (click)="rollDice(false)">Roll</button>
-                <button type="button" class="btn btn-secondary btn-sm float-right" (click)="rollDice(true)">Hidden Roll</button>
-                <button type="button" class="btn btn-secondary btn-sm float-left" (click)="clearRoll()">Clear</button>
-              </div>
-
-              <div class="col-sm-6 text-center">
-                <app-stats [character]="this.character"></app-stats>
-              </div>
-            </div>
+          <!-- Roll -->
+          <div [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-3' : 'col-lg-4'">
+            <app-roll (rollOutput)="rollDice($event)"></app-roll>
           </div>
 
-          <div class="col-lg-6">
-            <!-- Spell Info -->
+          <div class="text-center" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-2' : 'col-lg-3'">
+            <app-stats [character]="character"></app-stats>
+          </div>
+
+          <div [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-7' : 'col-lg-5'">
             <div class="row">
-              <div class="col-sm-6 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
+
+              <!-- Item info -->
+              <div class="float-right" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-sm-8' : 'col-sm-12'" *ngIf="this.character">
+                <app-equipment [character]="character"></app-equipment>
+              </div>
+
+              <!-- Spell Info -->
+              <div class="col-sm-3 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
                 <h4 class="text-center">Spell Info</h4>
                 <hr class="stat mt-0">
                 <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
@@ -52,10 +41,6 @@
                 </ul>
               </div>
               <!-- ^^ End of spell info-->
-              <!-- Item info -->
-              <div class="col-sm-6 float-right" *ngIf="this.character">
-                <app-equipment [character]="character"></app-equipment>
-              </div>
             </div>
 
           </div>

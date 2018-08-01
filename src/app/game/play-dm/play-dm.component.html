@@ -9,34 +9,24 @@
       <div class="card-body content text-light">
         <!-- Rolling info -->
         <div class="row">
-          <div class="col-md-6 text-center">
-              <h4>Roll</h4>
-              <hr class="stat mt-0" />
-              <label>Roll:</label>
-              <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-3">
-
-              <br>
-              <label>Die:</label>
-              <select class="custom-select col-sm-3 ml-1" (change)="this.rollMax = $event.target.value">
-                <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-              </select>
-              <div class="card-text mt-5">Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})</div>
-              <button type="button" class="btn btn-primary btn-sm float-right" (click)="rollDice(false)">Roll</button>
-              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="rollDice(true)">Hidden Roll</button>
-              <button type="button" class="btn btn-secondary btn-sm float-left" (click)="clearRoll()">Clear</button>
+          <!-- Roll -->
+          <div class="col-md-4">
+            <app-roll (rollOutput)="rollDice($event)"></app-roll>
           </div>
 
           <!-- Item Giving -->
-          <div class="col-md-6" *ngIf="this.getOtherGroupMembers().length">
+          <div class="col-md-4" *ngIf="this.getOtherGroupMembers().length">
             <app-giveitem [users]="this.getOtherGroupMembers()" [character]="null" (imd)="selectPlayer($event)"></app-giveitem>
+          </div>
+
+          <!-- XP Giving -->
+          <div class="col-md-4" *ngIf="this.getOtherGroupMembers().length">
+            <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
           </div>
 
         </div>
       </div>
       <div class="card-footer header">
-        <!--<button type="button" class="btn btn-primary float-right" (click)="rollDice(false)">Roll</button>
-        <button type="button" class="btn btn-secondary float-right" (click)="rollDice(true)">Hidden Roll</button>
-        <button type="button" class="btn btn-secondary float-left" (click)="clearRoll()">Clear</button>-->
       </div>
     </div>
 

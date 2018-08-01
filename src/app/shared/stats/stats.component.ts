@@ -52,6 +52,8 @@ export class StatsComponent implements OnInit {
   }
 
   private getLevelDetails(cd: ClassDetails) {
+    if (!cd) return;
+    
     let s: Subscription = this._dndApiService.getLevelInfo(cd.class_levels.class, this.character.level).subscribe(
       d => this.levelInfo = d,
       err => console.log("unable to get level info", err),

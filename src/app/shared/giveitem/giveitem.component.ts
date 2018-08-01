@@ -1,7 +1,3 @@
-/*
-  TODO:
-    MAKE ITEMS GO STRAIGHT TO THE BAG AND ALLOW FOR THE PLAYER TO EQUIP THEM!!
-*/
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { DndApiService, ItemManager } from '../../services/services';
@@ -140,7 +136,7 @@ export class GiveitemComponent implements OnInit {
   }
 
   setItem(item: Equipment, slot?: string) {
-    let cq = this.canEquip.findIndex(x => x === item.equipment_category) >= 0;
+    let cq = this.canEquip.some(x => x === item.equipment_category);
 
     this.createNewItem(item, cq);
   }

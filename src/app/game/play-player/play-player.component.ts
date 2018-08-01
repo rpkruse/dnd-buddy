@@ -40,11 +40,7 @@ export class PlayPlayerComponent implements OnInit {
   game: Game;
   @Input() character: Character;
 
-  //Rolling:
-  numDice: number = 1;
-  dice: number[] = [4, 6, 8, 10, 12, 20];
-  rollMax: number = 4;
-  roll: number = 0;
+  canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
 
   //Character info fields
   classDetail: ClassDetails;
@@ -68,30 +64,11 @@ export class PlayPlayerComponent implements OnInit {
    * Called whenever the user clicks the roll button, it will roll n number die and send the value rolled
    * to all other users in the game iff hiden is false
    * 
-   * @param {boolean} hidden If the value rolled should be sent to all users or not 
+   * @param {boolean} hidden If the value rolled should be sent to all users or not  [this.rollMax, this.roll, this.numDice]
    */
-  public rollDice(hidden: boolean) {
+  public rollDice(rollInfo: number[]) {
     let RMD: RollMessageData
-    let max: number = this.rollMax * this.numDice; //The max number we can roll
-    let min: number = 1 * this.numDice; //The min number we can roll
-
-    this.roll = this.getRandomInt(min, max);
-
-    if (!hidden) {
-      RMD = this._playManager.createRMD(this.character.characterId, this.game.name, this.rollMax, this.roll, this.numDice);
-
-      if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
-    }
-  }
-
-  /**
-   * Called when the user clicks clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
-   */
-  public clearRoll() {
-    let RMD: RollMessageData;
-    this.roll = 0;
-    RMD = this._playManager.createRMD(this.character.characterId, this.game.name, 4, this.roll, 1);
-
+    RMD = this._playManager.createRMD(this.character.characterId, this.game.name, rollInfo[0], rollInfo[1], rollInfo[2]);
     if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
   }
 
@@ -152,29 +129,11 @@ export class PlayPlayerComponent implements OnInit {
   /**
    * Called whenever the user is given an item, it will check to see what type of item it is and update the
    * character based on that
-   * [ToDo] Don't auto equip an item
    * 
    * @param {Equipment} item The item given to the player 
    */
   private handleWeaponType(item: Equipment) {
-    let canEq: boolean = false;
-    switch (item.equipment_category) {
-      case "Weapon":
-        canEq = true;
-        break;
-      case "Armor":
-        canEq = true;
-        break;
-      case "Shield":
-        canEq = true;
-        break;
-      case "Rings":
-        canEq = true;
-        break;
-      default:
-        canEq = false;
-        break;
-    }
+    let canEq = this.canEquip.some(i => i === item.equipment_category);
 
     this.addItemToBag(item, canEq);
     this._messageService.sendItem(null); //reset so we don't double up
@@ -195,28 +154,6 @@ export class PlayPlayerComponent implements OnInit {
     };
 
     this._itemManager.addItem(item, item.url);
-  }
-
-  private triggerMessage(message: string, action: string, level: MessageType) {
-    let out: MessageOutput = {
-      message: message,
-      action: action,
-      level: level
-    };
-
-    this._dataShareService.changeMessage(out);
-  }
-
-  /**
-  * Gets a random number between two values
-  * 
-  * @param {number} min The min value 
-  * @param {number} max The max value
-  * 
-  * @returns A number between min and max, both inclusive
-  */
-  private getRandomInt(min: number, max: number) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
   }
 
   ngOnDestroy() {

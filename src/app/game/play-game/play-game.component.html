@@ -43,7 +43,7 @@
   <div class="row mx-auto">
     <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
     <div class="card-deck mt-3 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
-      <div class="card w-100 bg-transparent text-light" *ngFor="let member of this.getOtherGroupMembers() index as i">
+      <div class="card bg-transparent text-light" *ngFor="let member of this.getOtherGroupMembers() index as i">
         <div class="card-header text-center header">{{ member.umd.name }}</div>
         <div class="card-body content">
           <p class="card-text" *ngIf="member.rmd">Value Rolled: {{ member.rmd.roll}} ({{ member.rmd.numDice }}D{{ member.rmd.maxRoll }})</p>

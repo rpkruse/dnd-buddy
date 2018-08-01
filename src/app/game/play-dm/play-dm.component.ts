@@ -9,10 +9,11 @@ import { Subscription } from 'rxjs';
 import {
   User, Game, ItemMessageData, RollMessageData,
   Equipment, EquipmentCategory, EquipmentCategoryDetails,
-  MessageOutput, MessageType, OnlineUser
+  MessageOutput, MessageType, OnlineUser, XP, Character
 } from '../../interfaces/interfaces';
 
-import { PlayManager, DataShareService, MessageService } from '../../services/services';
+import { PlayManager, DataShareService, MessageService, DndApiService, ApiService } from '../../services/services';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'play-dm',
@@ -25,18 +26,13 @@ export class PlayDmComponent implements OnInit {
   user: User;
   game: Game;
 
-  //Rolling:
-  numDice: number = 1;
-  dice: number[] = [4, 6, 8, 10, 12, 20];
-  rollMax: number = 4;
-  roll: number = 0;
-
   //Equipment Giving:
   equipmentTypes: EquipmentCategory;
   equipmentList: EquipmentCategoryDetails;
   equipmentItem: Equipment;
 
-  constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService) { }
+  constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, 
+              private _dndApiService: DndApiService, private _apiService: ApiService) { }
 
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
@@ -47,30 +43,11 @@ export class PlayDmComponent implements OnInit {
    * Called whenever the user clicks the roll button, it will roll n number die and send the value rolled
    * to all other users in the game iff hiden is false
    * 
-   * @param {boolean} hidden If the value rolled should be sent to all users or not 
+   * @param {boolean} hidden If the value rolled should be sent to all users or not  [this.rollMax, this.roll, this.numDice]
    */
-  public rollDice(hidden: boolean) {
+  public rollDice(rollInfo: number[]) {
     let RMD: RollMessageData
-    let max: number = this.rollMax * this.numDice; //The max number we can roll
-    let min: number = 1 * this.numDice; //The min number we can roll
-
-    this.roll = this.getRandomInt(min, max);
-
-    if (!hidden) {
-      RMD = this._playManager.createRMD(-1, this.game.name, this.rollMax, this.roll, this.numDice);
-
-      if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
-    }
-  }
-
-  /**
-   * Called when the user clicks clear roll button. It sets their roll to 0D4 and notifies all other people in the lobby
-   */
-  public clearRoll() {
-    let RMD: RollMessageData;
-    this.roll = 0;
-    RMD = this._playManager.createRMD(-1, this.game.name, 4, this.roll, 1);
-
+    RMD = this._playManager.createRMD(-1, this.game.name, rollInfo[0], rollInfo[1], rollInfo[2]);
     if (this._messageService.groupMembers.length > 1) this._messageService.sendRoll(RMD); //Only send the roll if we have at least one other person in the lobby (that isn't us)
   }
 
@@ -86,6 +63,52 @@ export class PlayDmComponent implements OnInit {
     this.triggerMessage("", "Item given!", MessageType.Success);
   }
 
+  public giveXP(amount: number) {
+    if (!amount || amount === 0) return;
+
+    let currentlyOnline: OnlineUser[] = this.getOtherGroupMembers();
+
+    
+    let toGiveTo: Character[] = this.game.character.filter(gc => currentlyOnline.some(co => gc.characterId === co.umd.characterId));
+
+    if (!toGiveTo) return;
+
+    let givenAmount: number = Math.floor(amount/toGiveTo.length);
+
+    for(let i=0; i<toGiveTo.length; i++) {
+      toGiveTo[i].xp += givenAmount;
+      this.checkForLevelUp(toGiveTo[i]);
+    }
+  }
+
+  private checkForLevelUp(character: Character) {
+    let s: Subscription;
+    let nextLevel: number = character.level + 1;
+    let xp: XP;
+    s = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "XP/" + nextLevel).subscribe(
+      d => xp = d,
+      err => console.log("unable to get xp for next level"),
+      () => {
+        s.unsubscribe();
+
+        if (xp.xp <= character.xp) character.level++;
+
+        this.updateCharacter(character);
+      }
+    )
+  }
+
+  private updateCharacter(character: Character) {
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", character, character.characterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to give XP", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage("", "XP given!", MessageType.Success);
+      }
+    )
+  }
+
   /**
    * Called to filter ourself out of the connected members (so that we cannot select ourself)
    * 
@@ -93,18 +116,6 @@ export class PlayDmComponent implements OnInit {
    */
   public getOtherGroupMembers(): OnlineUser[] {
     return this._messageService.groupMembers.filter(x => x.umd.characterId > 0);
-  }
-
-  /**
-   * Gets a random number between two values
-   * 
-   * @param {number} min The min value 
-   * @param {number} max The max value
-   * 
-   * @returns A number between min and max, both inclusive
-   */
-  private getRandomInt(min: number, max: number): number{
-    return Math.floor(min + Math.random() * (max + 1 - min));
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {
