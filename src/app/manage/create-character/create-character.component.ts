@@ -3,11 +3,12 @@
 */
 
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP } from '../../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP, Trait } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 
@@ -23,16 +24,24 @@ export class CreateCharacterComponent implements OnInit {
   classes: Class = null;
   races: Race = null;
 
-  selectedClass: ClassDetails;
-  selectedRace: RaceDetails;
-  selectedSubRace: SubRace;
-  selectedGame: Game;
+  selectedClass: ClassDetails = null;
+  selectedRace: RaceDetails = null;
+  selectedSubRace: SubRace = null;
+  selectedGame: Game = null;
 
   level: number = 1;
 
   character: Character;
+  trait: Trait;
 
   games: Game[] = [];
+
+  languageListActive: boolean = false;
+  traitsListActive: boolean = false;
+  proficiencyChoiceListActive: boolean = false;
+  proficiencyListActive: boolean = false;
+  savingThrowsListActive: boolean = false;
+  subclassesListActive: boolean = false;
 
   private numOfDice: number = 6;
   private numOfDiceToKeep: number = 3;
@@ -50,7 +59,11 @@ export class CreateCharacterComponent implements OnInit {
 
   boxIndex: number = -1;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router) { }
+  public title: string = "Select Race"
+  public buttonText: string = "Next";
+  public currentPage: number = 1;
+
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router, private _modalService: NgbModal) { }
 
   ngOnInit() {
     let s, j, k: Subscription;
@@ -149,6 +162,37 @@ export class CreateCharacterComponent implements OnInit {
   public selectGame(index: number) {
     if (this.games[index] === undefined) return;
     this.selectedGame = this.games[index];
+  }
+
+  public changePage(dir: number) {
+    this.currentPage += dir;
+
+    switch(this.currentPage) {
+      case 1:
+        this.title = "Select Race";
+        this.selectedSubRace = null;
+        break;
+      case 2:
+        this.title = "Select Class";
+        this.selectedClass = null;
+        break;
+      case 3:
+        this.title = "Roll Stats";
+        this.buttonText = "Next";
+        break;
+      case 4:
+        this.title = "Finalize Character";
+        this.buttonText = "Finish";
+        this.selectedGame = null;
+        this.character.name = "";
+        break;
+      case 5:
+        this.title = "Creating Character"
+        this.confirmCharacter();
+        break;
+      default:
+        break;
+    }
   }
 
   /**
@@ -250,9 +294,36 @@ export class CreateCharacterComponent implements OnInit {
     return "+0";
   }
 
-  public getRollString(index: number): string {
-    let s: string = this.rolls[index] > 0 ? "Re-roll" : "Roll";
+  /**
+   * Called when the user clicks on a trait to view. It pulls the trait from the 5e api and opens the modal to display
+   * 
+   * @param {string} url The url of the trait to pull
+   * @param {any} content The modal 
+   */
+  public getTraitDetails(url: string, content) {
+    let s: Subscription = this._dndApiService.getSingleEntity<Trait>(url).subscribe(
+      d => this.trait = d,
+      err => console.log("unable to load trait", err),
+      () => {
+        s.unsubscribe();
+        this._modalService.open(content, { size: 'lg' });
+      }
+    );
+  }
 
+  /**
+   * Appends words to each ability to make it look nicer on the DOM
+   * 
+   * @param {number[]} abilities The ability numbers to fix 
+   */
+  public fixAbilityBonuses(abilities: number[]): string[] { //str, dex, con, int, wis, char
+    let s: string[] = [];
+
+    for(let i=0; i < this.stats.length; i++) {
+      if (abilities[i] > 0 || abilities[i] < 0) {
+        s.push(this.stats[i] + ": " + abilities[i]);
+      }
+    }
     return s;
   }
 
@@ -328,16 +399,38 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   public finishedRolling() : boolean {
-    for (let i = 0; i < this.stats.length; i++) {
-      if (this.canRollAgain(i)) return false;
-    }
-
-    return true;
+    return !this.rolls.some(x => x < 2);
   }
 
   public canSubmitCharacter(): boolean {
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
       && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null && this.finishedRolling();
+  }
+
+  /**
+   * 1 -> Race
+   * 2 -> Class
+   * 3 -> Stats
+   * 4 -> Game
+   * 5 -> Name/Level
+   */
+  public canMoveOn(): boolean {
+    switch (this.currentPage) {
+      case 1:
+        return this.selectedSubRace !== null;
+      case 2:
+        return this.selectedClass !== null;
+      case 3:
+        return this.finishedRolling();
+      case 4:
+        return this.selectedGame !== null && this.character.name.length > 0;
+      default:
+        return false;
+    }
+  }
+
+  public canMoveBack(): boolean {
+    return this.currentPage > 1;
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {

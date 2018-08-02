@@ -11,8 +11,6 @@ import { DndApiService } from '../../services/services';
 
 import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Component({
   selector: 'character-race-details',
