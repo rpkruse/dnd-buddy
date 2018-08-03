@@ -11,6 +11,10 @@
     max-height: 10rem;
 }
 
+.short-med {
+    max-height: 15rem;
+}
+
 .half-height{
     max-height: 20rem;
 }

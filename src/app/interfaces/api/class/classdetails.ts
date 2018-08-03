@@ -5,7 +5,7 @@ export interface ClassDetails {
     index: number,
     name: string,
     hit_die: number,
-    proficiency_choices: ProficiencyChoices,
+    proficiency_choices: ProficiencyChoices[], //Gets returned as array value, so we need to cast it
     proficiencies: {
         url: string,
         name: string

@@ -1,242 +1,255 @@
 <div class="container" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
-    <div class="row mt-5">
-      <div class="col-12 mx-auto">
-        <h4 class="text-center">{{ this.title }}</h4>
-        <div class="mt-5" [ngSwitch]="currentPage">
-  
-          <!-- Race/Subrace -->
-          <div class="row" *ngSwitchCase="1">
-            <div class="col-md-4">
-              <!-- Race -->
-              <div class="form-group row">
-                <label class="col-sm-4 col-form-lable">Race Type:</label>
-                <select class="custom-select col-md-8" (change)="selectRace($event.target.value)">
-                  <option selected>Choose</option>
-                  <option *ngFor="let race of this.races.results index as i" [value]="race.url">{{ race.name }}</option>
-                </select>
-              </div>
-  
-              <!-- Subrace -->
-              <div class="form-group row">
-                <label class="col-sm-4 col-form-lable">Race:</label>
-                <select class="custom-select col-md-8" (change)="selectSubRace($event.target.value)" *ngIf="this.selectedRace">
-                  <option selected>Choose</option>
-                  <option *ngFor="let race of this.selectedRace.subraces index as i" [value]="race.url">{{ race.name }}</option>
-                </select>
-              </div>
-            </div>
-            <div [class.panelHide]="!this.selectedSubRace" class="col-md-8" *ngIf="this.selectedSubRace">
-              <div class="card w-100 panel">
-                <div class="card-header text-center header stat">
-                  {{ this.selectedSubRace.name }}
-                </div>
-                <div class="card-body content">
-                  <p>{{ this.selectedSubRace.desc }}</p>
-  
-                  <div class="text-center">
-                    <b>Ability Bonuses:</b>
-                    <p></p>
-                    <div *ngFor="let stat of fixAbilityBonuses(this.selectedSubRace.ability_bonuses)">{{ stat }}</div>
-                    <p></p>
-                    <p>
-                      <b>Age: </b>{{ this.selectedSubRace.age }}</p>
-                    <p>
-                      <b>Alignment: </b>{{ this.selectedSubRace.alignment }}</p>
-                    <p>
-                      <b>Preferred Class(es): </b>{{ this.selectedSubRace.preferred_class }}</p>
-                    <p>
-                      <b>Size: </b>{{ this.selectedSubRace.size }}</p>
-                    <p>
-                      <b>Speed: </b>{{ this.selectedSubRace.speed }}</p>
-                  </div>
-  
-                  <hr />
-                  <button (click)="languageListActive = !languageListActive" class="detailButton">Languages
-                    <span class="float-right glyphicon glyphicon-menu-down"></span>
-                  </button>
-                  <div class="detailList" *ngIf="this.languageListActive">
-                    <ul class="list-group w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let lang of this.selectedSubRace.languages">
-                        {{ lang.name }}
-                      </li>
-                    </ul>
-                  </div>
-  
-                  <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
-                    <span class="float-right glyphicon glyphicon-menu-down"></span>
-                  </button>
-                  <div class="detailList" *ngIf="this.traitsListActive">
-                    <ul class="list-group w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let trait of this.selectedSubRace.racial_traits index as i">
-                        {{ trait.name }}
-                        <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Class -->
-          <div class="row" *ngSwitchCase="2">
-            <div class="col-md-4">
-              <div class="form-group row">
-                <label class="col-sm-4 col-form-lable">Class:</label>
-                <select class="custom-select col-md-8" (change)="selectClass($event.target.value)">
-                  <option selected>Choose</option>
-                  <option *ngFor="let class of this.classes.results index as i" [value]="class.url">{{ class.name }}</option>
-                </select>
-              </div>
-            </div>
-            <div [class.panelHide]="!this.selectedClass" class="col-md-8" *ngIf="this.selectedClass">
-              <div class="card panel">
-                <div class="card-header text-center header stat">{{ this.selectedClass.name }}</div>
-                <div class="card-body content">
-                  <p class="text-center">
-                    <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
-  
-                  <hr />
-                  <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
-                    <strong>Choose {{this.selectedClass.proficiency_choices[0].choose }}</strong>
-                  </button>
-                  <div class="detailList" *ngIf="this.proficiencyChoiceListActive">
-                    <ul class="list-group w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiency_choices[0].from">
-                        {{ prof.name }}
-                      </li>
-                    </ul>
-                  </div>
-  
-  
-                  <button (click)="proficiencyListActive = !proficiencyListActive" class="detailButton">Proficiencies
-                    <span class="float-right glyphicon glyphicon-menu-down"></span>
-                  </button>
-                  <div id="proficiencyList" class="detailList" *ngIf="this.proficiencyListActive">
-                    <ul class="list-group list-group-flush w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiencies">
-                        {{ prof.name }}
-                      </li>
-                    </ul>
-                  </div>
-  
-                  <button (click)="savingThrowsListActive = !savingThrowsListActive" class="detailButton">Saving Throws
-                    <span class="float-right glyphicon glyphicon-menu-down"></span>
-                  </button>
-                  <div id="savingThrowsList" class="detailList" *ngIf="this.savingThrowsListActive">
-                    <ul class="list-group w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let save of this.selectedClass.saving_throws">
-                        {{ save.name }}
-                      </li>
-                    </ul>
-                  </div>
-  
-                  <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">Subclasses
-                    <span class="float-right glyphicon glyphicon-menu-down"></span>
-                  </button>
-                  <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
-                    <ul class="list-group w-100 static-size-list short">
-                      <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
-                        {{ subc.name }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Stats -->
-          <div class="row" *ngSwitchCase="3">
-            <div class="col-md-6">
-              <!-- Roll and stat assign panel -->
-              <p *ngFor="let r of this.rolls index as i">
-                Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
-                <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
-                <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
-              </p>
-            </div>
-            <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
-              <!-- Stats -->
-              <div class="col-lg-10 panel">
-                <div class="row">
-                  <div class="col-4 col-sm-3">
-                    <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
-                      {{ stat }} ({{ getStatString(i) }})
-                    </p>
-                  </div>
-  
-                  <div class="col-2">
-                    <ul class="list-group list-group-flush">
-                      <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
-                        (click)="clickBox(i)">
-                        {{ roll }}
-                      </li>
-                    </ul>
-                  </div>
+  <div class="row mt-5">
+    <div class="col-12 mx-auto">
+      <h4 class="text-center">{{ this.title }}</h4>
 
-                  <small class="text-light ml-5">*Click two stats to swap them!</small>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Game, Name, and Level -->
-          <div class="row" *ngSwitchCase="4">
-            <div class="col-md-6">
-              <label class="col-sm-4 col-form-lable">Game:</label>
-              <select class="custom-select col-md-5" (change)="selectGame($event.target.value)">
+      <div class="row justify-content-between" *ngIf="currentPage <= 4">
+
+        <button type="button" class="btn btn-danger" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
+        <button type="button" class="btn btn-success" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button>
+      </div>
+      <div class="mt-3" [ngSwitch]="currentPage">
+
+        <!-- Race/Subrace -->
+        <div class="row" *ngSwitchCase="1">
+          <div class="col-md-4">
+            <!-- Race -->
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-lable">Race Type:</label>
+              <select class="custom-select col-md-8" (change)="selectRace($event.target.value)">
                 <option selected>Choose</option>
-                <option *ngFor="let game of this.games index as i" [value]="i">{{ game.name }}</option>
+                <option *ngFor="let race of this.races.results index as i" [value]="race.url">{{ race.name }}</option>
               </select>
             </div>
-            <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
-              <!-- Stats -->
-              <div class="col-lg-10 panel">
-                <div [class.panelHide]="!this.selectedGame" class="col-md-8" *ngIf="this.selectedGame">
-                  <!-- Name -->
-                  <div class="form-group row">
-                    <label class="col-sm-4 col-form-lable">Name:</label>
-                    <div class="col-md-8">
-                      <input [value]="character.name" (input)="character.name = $event.target.value" type="text" class="form-control" placeholder="Name"
-                        [ngClass]="{ 'is-invalid': !character.name.length, 'is-valid': character.name.length }">
-                    </div>
+
+            <!-- Subrace -->
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-lable">Race:</label>
+              <select class="custom-select col-md-8" (change)="selectSubRace($event.target.value)" *ngIf="this.selectedRace">
+                <option selected>Choose</option>
+                <option *ngFor="let race of this.selectedRace.subraces index as i" [value]="race.url">{{ race.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div [class.panelHide]="!this.selectedSubRace" class="col-md-8" *ngIf="this.selectedSubRace">
+            <div class="card w-100 panel">
+              <div class="card-header text-center header stat">
+                {{ this.selectedSubRace.name }}
+              </div>
+              <div class="card-body content">
+                <p>{{ this.selectedSubRace.desc }}</p>
+
+                <div class="text-center">
+                  <b>Ability Bonuses:</b>
+                  <p></p>
+                  <div *ngFor="let stat of fixAbilityBonuses(this.selectedSubRace.ability_bonuses)">{{ stat }}</div>
+                  <p></p>
+                  <p>
+                    <b>Age: </b>{{ this.selectedSubRace.age }}</p>
+                  <p>
+                    <b>Alignment: </b>{{ this.selectedSubRace.alignment }}</p>
+                  <p>
+                    <b>Preferred Class(es): </b>{{ this.selectedSubRace.preferred_class }}</p>
+                  <p>
+                    <b>Size: </b>{{ this.selectedSubRace.size }}</p>
+                  <p>
+                    <b>Speed: </b>{{ this.selectedSubRace.speed }}</p>
+                </div>
+
+                <hr />
+                <button (click)="languageListActive = !languageListActive" class="detailButton">Languages
+                  <span class="float-right glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div class="detailList" *ngIf="this.languageListActive">
+                  <ul class="list-group w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let lang of this.selectedSubRace.languages">
+                      {{ lang.name }}
+                    </li>
+                  </ul>
+                </div>
+
+                <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
+                  <span class="float-right glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div class="detailList" *ngIf="this.traitsListActive">
+                  <ul class="list-group w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let trait of this.selectedSubRace.racial_traits index as i">
+                      {{ trait.name }}
+                      <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Class -->
+        <div class="row" *ngSwitchCase="2">
+          <div class="col-md-4">
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-lable">Class:</label>
+              <select class="custom-select col-md-8" (change)="selectClass($event.target.value)">
+                <option selected>Choose</option>
+                <option *ngFor="let class of this.classes.results index as i" [value]="class.url">{{ class.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div [class.panelHide]="!this.selectedClass" class="col-md-8" *ngIf="this.selectedClass">
+            <div class="card panel">
+              <div class="card-header text-center header stat">{{ this.selectedClass.name }}</div>
+              <div class="card-body content">
+                <p class="text-center">
+                  <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
+
+                <hr />
+                <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
+                  <strong>Choose {{ this.choiceAmount }}</strong>
+                </button>
+                <div class="detailList" *ngIf="this.proficiencyChoiceListActive">
+                  <ul class="list-group w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiency_choices[0].from index as i">
+                      {{ prof.name }}
+                      <button type="button" class="btn btn-sm btn-success float-right" *ngIf="!isSelected(prof.name)" (click)="selectProf(prof.name)"
+                        [disabled]="choiceAmount <= 0">Select</button>
+                      <button type="button" class="btn btn-sm btn-danger float-right" *ngIf="isSelected(prof.name)" (click)="unselectProf(prof.name)">Deselect</button>
+                    </li>
+                  </ul>
+                </div>
+
+
+                <button (click)="proficiencyListActive = !proficiencyListActive" class="detailButton">Proficiencies
+                  <span class="float-right glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div id="proficiencyList" class="detailList" *ngIf="this.proficiencyListActive">
+                  <ul class="list-group list-group-flush w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiencies">
+                      {{ prof.name }}
+                    </li>
+                  </ul>
+                </div>
+
+                <button (click)="savingThrowsListActive = !savingThrowsListActive" class="detailButton">Saving Throws
+                  <span class="float-right glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div id="savingThrowsList" class="detailList" *ngIf="this.savingThrowsListActive">
+                  <ul class="list-group w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let save of this.selectedClass.saving_throws">
+                      {{ save.name }}
+                    </li>
+                  </ul>
+                </div>
+
+                <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">Subclasses
+                  <span class="float-right glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
+                  <ul class="list-group w-100 static-size-list short">
+                    <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
+                      {{ subc.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <small class="text-light mx-auto" *ngIf="choiceAmount > 0">
+              <strong>*You must select {{ choiceAmount }} more {{ choiceAmount > 1 ? 'proficiencies' : 'proficiency' }}</strong>
+            </small>
+
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row" *ngSwitchCase="3">
+          <div class="col-md-6">
+            <!-- Roll and stat assign panel -->
+            <p *ngFor="let r of this.rolls index as i">
+              Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
+              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
+            </p>
+          </div>
+          <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
+            <!-- Stats -->
+            <div class="col-lg-10 panel">
+              <div class="row">
+                <div class="col-4 col-sm-3">
+                  <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
+                    {{ stat }} ({{ getStatString(i) }})
+                  </p>
+                </div>
+
+                <div class="col-2">
+                  <ul class="list-group list-group-flush">
+                    <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
+                      (click)="clickBox(i)">
+                      {{ roll }}
+                    </li>
+                  </ul>
+                </div>
+
+                <small class="text-light ml-5">*Click two stats to swap them!</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game, Name, and Level -->
+        <div class="row" *ngSwitchCase="4">
+          <div class="col-md-6">
+            <label class="col-sm-4 col-form-lable">Game:</label>
+            <select class="custom-select col-md-5" (change)="selectGame($event.target.value)">
+              <option selected>Choose</option>
+              <option *ngFor="let game of this.games index as i" [value]="i">{{ game.name }}</option>
+            </select>
+          </div>
+          <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
+            <!-- Stats -->
+            <div class="col-lg-10 panel">
+              <div [class.panelHide]="!this.selectedGame" class="col-md-8" *ngIf="this.selectedGame">
+                <!-- Name -->
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-lable">Name:</label>
+                  <div class="col-md-8">
+                    <input [value]="character.name" (input)="character.name = $event.target.value" type="text" class="form-control" placeholder="Name"
+                      [ngClass]="{ 'is-invalid': !character.name.length, 'is-valid': character.name.length }">
                   </div>
-  
-                  <!-- Level -->
-                  <div class="form-group row">
-                    <label class="col-sm-4 col-form-lable">Level:</label>
-                    <div class="col-md-8">
-                      <input [value]="this.level" (input)="this.level = $event.target.value" type="text" class="form-control" placeholder="Level"
-                        [ngClass]="{ 'is-invalid': !this.level, 'is-valid': this.level }">
-                    </div>
+                </div>
+
+                <!-- Level -->
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-lable">Level:</label>
+                  <div class="col-md-8">
+                    <input [value]="this.level" (input)="this.level = $event.target.value" type="text" class="form-control" placeholder="Level"
+                      [ngClass]="{ 'is-invalid': !this.level, 'is-valid': this.level }">
                   </div>
                 </div>
               </div>
             </div>
           </div>
-  
-          <button type="button" class="btn btn-danger float-left" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
-          <button type="button" class="btn btn-success float-right" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button>
         </div>
+
+        <!-- <button type="button" class="btn btn-danger float-left" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
+          <button type="button" class="btn btn-success float-right" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button> -->
       </div>
     </div>
   </div>
-  
-  <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header text-center header">
-      <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
-    </div>
-  
-    <div class="modal-body content text-light">
-      {{ this.trait.desc }}
-    </div>
-  
-    <div class="header modal-footer">
-      <button type="button" class="btn btn-secondary col-2" (click)="c()">Close</button>
-    </div>
-  </ng-template>
-  
-  <div *ngIf="!(this.classes && this.classes.results && this.races && this.races.results && this.games)">
-    <h1>Loading</h1>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header text-center header">
+    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
   </div>
+
+  <div class="modal-body content text-light">
+    {{ this.trait.desc }}
+  </div>
+
+  <div class="header modal-footer">
+    <button type="button" class="btn btn-secondary col-2" (click)="c()">Close</button>
+  </div>
+</ng-template>
+
+<div *ngIf="!(this.classes && this.classes.results && this.races && this.races.results && this.games)">
+  <h1>Loading</h1>
+</div>

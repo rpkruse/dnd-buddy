@@ -12,6 +12,7 @@ export interface Character {
     abil_Score_Int: number,
     abil_Score_Wis: number,
     abil_Score_Cha: number,
+    profs: string,
     level: number,
     armor: string,
     weapon: string,

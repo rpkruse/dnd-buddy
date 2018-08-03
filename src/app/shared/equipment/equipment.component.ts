@@ -48,6 +48,8 @@ export class EquipmentComponent implements OnInit {
 
   lastCharID: number = -1;
 
+  bagVisible: boolean = false;
+  
   mouseOver: number = -1;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _itemManager: ItemManager, private _modal: NgbModal) { }

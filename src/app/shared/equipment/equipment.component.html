@@ -3,61 +3,68 @@
   <hr class="stat mt-0" />
   <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-12 text-center">
       <!-- Armor -->
       <div *ngIf="this.armor">
-        <p class="text-left" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
-        <p class="text-left" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
+        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
       </div>
       <div *ngIf="!this.armor">
-        <p class="text-left">Armor: None</p>
+        <p class="">Armor: None</p>
       </div>
 
       <!-- Weapon -->
       <div *ngIf="this.weapon">
-        <p class="text-left">Weapon: {{ this.weapon.name }}</p>
-        <p class="text-left">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
-        <p class="text-left">Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+        <p class="">Weapon: {{ this.weapon.name }}</p>
+        <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+        <p class="">Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
       </div>
       <div *ngIf="!this.weapon">
-        <p class="text-left">Weapon: None</p>
+        <p class="">Weapon: None</p>
       </div>
 
       <!-- Rings -->
       <div *ngIf="this.ring_1">
-        <p class="text-left">Ring 1:
+        <p class="">Ring 1:
           <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">{{ this.ring_1.name }}</button>
         </p>
       </div>
       <div *ngIf="!this.ring_1">
-        <p class="text-left">Ring 1: None</p>
+        <p class="">Ring 1: None</p>
       </div>
 
       <div *ngIf="this.ring_2">
-        <p class="text-left">Ring 2:
+        <p class="">Ring 2:
           <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name }}</button>
         </p>
       </div>
       <div *ngIf="!this.ring_2">
-        <p class="text-left">Ring 2: None</p>
+        <p class="">Ring 2: None</p>
       </div>
     </div>
+  </div>
+  <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-12">
       <div class="mx-auto no-padding" *ngIf="this.items && this.items.length">
         <!-- <h5 class="mx-auto text-center bag">Bag:</h5> -->
-        <ul class="list-group list-group-flush static-size-list half-height">
-          <li class="list-group-item content w-100" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
-            {{ item.name }} (x{{ item.count }})
+        <button (click)="bagVisible = !bagVisible" class="detailButton">Bag
+          <span class="float-right glyphicon glyphicon-menu-down"></span>
+        </button>
+        <div *ngIf="this.bagVisible">
+          <ul class="list-group list-group-flush static-size-list short">
+            <li class="list-group-item content w-100" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
+              {{ item.name }} (x{{ item.count }})
 
-            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
-              (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
-            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
-              (click)="removeItemCount(i)">-</button>
-            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 float-right"
-              (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
-          </li>
-        </ul>
+              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
+                (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
+              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
+                (click)="removeItemCount(i)">-</button>
+              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 float-right"
+                (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 

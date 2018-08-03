@@ -1,4 +1,4 @@
-<div *ngIf="this.character && this.levelInfo">
+<div class="container" *ngIf="this.character && this.levelInfo">
   <h4>Stats</h4>
   <hr class="stat mt-0" />
   <p class="card-text">Level {{ this.character.level }}, {{ this.character.xp | number}} xp</p>
@@ -10,5 +10,18 @@
   <p class="card-text">{{ this.stats[4] }} {{ this.character.abil_Score_Wis }} {{getAttrScore(this.character.abil_Score_Wis)}}</p>
   <p class="card-text">{{ this.stats[5] }} {{ this.character.abil_Score_Cha }} {{getAttrScore(this.character.abil_Score_Cha)}}</p>
 
+
+  <button (click)="profsVisible = !profsVisible" class="detailButton">Skills
+    <span class="float-right glyphicon glyphicon-menu-down"></span>
+  </button>
+  <div *ngIf="this.profsVisible">
+    <ul class="list-group w-100 static-size-list short">
+      <li class="list-group-item light-content text-light" *ngFor="let prof of getProf() index as i">
+        {{ prof }}
+      </li>
+    </ul>
+  </div>
+
   <p class="text-muted">*proficiency in stat</p>
+
 </div>

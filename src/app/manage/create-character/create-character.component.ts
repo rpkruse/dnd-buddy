@@ -63,6 +63,9 @@ export class CreateCharacterComponent implements OnInit {
   public buttonText: string = "Next";
   public currentPage: number = 1;
 
+  choiceAmount: number = -1;
+  profChoices: string[] = [];
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router, private _modalService: NgbModal) { }
 
   ngOnInit() {
@@ -99,6 +102,7 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Int: 0,
       abil_Score_Wis: 0,
       abil_Score_Cha: 0,
+      profs: "",
       level: 1,
       armor: null,
       weapon: null,
@@ -170,7 +174,12 @@ export class CreateCharacterComponent implements OnInit {
     s = this._dndApiService.getSingleEntity<ClassDetails>(classUrl).subscribe(
       d => this.selectedClass = d,
       err => console.log("Unable to get details for selected race"),
-      () => s.unsubscribe()
+      () => { 
+        s.unsubscribe();
+        this.choiceAmount = this.selectedClass.proficiency_choices[0].choose;
+        this.character.profs = "";
+        this.profChoices = [];
+      }
     );
   }
 
@@ -213,7 +222,7 @@ export class CreateCharacterComponent implements OnInit {
         this.character.name = "";
         break;
       case 5:
-        this.title = "Creating Character"
+        this.title = "Creating Character..."
         this.confirmCharacter();
         break;
       default:
@@ -246,6 +255,7 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Int: this.character.abil_Score_Int,
       abil_Score_Wis: this.character.abil_Score_Wis,
       abil_Score_Cha: this.character.abil_Score_Cha,
+      profs: this.character.profs, //make this getProfs()
       level: this.level,
       xp: 0,
       userId: this.character.user.userId,
@@ -306,6 +316,34 @@ export class CreateCharacterComponent implements OnInit {
         this.character.abil_Score_Cha = val + bonus;
         break;
     }
+  }
+
+  public selectProf(val: string) {
+    this.choiceAmount--;
+    this.profChoices.push(val);
+
+    // this.character.profs = this.profChoices.toString();
+
+    //probably bad to do this every time
+    this.character.profs = "";
+    let profs: string[] = [];
+
+    for(let i=0; i<this.profChoices.length; i++) {
+      let s: string[] = this.profChoices[i].split("Skill: ");
+      profs.push(s[1]);
+    }
+
+    this.character.profs = profs.toString();
+  }
+
+  public unselectProf(val: string) {
+    let i = this.profChoices.indexOf(val);
+    this.profChoices.splice(i, 1);
+    this.choiceAmount++;
+  }
+
+  public isSelected(val: string): boolean {
+    return this.profChoices.some(x => x === val);
   }
 
   public getStatString(index: number): string {
@@ -445,7 +483,7 @@ export class CreateCharacterComponent implements OnInit {
       case 1:
         return this.selectedSubRace !== null;
       case 2:
-        return this.selectedClass !== null;
+        return this.selectedClass !== null && this.choiceAmount <= 0;
       case 3:
         return this.finishedRolling();
       case 4:

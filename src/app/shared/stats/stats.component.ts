@@ -18,6 +18,8 @@ export class StatsComponent implements OnInit {
   cd: ClassDetails;
 
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
+  
+  profsVisible: boolean = false;
 
   constructor(private _dndApiService: DndApiService) { }
 
@@ -72,5 +74,9 @@ export class StatsComponent implements OnInit {
       v += "(" + n + ")";
 
     return v;
+  }
+
+  public getProf(): string[] {
+    return this.character.profs.split(",");
   }
 }
