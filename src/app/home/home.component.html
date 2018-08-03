@@ -1,27 +1,46 @@
 <div class="container">
   <div class="row">
-    
-    <div class="col-md-5 section">
-      <div class="shadowblock">
-        <h2 class="text-left">Play Now!</h2>
-        <span class="description">
-          <p>Create a game as a DM or join a game</p>
-        </span>
-        <button type="button" class="btn btn-s" (click)="moveToPage(0)">Join Game</button>
+
+    <div class="col-12 section">
+      <div class="row justify-content-between">
+        <!-- Games -->
+        <div class="col-sm-5 shadowblock">
+          <h2>Games</h2>
+          <hr class="stat mt-0" />
+          <span class="description">
+            <p>
+              Create a new game as a GM or join a game as a player
+            </p>
+          </span>
+          <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(0)">Join Game</button>
+
+        </div>
+
+        <!-- Character -->
+        <div class="col-sm-6 shadowblock">
+          <h2>Characters</h2>
+          <hr class="stat mt-0" />
+          <span class="description">
+            <p>
+              Create a new character, manage current characters, or view class/race info
+            </p>
+          </span>
+
+          <div class="row justify-content-around">
+            <div class="col-sm-3">
+            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(3)">Create Character</button>
+            </div>
+            <div class="col-sm-3 mt-sm">
+            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(2)">View Characters</button>
+            </div>
+
+            <div class="col-sm-3">
+            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(1)">Race/Class Details</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="col-md-7 section">
-      <div class="shadowblock">
-        <h2 class="text-left">Manage Characters</h2>
-        <span class="description">
-          <p>View Class/Race details, Manager your characters, or manage a game as a DM</p>
-        </span>
-        <button type="button" class="btn btn-s" (click)="moveToPage(1)">Character Details</button>
-        <button type="button" class="btn btn-s ml-2" (click)="moveToPage(2)">Manage Characters</button>
-      </div>
-    </div>
-
-    <small class="form-text text-dark"><b>*Note:</b> This page layout is temp!</small>
   </div>
 </div>

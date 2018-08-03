@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 
 import { DataShareService } from '../services/services';
 
-import { User } from '../interfaces/interfaces';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -24,6 +22,8 @@ export class HomeComponent implements OnInit {
    * 
    * 2 -> User Characters
    * 
+   * 3 -> New Character
+   * 
    * @param {number} pageNum The page to move to  
    */
   public moveToPage(pageNum: number) {
@@ -36,6 +36,9 @@ export class HomeComponent implements OnInit {
         break;
       case 2:
         this._router.navigate(['./manageCharacter']);
+        break;
+      case 3:
+        this._router.navigate(['./createCharacter']);
         break;
       default:
         break;
