@@ -23,11 +23,11 @@ export class ProfileComponent implements OnInit {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
     this.oldUsername = this.user.username;
 
-    console.log(this.user);
+    // console.log(this.user);
   }
 
   public saveUser() {
-    console.log(this.user);
+    // console.log(this.user);
   }
 
   public cancelChanges() {

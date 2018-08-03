@@ -114,6 +114,11 @@ export class CreateCharacterComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the user selects a race type to get its subraces
+   * 
+   * @param {string} raceUrl The URL of the race to get details on 
+   */
   public selectRace(raceUrl: string) {
     if (raceUrl === "Choose") {
       this.selectedRace = null;
@@ -128,6 +133,11 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user selects a subrace, it pulls its details
+   * 
+   * @param {string} subraceUrl The URL of the subrace to get details on 
+   */
   public selectSubRace(subraceUrl: string) {
     if (subraceUrl === "Choose") {
       this.selectedSubRace = null;
@@ -144,6 +154,11 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user selects a class, it pulls it details
+   * 
+   * @param {string} classUrl The URL of the class to get details from 
+   */
   public selectClass(classUrl: string) {
     if (classUrl === "Choose") {
       this.selectedClass = null;
@@ -159,11 +174,22 @@ export class CreateCharacterComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user selects a game to join
+   * 
+   * @param {number} index The index of the game to join 
+   */
   public selectGame(index: number) {
     if (this.games[index] === undefined) return;
     this.selectedGame = this.games[index];
   }
 
+  /**
+   * Called when the user clicks next or back. It moves them to the new page
+   * and resets values based on the movement
+   * 
+   * @param {number} dir The direction to move [-1, 1] 
+   */
   public changePage(dir: number) {
     this.currentPage += dir;
 

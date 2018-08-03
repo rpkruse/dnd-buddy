@@ -5,6 +5,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { trigger, state, animate, transition, style } from '@angular/animations';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService, DndApiService, DataShareService, StorageService } from '../services/services';
@@ -15,7 +17,22 @@ import { debounceTime } from 'rxjs/operators/debounceTime';
 @Component({
   selector: 'game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css', '../global-style.css']
+  styleUrls: ['./game.component.css', '../global-style.css'],
+  animations: [
+    trigger(
+      'showState', [
+        state('show', style({
+          opacity: 1,
+          visibility: 'visible'
+        })),
+        state('hide', style({
+          opacity: 0,
+          visibility: 'hidden'
+        })),
+        transition('show => *', animate('400ms')),
+        transition('hide => show', animate('400ms')),
+      ])
+  ]
 })
 export class GameComponent implements OnInit {
   MessageType = MessageType;
@@ -35,6 +52,9 @@ export class GameComponent implements OnInit {
   raceDetail: RaceDetails;
 
   gameNameChanged: Subject<string> = new Subject<string>();
+
+  mouseOver: number = -1;
+  deleteClickIndex: number = -1;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal, private _router: Router, private _storageService: StorageService) { }
 
@@ -144,7 +164,7 @@ export class GameComponent implements OnInit {
    */
   public confirmDeleteGame(confirm) {
     this._modalService.open(confirm).result.then((result) => { //confirm
-      if (this.selectedGame.character.length > 0) this.removeCharactersFromGame(); else this.deleteGame();
+      if (this.selectedGame.character.length > 0) this.removeAllCharactersFromGame(); else this.deleteGame();
     }, (reason) => { //cancel or click off, do nothing
 
     });
@@ -174,7 +194,7 @@ export class GameComponent implements OnInit {
   /**
    * Called when the DM deletes a game. Since the characters have a foreign key value to the game, we must delete the characters first
    */
-  private removeCharactersFromGame() {
+  private removeAllCharactersFromGame() {
     let s: Subscription;
     let size: number = this.selectedGame.character.length;
     for (let i = 0; i < size; i++) {
@@ -190,6 +210,30 @@ export class GameComponent implements OnInit {
         }
       )
     }
+  }
+
+  public removeSingleCharacterFromGame(index: number, event) {
+    event.stopPropagation();
+    this.deleteClickIndex = index;
+
+    let c: Character = this.selectedGame.character[index];
+
+    let s: Subscription =  this._apiService.deleteEntity("Characters", c.characterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to remove character", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage("", "Character removed!", MessageType.Success);
+        this.selectedGame.character.splice(index, 1);
+        this.deleteClickIndex = -1;
+      }
+    );
+  }
+
+  public isGameOwner(): boolean {
+    if (!this.selectedGame) return false;
+
+    return this.selectedGame.userId === this.user.userId;
   }
 
   /**
