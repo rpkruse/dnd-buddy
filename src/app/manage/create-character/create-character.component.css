@@ -57,6 +57,10 @@ label {
     width: 100%;
 }
 
+.light-content {
+    background: rgba(0, 0, 0, 0.35);
+}
+
 /*.list-group-item {
     color: white;
     background-color: #464646;
