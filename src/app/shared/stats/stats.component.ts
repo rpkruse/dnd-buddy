@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { DndApiService } from '../../services/services';
-import { Character, ClassDetails, ClassLevels } from '../../interfaces/interfaces';
+import { Character, ClassDetails, ClassLevels, SubRace, Trait } from '../../interfaces/interfaces';
 import { Subscription } from '../../../../node_modules/rxjs';
 
 @Component({
@@ -16,14 +17,17 @@ export class StatsComponent implements OnInit {
   lastCharID: number = -1;
 
   cd: ClassDetails;
+  raceDetails: SubRace;
+  trait: Trait;
 
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
   
   profsVisible: boolean = false;
+  traitsVisible: boolean = false;
 
   show: boolean = true;
 
-  constructor(private _dndApiService: DndApiService) { }
+  constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
   ngOnInit() {
     let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class).subscribe(
@@ -62,6 +66,29 @@ export class StatsComponent implements OnInit {
       d => this.levelInfo = d,
       err => console.log("unable to get level info", err),
       () => s.unsubscribe()
+    );
+
+    let k: Subscription = this._dndApiService.getSingleEntity<SubRace>(this.character.race).subscribe(
+      d => this.raceDetails = d,
+      err => console.log("unable to get race detail", err),
+      () => k.unsubscribe()
+    );
+  }
+
+  /**
+   * Called when the user clicks on a trait to view. It pulls the trait from the 5e api and opens the modal to display
+   * 
+   * @param {string} url The url of the trait to pull
+   * @param {any} content The modal 
+   */
+  public getTraitDetails(url: string, content) {
+    let s: Subscription = this._dndApiService.getSingleEntity<Trait>(url).subscribe(
+      d => this.trait = d,
+      err => console.log("unable to load trait", err),
+      () => {
+        s.unsubscribe();
+        this._modalService.open(content, { size: 'lg' });
+      }
     );
   }
 

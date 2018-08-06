@@ -3,7 +3,7 @@
     <div class="col-12 mx-auto">
       <h4 class="text-center">{{ this.title }}</h4>
 
-      <div class="row justify-content-between" *ngIf="currentPage <= 4">
+      <div class="row justify-content-between" *ngIf="currentPage <= maxPage">
 
         <button type="button" class="btn btn-danger" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
         <button type="button" class="btn btn-success" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button>
@@ -165,8 +165,8 @@
             <!-- Roll and stat assign panel -->
             <p *ngFor="let r of this.rolls index as i">
               Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
-              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="!canRollAgain(i)" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
-              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="!canRollAgain(i) || this.rolls[i] <= 0" (click)="keepRoll(i)">Keep</button>
+              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.rolls[i] == 2 || this.rolls[i] <= 0" (click)="this.rolls[i] = 2">Keep</button>
             </p>
           </div>
           <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
@@ -229,8 +229,18 @@
           </div>
         </div>
 
-        <!-- <button type="button" class="btn btn-danger float-left" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
-          <button type="button" class="btn btn-success float-right" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button> -->
+
+        <div class="row" *ngSwitchCase="5">
+          <div class="col-md-6">
+            <p *ngFor="let roll of this.hp_rolls index as i">
+              {{ roll }} {{ getAttrScoreString(this.character.abil_Score_Con) }}
+              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.hpRollCount[i] === 2" (click)="rollHP(i)" *ngIf="i !== 0">{{ this.hpRollCount[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.hpRollCount[i] === 2 || this.hpRollCount[i] <= 0" (click)="this.hpRollCount[i] = 2"
+                *ngIf="i !== 0">Keep</button>
+            </p>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>

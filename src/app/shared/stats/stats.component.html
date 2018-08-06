@@ -11,6 +11,7 @@
   <div *ngIf="show">
     <p class="card-text">Level {{ this.character.level }}, {{ this.character.xp | number}} xp</p>
     <p class="card-text" *ngIf="levelInfo">Prof Bonus: {{ this.levelInfo.prof_bonus }}</p>
+    <p class="card-text">HP: {{ character.hp }}/{{ character.max_HP }}</p>
     <p class="card-text">{{ this.stats[0] }} {{ this.character.abil_Score_Str }} {{getAttrScore(this.character.abil_Score_Str)}}</p>
     <p class="card-text">{{ this.stats[1] }} {{ this.character.abil_Score_Dex }} {{getAttrScore(this.character.abil_Score_Dex)}}</p>
     <p class="card-text">{{ this.stats[2] }} {{ this.character.abil_Score_Con }} {{getAttrScore(this.character.abil_Score_Con)}}</p>
@@ -30,6 +31,32 @@
       </ul>
     </div>
 
+    <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
+      <span class="float-right glyphicon glyphicon-menu-down"></span>
+    </button>
+    <div class="detailList text-left" *ngIf="this.traitsListActive">
+      <ul class="list-group w-100 static-size-list short">
+        <li class="list-group-item light-content text-light" *ngFor="let trait of this.raceDetails.racial_traits index as i">
+          {{ trait.name }}
+          <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button>
+        </li>
+      </ul>
+    </div>
+
     <p class="text-muted">*proficiency in stat</p>
   </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header text-center header">
+    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+  </div>
+
+  <div class="modal-body content text-light">
+    {{ this.trait.desc }}
+  </div>
+
+  <div class="header modal-footer">
+    <button type="button" class="btn btn-secondary col-2" (click)="c()">Close</button>
+  </div>
+</ng-template>

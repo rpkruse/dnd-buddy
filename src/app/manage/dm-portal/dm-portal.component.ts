@@ -156,6 +156,12 @@ export class DmPortalComponent implements OnInit {
     }
   }
 
+  setHPValue(val: number) {
+    this.character.max_HP += val;
+
+    if (this.character.max_HP <= 0) this.character.max_HP = 1;
+  }
+  
   /**
    * Returns the ability modifier value for a given stat: FL((val - 10)/2)
    * 

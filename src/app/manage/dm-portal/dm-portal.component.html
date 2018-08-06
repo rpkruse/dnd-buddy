@@ -53,6 +53,13 @@
                 <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
                 <br>
                 <br>
+
+                <p class="text-light">
+                  Max HP: {{ character.max_HP }}
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setHPValue(-1)">-</button>
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setHPValue(1)">+</button>
+                </p>
+
                 <p class="text-light" *ngFor="let stat of this.stats index as i">
                   {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
                   <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>

@@ -1,5 +1,5 @@
 /*
-  Note: This code is very temp, and will be cleaned up ASAP
+  TODO: Rewrite this
 */
 
 import { Component, OnInit } from '@angular/core';
@@ -31,17 +31,13 @@ export class CreateCharacterComponent implements OnInit {
 
   level: number = 1;
 
+  hp_rolls: number[] = [];
+  hpRollCount: number[] = [];
+
   character: Character;
   trait: Trait;
 
   games: Game[] = [];
-
-  languageListActive: boolean = false;
-  traitsListActive: boolean = false;
-  proficiencyChoiceListActive: boolean = false;
-  proficiencyListActive: boolean = false;
-  savingThrowsListActive: boolean = false;
-  subclassesListActive: boolean = false;
 
   private numOfDice: number = 6;
   private numOfDiceToKeep: number = 3;
@@ -62,9 +58,19 @@ export class CreateCharacterComponent implements OnInit {
   public title: string = "Select Race"
   public buttonText: string = "Next";
   public currentPage: number = 1;
+  public maxPage: number = 5;
 
   choiceAmount: number = -1;
   profChoices: string[] = [];
+
+  languageListActive: boolean = false;
+  traitsListActive: boolean = false;
+  proficiencyChoiceListActive: boolean = false;
+  proficiencyListActive: boolean = false;
+  savingThrowsListActive: boolean = false;
+  subclassesListActive: boolean = false;
+
+  statsSet: boolean = false;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router, private _modalService: NgbModal) { }
 
@@ -102,6 +108,8 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Int: 0,
       abil_Score_Wis: 0,
       abil_Score_Cha: 0,
+      max_HP: 0,
+      hp: 0,
       profs: "",
       level: 1,
       armor: null,
@@ -194,56 +202,19 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   /**
-   * Called when the user clicks next or back. It moves them to the new page
-   * and resets values based on the movement
-   * 
-   * @param {number} dir The direction to move [-1, 1] 
-   */
-  public changePage(dir: number) {
-    this.currentPage += dir;
-
-    switch(this.currentPage) {
-      case 1:
-        this.title = "Select Race";
-        this.selectedSubRace = null;
-        break;
-      case 2:
-        this.title = "Select Class";
-        this.selectedClass = null;
-        break;
-      case 3:
-        this.title = "Roll Stats";
-        this.buttonText = "Next";
-        break;
-      case 4:
-        this.title = "Finalize Character";
-        this.buttonText = "Finish";
-        this.selectedGame = null;
-        this.character.name = "";
-        break;
-      case 5:
-        this.title = "Creating Character..."
-        this.confirmCharacter();
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
    * Called when the user clicks create on their character. It adds the race mods. to their ability score rolls
    * and adds them to the backend/game they selected
    */
   public confirmCharacter() {
-    for (let i = 0; i < this.stats.length; i++) {
-      this.setAttr(i);
-    }
-
     this.character.userId = this.user.userId;
     this.character.user = this.user;
     this.character.gameId = this.selectedGame.gameId;
     this.character.game = this.selectedGame;
     this.character.level = this.level;
+
+    for(let i=0; i<this.level; i++) {
+      this.character.hp += (this.hp_rolls[i] + this.getAttrScoreValue(this.character.abil_Score_Con));
+    }
 
     let c = {
       name: this.character.name,
@@ -255,6 +226,8 @@ export class CreateCharacterComponent implements OnInit {
       abil_Score_Int: this.character.abil_Score_Int,
       abil_Score_Wis: this.character.abil_Score_Wis,
       abil_Score_Cha: this.character.abil_Score_Cha,
+      max_HP: this.character.hp,
+      hp: this.character.hp,
       profs: this.character.profs, //make this getProfs()
       level: this.level,
       xp: 0,
@@ -424,6 +397,17 @@ export class CreateCharacterComponent implements OnInit {
     this.keptRolls[index] = score;
   }
 
+  public rollHP(index: number) {
+    this.hpRollCount[index]++;
+
+    let max: number = this.selectedClass.hit_die;
+    let min: number = 1;
+
+    let r: number = Math.floor(min + Math.random() * (max + 1 - min));
+
+    this.hp_rolls[index] = r;
+  }
+
   public clickBox(index: number) {
     if (this.boxIndex === index) {
       this.boxIndex = -1;
@@ -442,26 +426,6 @@ export class CreateCharacterComponent implements OnInit {
     this.boxIndex = index;
   }
 
-  /**
-   * Called when the user clicks the keep roll button
-   * 
-   * @param {number} index The index of the roll 
-   */
-  public keepRoll(index: number) {
-    this.rolls[index] = 2;
-  }
-
-  /**
-   * Called to check if we can roll a stat again
-   * 
-   * @param {number} index The index of the roll
-   *  
-   * @returns If we can reroll a stat
-   */
-  public canRollAgain(index: number): boolean {
-    return this.rolls[index] < 2;
-  }
-
   public finishedRolling() : boolean {
     return !this.rolls.some(x => x < 2);
   }
@@ -471,12 +435,68 @@ export class CreateCharacterComponent implements OnInit {
       && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null && this.finishedRolling();
   }
 
+   /**
+   * Called when the user clicks next or back. It moves them to the new page
+   * and resets values based on the movement
+   * 
+   * @param {number} dir The direction to move [-1, 1] 
+   */
+  public changePage(dir: number) {
+    this.currentPage += dir;
+
+    switch(this.currentPage) {
+      case 1:
+        this.title = "Select Race";
+        this.selectedSubRace = null;
+        break;
+      case 2:
+        this.title = "Select Class";
+        this.selectedClass = null;
+        break;
+      case 3:
+        this.title = "Roll Stats";
+        break;
+      case 4:
+        this.title = "Select Game and Level";
+        this.selectedGame = null;
+        this.character.name = "";
+        this.buttonText = "Next";
+        
+        if (!this.statsSet) {
+          for (let i = 0; i < this.stats.length; i++) {
+            this.setAttr(i);
+          }
+          this.statsSet = true;
+        }
+        break;
+      case 5:
+        this.hp_rolls = [];
+        this.hpRollCount = [];
+
+        for(let i=0; i<this.level; i++) {
+          this.hp_rolls.push(0);
+          this.hpRollCount.push(0);
+        }
+
+        this.hp_rolls[0] = this.selectedClass.hit_die;
+        this.hpRollCount[0] = 2;
+        this.buttonText = "Finalize Character";
+        break;
+      case 6:
+        this.title = "Creating Character..."
+        this.confirmCharacter();
+        break;
+      default:
+        break;
+    }
+  }
+
   /**
    * 1 -> Race
    * 2 -> Class
    * 3 -> Stats
-   * 4 -> Game
-   * 5 -> Name/Level
+   * 4 -> Game, Name, Level
+   * 5 -> Health
    */
   public canMoveOn(): boolean {
     switch (this.currentPage) {
@@ -485,9 +505,11 @@ export class CreateCharacterComponent implements OnInit {
       case 2:
         return this.selectedClass !== null && this.choiceAmount <= 0;
       case 3:
-        return this.finishedRolling();
+        return !this.rolls.some(x => x < 2);
       case 4:
         return this.selectedGame !== null && this.character.name.length > 0;
+      case 5:
+        return !this.hpRollCount.some(x => x < 2);
       default:
         return false;
     }
@@ -495,6 +517,23 @@ export class CreateCharacterComponent implements OnInit {
 
   public canMoveBack(): boolean {
     return this.currentPage > 1;
+  }
+
+  public getAttrScoreString(attr: number): string {
+    let v: string = "";
+
+    let n: number = Math.floor((attr - 10) / 2);
+
+    if (n >= 0)
+      v += "(+" + n + ")";
+    else
+      v += "(" + n + ")";
+
+    return v;
+  }
+
+  public getAttrScoreValue(attr: number): number {
+    return Math.floor((attr - 10) / 2);
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {
