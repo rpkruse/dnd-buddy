@@ -167,7 +167,7 @@ export class LoginComponent implements OnInit {
    */
   private allFieldsFilled(): boolean {
     if(this.createUser)
-      return this.passwordsMatch() && !this.usernameTaken && this.username.length > 0;
+      return this.passwordsMatch() && !this.usernameTaken && this.createUsername.length > 0;
     
       return this.username.length > 0 && this.password.length > 0;
   }
