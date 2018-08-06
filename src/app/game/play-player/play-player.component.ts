@@ -116,6 +116,11 @@ export class PlayPlayerComponent implements OnInit {
     this.spellSlots[index]--;
   }
 
+  public rest() {
+    this.spellSlots = this._playManager.setSpellSlots(this.levelDetail);
+    this.character.hp = this.character.max_HP;
+  }
+
   /**
    * Called when our play manager returns the level details of the current character
    * 

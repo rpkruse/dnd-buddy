@@ -1,18 +1,108 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="card w-100 bg-transparent">
+<div class="container">
+  <div class="row mb-5 justify-content-around">
+    <div class="col-md-11 header text-light text-center">
+      <h2>
+        {{ this.character.name }}, Level {{ this.character.level }}
+        <button type="button" class="btn btn-sm btn-h btn-s float-right d-inline" (click)="rest()">Rest</button>
+
+      </h2>
+    </div>
+  </div>
+  <div class="row justify-content-around">
+    <!-- Rolling -->
+    <div class="col-md-5 content text-light mb-sm-0 mb-5">
+      <app-roll (rollOutput)="rollDice($event)"></app-roll>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-md-5 content text-light text-center">
+      <app-stats [character]="character"></app-stats>
+    </div>
+  </div>
+
+  <div class="row mt-5 justify-content-around">
+
+    <!-- Equipment -->
+    <div class="content text-light mb-sm-0 mb-5" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-md-5' : 'col-md-12'">
+      <app-equipment [character]="character"></app-equipment>
+    </div>
+
+    <!-- Spellbook -->
+    <div class="col-md-5 content text-light" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
+      <div class="col-md-12 no-padding">
+        <h4 class="text-center">
+          Spell Info
+          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right" ngbTooltip="Hide"
+            (click)="show = !show" *ngIf="show" />
+          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right" ngbTooltip="Show"
+            (click)="show = !show" *ngIf="!show" />
+        </h4>
+        <hr class="stat mt-0">
+
+        <div *ngIf="show">
+          <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
+            <li class="list-group-item text-light content">
+              Cantrips: {{levelDetail.spellcasting.cantrips_known}}
+              <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
+            </li>
+            <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
+              Level {{i+1}} Spells: {{spellSlot}}
+              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Equipment 
+    <div class="card w-100 bg-transparent col-md-6">
+      <div class="card-body content text-light">
+        <div class="float-right col-md-12" *ngIf="this.character">
+          <app-equipment [character]="character"></app-equipment>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spells 
+    <div class="card w-100 bg-transparent col-md-6">
+      <div class="card-body content text-light">
+        <div class="col-md-12 no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
+          <h4 class="text-center">
+            Spell Info
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right" ngbTooltip="Hide"
+              (click)="show = !show" *ngIf="show" />
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right" ngbTooltip="Show"
+              (click)="show = !show" *ngIf="!show" />
+          </h4>
+          <hr class="stat mt-0">
+
+          <div *ngIf="show">
+            <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
+              <li class="list-group-item text-light content">
+                Cantrips: {{levelDetail.spellcasting.cantrips_known}}
+                <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
+              </li>
+              <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
+                Level {{i+1}} Spells: {{spellSlot}}
+                <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!--<div class="card w-100 bg-transparent">
       <div class="card-header text-center header text-light">
         {{ this.character.name }} ({{ this.user.username }})
         <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
       </div>
       <div class="card-body content text-light">
         <div class="row">
-          <!-- Rolling info -->
-          <!-- Roll -->
+          <!-- Rolling info 
           <div [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-3' : 'col-lg-4'">
             <app-roll (rollOutput)="rollDice($event)"></app-roll>
           </div>
 
+          <!-- Stats 
           <div class="text-center" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-2' : 'col-lg-3'">
             <app-stats [character]="character"></app-stats>
           </div>
@@ -20,18 +110,18 @@
           <div [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-lg-7' : 'col-lg-5'">
             <div class="row">
 
-              <!-- Item info -->
+              <!-- Item info 
               <div class="float-right" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-sm-8' : 'col-sm-12'" *ngIf="this.character">
                 <app-equipment [character]="character"></app-equipment>
               </div>
 
-              <!-- Spell Info -->
+              <!-- Spell Info 
               <div class="col-sm-3 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
                 <h4 class="text-center">
                   Spell Info
-                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right" ngbTooltip="Hide"
                     (click)="show = !show" *ngIf="show" />
-                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right" ngbTooltip="Show"
                     (click)="show = !show" *ngIf="!show" />
                 </h4>
                 <hr class="stat mt-0">
@@ -49,7 +139,7 @@
                   </ul>
                 </div>
               </div>
-              <!-- ^^ End of spell info-->
+              <!-- ^^ End of spell info
             </div>
 
           </div>
@@ -57,7 +147,7 @@
       </div>
       <div class="card-footer header">
       </div>
-    </div>
+    </div>-->
   </div>
 </div>
 
