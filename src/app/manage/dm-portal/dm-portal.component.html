@@ -39,26 +39,35 @@
           <div class="row">
             <!-- Name/Stats -->
             <div class="col-md-3 float-left text-center">
-              <h4>Set Stats</h4>
+              <h4>
+                Set Stats
+                <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+                  (click)="show = !show" *ngIf="show" />
+                <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+                  (click)="show = !show" *ngIf="!show" />
+              </h4>
               <hr class="stat mt-0" />
-              <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
-              <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
-              <br>
-              <br>
-              <p class="text-light" *ngFor="let stat of this.stats index as i">
-                {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
-                <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
-                <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setStatValue(1, i)">+</button>
-              </p>
+
+              <div *ngIf="show">
+                <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
+                <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
+                <br>
+                <br>
+                <p class="text-light" *ngFor="let stat of this.stats index as i">
+                  {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setStatValue(1, i)">+</button>
+                </p>
+              </div>
             </div>
 
             <!-- Equipment -->
-            <div class="col-md-5">
+            <div class="col-md-4">
               <app-equipment [character]="this.character" [dmPortal]="true"></app-equipment>
             </div>
 
             <!-- Give Equip. -->
-            <div class="col-md-4 text-light">
+            <div class="col-md-5 text-light">
               <app-giveitem [character]="this.character" [users]="[]"></app-giveitem>
             </div>
 

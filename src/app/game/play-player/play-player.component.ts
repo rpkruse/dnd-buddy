@@ -38,6 +38,9 @@ export class PlayPlayerComponent implements OnInit {
 
   user: User;
   game: Game;
+
+  show: boolean = true;
+  
   @Input() character: Character;
 
   canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];

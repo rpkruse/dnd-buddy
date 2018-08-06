@@ -21,6 +21,8 @@ export class StatsComponent implements OnInit {
   
   profsVisible: boolean = false;
 
+  show: boolean = true;
+
   constructor(private _dndApiService: DndApiService) { }
 
   ngOnInit() {

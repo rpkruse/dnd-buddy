@@ -25,6 +25,9 @@ export class GiveitemComponent implements OnInit {
   finished: boolean = false;
 
   canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
+  giveAmount: number = 1;
+
+  show: boolean = true;
 
   constructor(private _dndApiService: DndApiService, private _itemManager: ItemManager) { }
 
@@ -105,6 +108,13 @@ export class GiveitemComponent implements OnInit {
     this.finished = true;
   }
 
+  changeAmountToGive(dir: number) {
+    this.giveAmount += dir;
+
+    if (this.giveAmount <= 1)
+      this.giveAmount = 1;
+  }
+
   /**
    * Called only from the DM portal, it gives the selected item to a player
    */
@@ -135,12 +145,14 @@ export class GiveitemComponent implements OnInit {
     let nItem = {
       name: eq.name,
       url: eq.url,
-      count: 1,
+      count: this.giveAmount,
       canEquip: canEquip,
       characterId: this.character.characterId
     }
 
     this._itemManager.addItem(nItem, nItem.url);
+
+    this.giveAmount = 1;
   }
 
   ngOnDestroy() {

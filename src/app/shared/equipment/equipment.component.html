@@ -1,7 +1,13 @@
 <div class="col-md-12 text-light">
-  <h4 class="text-center">Equipment</h4>
+  <h4 class="text-center">
+    Equipment
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+      (click)="show = !show" *ngIf="show" />
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+      (click)="show = !show" *ngIf="!show" />
+  </h4>
   <hr class="stat mt-0" />
-  <div class="row">
+  <div class="row" *ngIf="show">
 
     <div class="col-md-12 text-center">
       <!-- Armor -->
@@ -43,7 +49,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="show">
 
     <div class="col-md-12">
       <div class="mx-auto no-padding" *ngIf="this.items && this.items.length">

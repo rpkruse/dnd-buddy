@@ -27,18 +27,27 @@
 
               <!-- Spell Info -->
               <div class="col-sm-3 float-right no-padding" *ngIf="this.levelDetail && this.levelDetail.spellcasting">
-                <h4 class="text-center">Spell Info</h4>
+                <h4 class="text-center">
+                  Spell Info
+                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+                    (click)="show = !show" *ngIf="show" />
+                  <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+                    (click)="show = !show" *ngIf="!show" />
+                </h4>
                 <hr class="stat mt-0">
-                <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
-                  <li class="list-group-item text-light content">
-                    Cantrips: {{levelDetail.spellcasting.cantrips_known}}
-                    <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
-                  </li>
-                  <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
-                    Level {{i+1}} Spells: {{spellSlot}}
-                    <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
-                  </li>
-                </ul>
+
+                <div *ngIf="show">
+                  <ul class="list-group list-group-flush static-size-list spell-list" *ngIf="this.spellSlots">
+                    <li class="list-group-item text-light content">
+                      Cantrips: {{levelDetail.spellcasting.cantrips_known}}
+                      <button type="button" class="btn btn-success btn-sm float-right" (click)="openSpellBook(content)">Spell Book</button>
+                    </li>
+                    <li class="list-group-item text-light content" *ngFor="let spellSlot of this.spellSlots index as i">
+                      Level {{i+1}} Spells: {{spellSlot}}
+                      <button type="button" class="btn btn-secondary float-right" (click)="castSpell(i)" [disabled]="spellSlot <=0">Cast</button>
+                    </li>
+                  </ul>
+                </div>
               </div>
               <!-- ^^ End of spell info-->
             </div>

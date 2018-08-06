@@ -1,27 +1,35 @@
 <div class="col-md-12">
-  <h4>Roll</h4>
+  <h4>
+    Roll
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+      (click)="show = !show" *ngIf="show" />
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+      (click)="show = !show" *ngIf="!show" />
+  </h4>
   <hr class="stat mt-0" />
 
-  <div class="row">
-    <div class="col-md-12 text-center">
-      <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-4"> D
-      <select class="custom-select col-sm-4 ml-1" (change)="this.rollMax = $event.target.value">
-        <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
-      </select>
-      <div class="card-text">
-        Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})
+  <div *ngIf="show">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <input [value]="numDice" (input)="numDice = $event.target.value" type="text" class="col-sm-4"> D
+        <select class="custom-select col-sm-4 ml-1" (change)="this.rollMax = $event.target.value">
+          <option *ngFor="let die of this.dice index as i" [value]="die">{{die}}</option>
+        </select>
+        <div class="card-text">
+          Value Rolled: {{ this.roll }} ({{ this.numDice }}D{{ this.rollMax}})
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
+    <div class="row">
 
-    <div class="col-md-12 mt-4 text-center">
-      <input type="checkbox" [checked]="hidden" (change)="hidden = !hidden">Hidden
-      <button type="button" class="btn btn-s btn-h btn-sm" (click)="clearRoll()">Clear</button>
-      <button type="button" class="btn btn-success btn-sm ml-2" (click)="rollDice()">Roll</button>
+      <div class="col-md-12 mt-4 text-center">
+        <input type="checkbox" [checked]="hidden" (change)="hidden = !hidden">Hidden
+        <button type="button" class="btn btn-s btn-h btn-sm" (click)="clearRoll()">Clear</button>
+        <button type="button" class="btn btn-success btn-sm ml-2" (click)="rollDice()">Roll</button>
+      </div>
+
     </div>
 
   </div>
-
 </div>

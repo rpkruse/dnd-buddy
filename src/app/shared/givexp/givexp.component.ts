@@ -21,6 +21,8 @@ export class GivexpComponent implements OnInit {
 
   xpItems: XpItem[] = [];
 
+  show: boolean = true;
+  
   @Output() xpOutput: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() { }

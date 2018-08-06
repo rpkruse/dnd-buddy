@@ -52,6 +52,8 @@ export class EquipmentComponent implements OnInit {
   
   mouseOver: number = -1;
 
+  show: boolean = true;
+  
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {

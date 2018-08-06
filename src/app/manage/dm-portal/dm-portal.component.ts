@@ -39,6 +39,8 @@ export class DmPortalComponent implements OnInit {
 
   slottedItem: boolean = false;
 
+  show: boolean = true;
+  
   stats: string[] = ["STR: ", "DEX: ", "CON: ", "INT: ", "WIS: ", "CHA: "]
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _itemManager: ItemManager) { }

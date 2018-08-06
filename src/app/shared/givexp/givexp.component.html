@@ -1,15 +1,23 @@
 <div class="col-md-12 text-center">
-  <h4>Give XP</h4>
+  <h4>
+    Give XP
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+      (click)="show = !show" *ngIf="show" />
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+      (click)="show = !show" *ngIf="!show" />
+  </h4>
   <hr class="stat mt-0" />
 
-  <ul class="list-group list-group-flush static-size-list short">
-    <li class="list-group-item bg-transparent" *ngFor="let xItem of this.xpItems index as i">
-      <input class="col-5" [value]="this.xpItems[i].amount" (input)="this.xpItems[i].amount = $event.target.value" placeholder="Amount"> x {{ this.xpItems[i].times }}
-      <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="changeTimes(-1, i)">-</button>
-      <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="changeTimes(1, i)">+</button>
-    </li>
-  </ul>
+  <div *ngIf="show">
+    <ul class="list-group list-group-flush static-size-list short">
+      <li class="list-group-item bg-transparent" *ngFor="let xItem of this.xpItems index as i">
+        <input class="col-5" [value]="this.xpItems[i].amount" (input)="this.xpItems[i].amount = $event.target.value" placeholder="Amount"> x {{ this.xpItems[i].times }}
+        <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="changeTimes(-1, i)">-</button>
+        <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="changeTimes(1, i)">+</button>
+      </li>
+    </ul>
 
-  <button type="button" class="btn btn-sm btn-success float-left" (click)="createNewItem()">Add XP</button>
-  <button type="button" class="btn btn-sm btn-s btn-h float-right" (click)="giveXp()">Give XP</button>
+    <button type="button" class="btn btn-sm btn-success float-left" (click)="createNewItem()">Add XP</button>
+    <button type="button" class="btn btn-sm btn-s btn-h float-right" (click)="giveXp()">Give XP</button>
+  </div>
 </div>

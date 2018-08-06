@@ -15,6 +15,8 @@ export class RollComponent implements OnInit {
 
   hidden: boolean = false;
 
+  show: boolean = true;
+
   @Output() rollOutput: EventEmitter<number[]> = new EventEmitter<number[]>();
 
   constructor() { }
