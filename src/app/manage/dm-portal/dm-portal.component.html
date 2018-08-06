@@ -60,6 +60,12 @@
                   <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setHPValue(1)">+</button>
                 </p>
 
+                <p class="text-light">
+                  Level: {{ character.level }}
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setLevelValue(-1)">-</button>
+                  <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setLevelValue(1)">+</button>
+                </p>
+
                 <p class="text-light" *ngFor="let stat of this.stats index as i">
                   {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
                   <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
@@ -69,13 +75,18 @@
             </div>
 
             <!-- Equipment -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <app-equipment [character]="this.character" [dmPortal]="true"></app-equipment>
             </div>
 
             <!-- Give Equip. -->
-            <div class="col-md-5 text-light">
+            <div class="col-md-3 text-light">
               <app-giveitem [character]="this.character" [users]="[]"></app-giveitem>
+            </div>
+
+            <!-- Give XP -->
+            <div class="col-md-3 text-light">
+              <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
             </div>
 
           </div>

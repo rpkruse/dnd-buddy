@@ -9,11 +9,12 @@ import { ApiService, DndApiService, DataShareService, ItemManager } from '../../
 
 import {
   User, Character, Item, Game, RaceDetails, ClassDetails,
-  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType, ItemType
+  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType, XP
 } from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'dm-portal',
@@ -40,7 +41,7 @@ export class DmPortalComponent implements OnInit {
   slottedItem: boolean = false;
 
   show: boolean = true;
-  
+
   stats: string[] = ["STR: ", "DEX: ", "CON: ", "INT: ", "WIS: ", "CHA: "]
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _itemManager: ItemManager) { }
@@ -161,7 +162,43 @@ export class DmPortalComponent implements OnInit {
 
     if (this.character.max_HP <= 0) this.character.max_HP = 1;
   }
-  
+
+  setLevelValue(val: number) {
+    this.character.level += val;
+
+    if (this.character.level <= 0) this.character.level = 1;
+
+    let xp: XP;
+    let k: Subscription = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "xp/" + this.character.level).subscribe(
+      d => xp = d,
+      err => console.log(err),
+      () => {
+        k.unsubscribe();
+        this.character.xp = xp.xp;
+      }
+    );
+  }
+
+  giveXP(xp: number) {
+    this.character.xp += xp;
+
+    this.checkForLevelUp();
+  }
+
+  private checkForLevelUp() {
+    let s: Subscription;
+    let nextLevel: number = this.character.level + 1;
+    let xp: XP;
+    s = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "XP/" + nextLevel).subscribe(
+      d => xp = d,
+      err => console.log("unable to get xp for next level"),
+      () => {
+        s.unsubscribe();
+
+        if (xp.xp <= this.character.xp) this.character.level++;
+      }
+    )
+  }
   /**
    * Returns the ability modifier value for a given stat: FL((val - 10)/2)
    * 
