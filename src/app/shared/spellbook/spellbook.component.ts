@@ -1,15 +1,22 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
 import { ApiService, DndApiService } from '../../services/services';
 
 import { ClassDetails, Spell, SpellDetails } from '../../interfaces/interfaces';
 import { Subscription } from '../../../../node_modules/rxjs';
+import { Results } from '../../interfaces/api/results';
+
+export interface SimpleSpell {
+  name: string,
+  level: number,
+  url: string
+};
 
 @Component({
   selector: 'app-spellbook',
   templateUrl: './spellbook.component.html',
-  styleUrls: ['./spellbook.component.css', '../../global-style.css', '../shared-style.css'],
+  styleUrls: ['./spellbook.component.css', '../../global-style.css'],
   animations: [
     trigger(
       'showState', [
@@ -28,12 +35,27 @@ import { Subscription } from '../../../../node_modules/rxjs';
 })
 
 export class SpellbookComponent implements OnInit {
-  @Input() cd: ClassDetails
+  @Input() cd: ClassDetails;
+  @Input() simpleView: boolean;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.width = window.innerWidth;
+
+    this.onMobile = this.width <= 400;
+  }
 
   spellBook: Spell[] = [];
+  simpleSpellBook: SimpleSpell[] = [];
+
   spellDetail: SpellDetails;
 
   mouseOver: number = -1;
+
+  show: boolean = true;
+
+  width: number;
+  private onMobile: boolean = false;
 
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService) { }
 
@@ -58,9 +80,28 @@ export class SpellbookComponent implements OnInit {
         () => {
           this.spellBook.push(spell);
 
-          if (i === 9) s.unsubscribe();
+          if (i === 9) {
+            s.unsubscribe();
+            this.setSimpleSpellBook();
+          }
         }
       );
+    }
+  }
+
+  private setSimpleSpellBook() {
+    for (let i = 0; i < this.spellBook.length; i++) {
+      let spells: Results[] = this.spellBook[i].results;
+
+      for (let j = 0; j < spells.length; j++) {
+        let spell: SimpleSpell = {
+          level: i,
+          name: spells[j].name,
+          url: spells[j].url
+        };
+
+        this.simpleSpellBook.push(spell);
+      }
     }
   }
 
@@ -74,13 +115,20 @@ export class SpellbookComponent implements OnInit {
     s = this._dndApiService.getSingleEntity<SpellDetails>(path).subscribe(
       d => this.spellDetail = d,
       err => console.log("unable to get spell details"),
-      () => s.unsubscribe()
+      () => {
+        s.unsubscribe();
+        if (this.onMobile) this.show = false;
+      }
     );
+  }
+
+  public dismissSpell() {
+    this.spellDetail = null;
+    if (this.onMobile) this.show = true;
   }
 
   ngOnDestroy() {
     this.spellBook = [];
     this.spellDetail = null;
   }
-
 }

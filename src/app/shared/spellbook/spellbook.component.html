@@ -1,9 +1,17 @@
 <div class="row">
-  <div class="col-md-6">
+
+  <div class="col-md-6" *ngIf="simpleView">
     <ngb-tabset *ngIf="this.spellBook && this.spellBook.length">
       <ngb-tab *ngFor="let spellLevel of this.spellBook index as i" title="Level {{i}}">
         <ng-template ngbTabContent>
-          <ul class="list-group static-size-list half-height">
+          <h3 class="text-center">
+            Spells
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+              (click)="show = !show" *ngIf="show" />
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+              (click)="show = !show" *ngIf="!show" />
+          </h3>
+          <ul class="list-group static-size-list half-height" *ngIf="show">
             <li class="list-group-item" *ngFor="let spell of spellLevel.results index as j" (mouseover)="this.mouseOver = j" (mouseout)="this.mouseOver = -1">
               {{spell.name}}
               <button [@showState]="this.mouseOver === j ? 'show' : 'hide'" type="button" class="btn btn-secondary float-right" (click)="getSpellDetail(spell.url)">Details</button>
@@ -14,6 +22,22 @@
     </ngb-tabset>
   </div>
 
+  <div class="col-md-6" *ngIf="!simpleView">
+    <h3 class="text-center">
+      Spells
+      <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button.png" placement="right" ngbTooltip="Hide"
+        (click)="show = !show" *ngIf="show" />
+      <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
+        (click)="show = !show" *ngIf="!show" />
+    </h3>
+    <ul class="list-group static-size-list half-height" *ngIf="show">
+      <li class="list-group-item" *ngFor="let spell of simpleSpellBook index as i" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1">
+        {{ spell.name }} (Level {{ spell.level }})
+        <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-secondary float-right" (click)="getSpellDetail(spell.url)">Details</button>
+      </li>
+    </ul>
+  </div>
+
   <div class="col-md-6" *ngIf="this.spellDetail">
     <div class="card w-100">
       <div class="card-body static-size-list half-height-with-some">
@@ -22,7 +46,11 @@
         <p>Requires Concentration: {{spellDetail.concentration}}</p>
         <p>{{spellDetail.desc}}</p>
       </div>
-      <button type="button" class="btn btn-secondary btn-sm float-right" (click)="spellDetail=null">Dismiss</button>
+      <button type="button" class="btn btn-secondary btn-sm float-right" (click)="dismissSpell()">Dismiss</button>
     </div>
+  </div>
+
+  <div class="col-md-6 text-center text-muted" *ngIf="!this.spellDetail">
+    Select a spell
   </div>
 </div>

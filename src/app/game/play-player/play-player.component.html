@@ -63,12 +63,22 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h5 class="modal-title text-center">{{this.classDetail.name}} Spell Book</h5>
+
+    <div class="text-left">
+      <h5 class="modal-title">
+        {{this.classDetail.name}} Spell Book
+      </h5>
+    </div>
+    <div class="text-left">
+      <input type="checkbox" [checked]="simpleView" (change)="simpleView = !simpleView">Tab View
+    </div>
+
+
   </div>
   <div class="modal-body">
-    <app-spellbook [cd]="this.classDetail"></app-spellbook>
+    <app-spellbook [cd]="this.classDetail" [simpleView]="simpleView"></app-spellbook>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-success col-2" (click)="d()">Close</button>
+    <button type="button" class="btn btn-success btn-sm" (click)="d()">Close</button>
   </div>
 </ng-template>

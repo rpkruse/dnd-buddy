@@ -51,6 +51,8 @@ export class PlayPlayerComponent implements OnInit {
 
   spellSlots: number[] = [];
 
+  simpleView: boolean = false;
+  
   constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
