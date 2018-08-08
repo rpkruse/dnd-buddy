@@ -1,46 +1,35 @@
 <div class="container">
-  <div class="row">
+  <div class="row justify-content-between mt-5">
 
-    <div class="col-12 section">
-      <div class="row justify-content-between">
-        <!-- Games -->
-        <div class="col-sm-5 shadowblock">
-          <h2>Games</h2>
-          <hr class="stat mt-0" />
-          <span class="description">
-            <p>
-              Create a new game as a DM or join a game as a player
-            </p>
-          </span>
-          <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(0)">Join Game</button>
-
-        </div>
-
-        <!-- Character -->
-        <div class="col-sm-6 shadowblock">
-          <h2>Characters</h2>
-          <hr class="stat mt-0" />
-          <span class="description">
-            <p>
-              Create a new character, manage current characters, or view class/race info
-            </p>
-          </span>
-
-          <div class="row justify-content-around">
-            <div class="col-sm-3">
-            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(3)">Create Character</button>
-            </div>
-            <div class="col-sm-3 mt-sm">
-            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(2)">View Characters</button>
-            </div>
-
-            <div class="col-sm-3">
-            <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(1)">Race/Class Details</button>
-            </div>
-          </div>
-        </div>
+    <!-- Games -->
+    <div class="col-lg-5 shadowblock mb-lg-0 mb-5">
+      <h2>Games</h2>
+      <hr class="stat mt-0" />
+      <span class="description">
+        <p>
+          Create a new game as a DM or join a game as a player.
+        </p>
+      </span>
+      <div class="row justify-content-center">
+        <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(0)">Join Game</button>
       </div>
     </div>
 
+    <!-- Characters -->
+    <div class="col-lg-5 shadowblock">
+      <h2>Characters</h2>
+      <hr class="stat mt-0" />
+      <span class="description">
+        <p>
+          Create a new character, manage current characters, or view class/race info.
+        </p>
+      </span>
+
+      <div class="row justify-content-around">
+        <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(3)">Create Character</button>
+        <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(2)">View Characters</button>
+        <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(1)">Race/Class Info</button>
+      </div>
+    </div>
   </div>
 </div>

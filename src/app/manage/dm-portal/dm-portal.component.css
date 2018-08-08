@@ -44,3 +44,8 @@ h1, h2 {
     color: #ffd553; /* gold */
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
 }
+
+.dark-border {
+    border: 2px solid black;
+    border-radius: 5px;
+}

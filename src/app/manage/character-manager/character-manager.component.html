@@ -1,10 +1,10 @@
 <div class="container">
-  <div class="row mt-5">
+  <div class="row mt-5 justify-content-around">
 
     <!-- Character List -->
-    <div class="col-md-3 mb-5">
+    <div class="mb-5" [ngClass]="!this.selectedCharacter && !this.raceDetail && !this.classDetail ? 'col-lg-6' : 'col-lg-3'">
       <h2 class="header mb-0">Characters</h2>
-      <ul class="list-group list-group-flush static-size-list half-height" *ngIf="this.characters.length">
+      <ul class="list-group list-group-flush static-size-list short-med" *ngIf="this.characters.length">
         <li class="list-group-item text-light content character" (click)="getCharacterDetails(character)" (mouseover)="this.mouseOver = i"
           (mouseout)="this.mouseOver = -1" *ngFor="let character of this.characters index as i">
           {{ character.name }}
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Character detail -->
-    <div class="col-md-9" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
+    <div class="col-lg-9" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
       <div class="card w-100 bg-transparent">
         <div class="card-header text-center header">
           <span class="stat">

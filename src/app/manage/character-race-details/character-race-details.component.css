@@ -8,22 +8,6 @@
     overflow-y: scroll;
 }
 
-.set-height {
-    max-height: 25vh;
-}
-
-.half-height{
-    max-height: 100%;
-}
-
-.half-height-with-some {
-    max-height: 100%;
-}
-
-.three-fourth-height {
-    max-height: 100%;
-}
-
 ::-webkit-scrollbar{
     background: transparent;
     width: 0px;
@@ -78,10 +62,6 @@ body {
     background-color: white;
 }
 
-#raceList, #classList {
-    overflow: hidden;
-}
-
 @keyframes slidein {
     from {
         opacity: 0;
@@ -125,10 +105,6 @@ body {
     animation-fill-mode: forwards;
     animation-name: slidein;
     animation-duration: .75s;
-}
-
-#subraceList {
-    overflow: hidden;
 }
 
 .tab.active {
