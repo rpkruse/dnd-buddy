@@ -1,34 +1,37 @@
-<div class="container-fluid">
-  <div class="row">
-
-    <div class="card w-100 bg-transparent">
-      <div class="card-header text-center header text-light">
+<div class="container">
+  <div class="row mb-5 justify-content-around">
+    <div class="col-md-11 header text-light text-center">
+      <h2>
         {{ this.user.username }} (DM)
-        <button type="button" class="btn btn-success float-right" [routerLink]="['/game']">Leave</button>
-      </div>
-      <div class="card-body content text-light">
-        <!-- Rolling info -->
-        <div class="row">
-          <!-- Roll -->
-          <div class="col-md-4">
-            <app-roll (rollOutput)="rollDice($event)"></app-roll>
-          </div>
+      </h2>
+    </div>
+  </div>
 
-          <!-- Item Giving -->
-          <div class="col-md-4" *ngIf="this.getOtherGroupMembers().length">
-            <app-giveitem [users]="this.getOtherGroupMembers()" [character]="null" (imd)="selectPlayer($event)"></app-giveitem>
-          </div>
-
-          <!-- XP Giving -->
-          <div class="col-md-4" *ngIf="this.getOtherGroupMembers().length">
-            <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
-          </div>
-
-        </div>
-      </div>
-      <div class="card-footer header">
-      </div>
+  <div class="row justify-content-around">
+    <!-- Rolling -->
+    <div class="col-md-5 content text-light mb-sm-0 mb-5 dark-border">
+      <app-roll (rollOutput)="rollDice($event)"></app-roll>
     </div>
 
+    <!-- Item Giving -->
+    <div class="col-md-5 content text-light dark-border" *ngIf="getOtherGroupMembers().length">
+      <app-giveitem [users]="this.getOtherGroupMembers()" [character]="null" (imd)="selectPlayer($event)"></app-giveitem>
+    </div>
   </div>
+
+  <div class="row mt-5 justify-content-around" *ngIf="getOtherGroupMembers().length">
+    <!-- Give XP -->
+    <div class="col-md-5 content text-light mb-sm-0 mb-5 dark-border">
+      <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
+    </div>
+
+    <!-- Create Monster (coming soon) -->
+    <div class="col-md-5 content text-center text-light dark-border">
+      <!-- Get rid of text-center!!!! -->
+      <small>
+        <strong>Create monster coming soon!</strong>
+      </small>
+    </div>
+  </div>
+
 </div>

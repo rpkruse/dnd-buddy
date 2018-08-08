@@ -3,7 +3,7 @@
     position: fixed;
     bottom: 0; 
     width: 400px;
-    right: 0;
+    left: 0;
     font-size: 0.6em;
     z-index: 9999 !important;
     overflow-x: hidden;
@@ -13,7 +13,7 @@
     position: fixed;
     bottom: 0; 
     width: 400px;
-    right: 0;
+    left: 0;
     font-size: 0.6em;
     z-index: 9999 !important;
 }

@@ -1,4 +1,4 @@
-<div class="container-fluid mt-3" *ngIf="this.hasJoined">
+<div class="container mt-3" *ngIf="this.hasJoined">
   <!-- If we are the GM put us in the middle of the screen-->
   <div class="row" *ngIf="this.isGM">
     <div class="col-md-12 mx-auto">
@@ -11,9 +11,9 @@
       <play-player [character]="this.character"></play-player>
     </div>
   </div>
-  <div class="row mt-4">
+  <div class="row mt-4 justify-content-around">
     <!-- Grid -->
-    <div class="col-10" *ngIf="!this.gridHidden">
+    <div class="col-12" *ngIf="!this.gridHidden">
       <table class="table table-sm text-center">
         <tbody id="board">
           <tr class="boardRow" *ngFor="let gridY of this._messageService.grid index as y">
@@ -24,23 +24,38 @@
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="row justify-content-around">
     <!-- Selection -->
-    <div class="col-2" *ngIf="this.isGM && !this.gridHidden">
-      <label class="col-4">Put:</label>
-      <select class="custom-select col-5" (change)="this.token = $event.target.value">
+    <div class="text-center col-md-6" *ngIf="this.isGM && !this.gridHidden">
+      <label class="col-md-2">Put:</label>
+      <select class="custom-select col-md-6" (change)="this.token = $event.target.value">
         <option selected value="N">Empty</option>
         <option value="P">Player</option>
         <option value="E">Enemy</option>
         <option value="W">Wall</option>
       </select>
     </div>
-    <div class="col-2" *ngIf="!this.isGm">
-      <button type="button" class="btn btn-danger btn-sm" (click)="resetGrid()" *ngIf="this.isGM">Reset Grid</button>
-      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
-      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = false" *ngIf="this.gridHidden">Show Grid</button>
+
+    <div class="col-md-12" *ngIf="!this.isGM">
+      <button type="button" class="btn btn-success btn-sm float-right" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
+      <button type="button" class="btn btn-success btn-sm float-right" (click)="this.gridHidden = false" *ngIf="this.gridHidden">Show Grid</button>
     </div>
+
+    <div [ngClass]="this.gridHidden ? 'col-md-12' : 'col-md-6'" *ngIf="this.isGM">
+      <button type="button" class="btn btn-success btn-sm float-right" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
+      <button type="button" class="btn btn-success btn-sm float-right" (click)="this.gridHidden = false" *ngIf="this.gridHidden">Show Grid</button>
+      <button type="button" class="btn btn-danger btn-sm float-right" (click)="resetGrid()" *ngIf="this.isGM">Reset Grid</button>
+    </div>
+
+    <!-- <div class="col-6 text-right" *ngIf="!this.isGm">
+      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = true" *ngIf="!this.gridHidden">Hide Grid</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="this.gridHidden = false" id="notGM" *ngIf="this.gridHidden">Show Grid</button>
+    </div> -->
+
   </div>
-  <div class="row mx-auto">
+  <div class="row mx-auto justify-content-around">
     <!-- Put everyone else at the bottom of the screen (maybe need row tag first?)-->
     <div class="card-deck mt-3 mb-5" *ngIf="this._messageService.groupMembers.length > 1">
       <div class="card bg-transparent text-light" *ngFor="let member of this.getOtherGroupMembers() index as i">
