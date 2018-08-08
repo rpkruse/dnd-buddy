@@ -408,6 +408,22 @@ export class CreateCharacterComponent implements OnInit {
     this.hp_rolls[index] = r;
   }
 
+  public keepHalfHealthRoll(index: number) {
+    this.hpRollCount[index] = 2;
+
+    this.hp_rolls[index] = Math.floor(this.hp_rolls[0]/2);
+  }
+
+  public getTotalHealth(): number {
+    let total: number = 0;
+    
+    for(let i=0; i<this.hp_rolls.length; i++) {
+      total += (this.hp_rolls[i] + this.getAttrScoreValue(this.character.abil_Score_Con));
+    }
+
+    return total;
+  }
+
   public clickBox(index: number) {
     if (this.boxIndex === index) {
       this.boxIndex = -1;

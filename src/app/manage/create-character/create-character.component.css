@@ -16,6 +16,20 @@ label {
     }
 }
 
+@keyframes slidein-left {
+    from {
+        opacity: 0;
+        margin-left: -150%;
+        width: 150%; 
+    }
+  
+    to {
+        opacity: 1;
+        margin-left: 0%;
+        width: 100%;
+    }
+}
+
 @keyframes slideout {
     from {
         display: block;
@@ -36,6 +50,12 @@ label {
     animation-duration: 0.45s;
 }
 
+.panel-left {
+    animation-fill-mode: forwards;
+    animation-name: slidein-left;
+    animation-duration: 0.45s;
+}
+
 .panel.panelHide {
     animation-name: slideout;
     animation-duration: 1.5s;
@@ -53,12 +73,21 @@ label {
     color: black;
 }
 
+.btn-h:hover {
+    background-color: #ffd553;
+}
+
 .detailList {
     width: 100%;
 }
 
 .light-content {
     background: rgba(0, 0, 0, 0.35);
+}
+
+.dark-border {
+    border: 2px solid black;
+    border-radius: 5px;
 }
 
 /*.list-group-item {

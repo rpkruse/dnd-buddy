@@ -56,7 +56,6 @@
                     <b>Speed: </b>{{ this.selectedSubRace.speed }}</p>
                 </div>
 
-                <hr />
                 <button (click)="languageListActive = !languageListActive" class="detailButton">Languages
                   <span class="float-right glyphicon glyphicon-menu-down"></span>
                 </button>
@@ -102,7 +101,6 @@
                 <p class="text-center">
                   <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
 
-                <hr />
                 <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
                   <strong>Choose {{ this.choiceAmount }}</strong>
                 </button>
@@ -160,43 +158,58 @@
         </div>
 
         <!-- Stats -->
-        <div class="row" *ngSwitchCase="3">
-          <div class="col-md-6">
-            <!-- Roll and stat assign panel -->
-            <p *ngFor="let r of this.rolls index as i">
-              Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
-              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
-              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.rolls[i] == 2 || this.rolls[i] <= 0" (click)="this.rolls[i] = 2">Keep</button>
-            </p>
-          </div>
-          <div [class.panelHide]="!this.finishedRolling()" class="col-md-6" *ngIf="this.finishedRolling()">
-            <!-- Stats -->
-            <div class="col-lg-10 panel">
-              <div class="row">
-                <div class="col-4 col-sm-3">
-                  <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
-                    {{ stat }} ({{ getStatString(i) }})
-                  </p>
-                </div>
+        <div class="row justify-content-between" *ngSwitchCase="3">
+          <div class="col-md-6 dark-border content text-light text-center mb-sm-0 mb-5">
+            <div class="row mt-4">
 
-                <div class="col-2">
-                  <ul class="list-group list-group-flush">
-                    <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
-                      (click)="clickBox(i)">
-                      {{ roll }}
-                    </li>
-                  </ul>
-                </div>
-
-                <small class="text-light ml-5">*Click two stats to swap them!</small>
+              <!-- Roll and stat assign panel -->
+              <div [ngClass]="this.finishedRolling() ? 'col-md-12' : 'col-md-6'">
+                <p *ngFor="let r of this.rolls index as i">
+                  Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
+                  <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+                  <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.rolls[i] == 2 || this.rolls[i] <= 0" (click)="this.rolls[i] = 2">Keep</button>
+                </p>
               </div>
+
+              <!-- Help screen -->
+              <div class="col-md-5" [class.panelHide]="!this.finishedRolling()" *ngIf="!this.finishedRolling()">
+                <p class="panel text-left">
+                  When rolling for stats, you can roll up to two times.
+                  <br>
+                  <br> When you roll for the second time, you
+                  <strong>must</strong> keep the second value, even if the value is less than your original roll.
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+          <div [class.panelHide]="!this.finishedRolling()" class="col-md-5 dark-border content text-center" *ngIf="this.finishedRolling()">
+            <!-- Stats Set-->
+            <div class="row mt-4 panel">
+              <div class="col-4 col-sm-3 text-light">
+                <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
+                  {{ stat }} ({{ getStatString(i) }})
+                </p>
+              </div>
+
+            
+              <div class="col-8 col-sm-9">
+                <ul class="list-group list-group-flush">
+                  <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
+                    (click)="clickBox(i)">
+                    {{ roll }}
+                  </li>
+                </ul>
+              </div>
+              <small class="text-light">*Click two stats to swap them!</small>
             </div>
           </div>
         </div>
 
         <!-- Game, Name, and Level -->
         <div class="row" *ngSwitchCase="4">
-          <div class="col-md-6">
+          <div class="col-md-6 mb-sm-0 mb-5">
             <label class="col-sm-4 col-form-lable">Game:</label>
             <select class="custom-select col-md-5" (change)="selectGame($event.target.value)">
               <option selected>Choose</option>
@@ -229,18 +242,32 @@
           </div>
         </div>
 
-
-        <div class="row" *ngSwitchCase="5">
-          <div class="col-md-6">
+        <!-- HP -->
+        <div class="row" *ngSwitchCase="5" [class.panelHide]="!currentPage !== 5">
+          <div class="col-sm-8 text-center mx-auto panel-left dark-border content text-light mb-sm-0 mb-5">
+            <h6>Max Roll: {{ hp_rolls[0] }}</h6>
             <p *ngFor="let roll of this.hp_rolls index as i">
-              {{ roll }} {{ getAttrScoreString(this.character.abil_Score_Con) }}
-              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.hpRollCount[i] === 2" (click)="rollHP(i)" *ngIf="i !== 0">{{ this.hpRollCount[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
-              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.hpRollCount[i] === 2 || this.hpRollCount[i] <= 0" (click)="this.hpRollCount[i] = 2"
-                *ngIf="i !== 0">Keep</button>
+              Level {{ i+1 }}: {{ roll }} {{ getAttrScoreString(this.character.abil_Score_Con) }}
+              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.hpRollCount[i] === 2" (click)="rollHP(i)">{{ this.hpRollCount[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+              <button type="button" class="btn btn-sm btn-s btn-h ml-2" [disabled]="this.hpRollCount[i] >= 1" (click)="keepHalfHealthRoll(i)">Half</button>
+              <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.hpRollCount[i] === 2 || this.hpRollCount[i] <= 0"
+                (click)="this.hpRollCount[i] = 2">Keep</button>
+            </p>
+            <p>Total Health: {{ getTotalHealth() }}</p>
+          </div>
+          <div class="col-sm-4">
+            <p class="dark-border content text-light">
+              When rolling for health, you can either keep your health for half of your max roll, or you can roll up to two times.
+              <br>
+              <br> When you roll for the second time, you must keep the second value, even if the value is less than your original
+              roll.
+              <br>
+              <br> You may
+              <strong>not</strong> keep for half if you have already rolled at least one time.
             </p>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
