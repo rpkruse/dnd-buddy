@@ -10,28 +10,28 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
+  <!-- Inside navbar content here -->
   <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="this.isLoggedIn()">
-    <!-- Inside navbar content here -->
-    <div class="nav-item">
+    <div class="nav-item pl-sm-3 pl-md-0 pl-3">
       <div ngbDropdown placement="bottom-left">
         <div class="text-light text-hover" ngbDropdownToggle>Manage</div>
         <div ngbDropdownMenu>
-          <a class="dropdown-item" [routerLink]="['/manageCharacter']">Player Portal</a>
-          <a class="dropdown-item" [routerLink]="['/dmPortal']">DM Portal</a>
+          <a class="dropdown-item" [routerLink]="['/manageCharacter']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Player Portal</a>
+          <a class="dropdown-item" [routerLink]="['/dmPortal']" (click)="isNavbarCollapsed = !isNavbarCollapsed">DM Portal</a>
         </div>
       </div>
     </div>
-    <div class="nav-item pl-md-3">
+    <div class="nav-item pl-sm-3 pl-3">
       <div ngbDropdown placement="bottom-left">
         <div class="text-light text-hover" ngbDropdownToggle>Create</div>
         <div ngbDropdownMenu>
-          <a class="dropdown-item" [routerLink]="['/createCharacter']">Create Character</a>
-          <a class="dropdown-item" [routerLink]="['/characterRaceDetails']">Classes and Races</a>
+          <a class="dropdown-item" [routerLink]="['/createCharacter']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Create Character</a>
+          <a class="dropdown-item" [routerLink]="['/characterRaceDetails']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Classes and Races</a>
         </div>
       </div>
     </div>
     <div class="nav-item">
-      <a class="nav-link text-light text-hover" [routerLink]="['/game']">Games</a>
+      <a class="nav-link text-light text-hover" [routerLink]="['/game']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Games</a>
     </div>
 
   </div>
