@@ -163,7 +163,7 @@
             <div class="row mt-4">
 
               <!-- Roll and stat assign panel -->
-              <div [ngClass]="this.finishedRolling() ? 'col-md-12' : 'col-md-6'">
+              <div [ngClass]="this.finishedRolling() ? 'col-lg-12' : 'col-lg-6'">
                 <p *ngFor="let r of this.rolls index as i">
                   Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
                   <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
@@ -172,7 +172,7 @@
               </div>
 
               <!-- Help screen -->
-              <div class="col-md-5" [class.panelHide]="!this.finishedRolling()" *ngIf="!this.finishedRolling()">
+              <div class="col-lg-5" [class.panelHide]="!this.finishedRolling()" *ngIf="!this.finishedRolling()">
                 <p class="panel text-left">
                   When rolling for stats, you can roll up to two times.
                   <br>
@@ -187,14 +187,14 @@
           <div [class.panelHide]="!this.finishedRolling()" class="col-md-5 dark-border content text-center" *ngIf="this.finishedRolling()">
             <!-- Stats Set-->
             <div class="row mt-4 panel">
-              <div class="col-4 col-sm-3 text-light">
+              <div class="col-8 text-light">
                 <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
                   {{ stat }} ({{ getStatString(i) }})
                 </p>
               </div>
 
             
-              <div class="col-8 col-sm-9">
+              <div class="col-4">
                 <ul class="list-group list-group-flush">
                   <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
                     (click)="clickBox(i)">
