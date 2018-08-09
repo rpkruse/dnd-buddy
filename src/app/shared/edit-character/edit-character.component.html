@@ -1,0 +1,70 @@
+<div class="container no-padding">
+  <div class="row mt-5 dark-border content" *ngIf="this.character">
+    <div class="col-md-12 mx-auto" *ngIf="this.character">
+
+      <div class="mb-5">
+        <h2 class="mb-0">
+          <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Clear" (click)="character = null"
+          /> {{ this.character.name }}
+          <button type="button" class="btn btn-s btn-h float-right" (click)="updateCharacter()">Save</button>
+        </h2>
+      </div>
+
+      <!-- Stats ^ EQ -->
+      <div class="row justify-content-around">
+        <!-- Name/Stats -->
+        <div class="col-lg-5 float-left text-center text-light mb-lg-0 mb-5">
+          <h4>
+            Set Stats
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+              ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
+            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+              ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
+          </h4>
+          <hr class="stat mt-0" />
+
+          <div *ngIf="show">
+            <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
+            <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
+            <br>
+            <br>
+
+            <p class="text-light">
+              Max HP: {{ character.max_HP }}
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setHPValue(-1)">-</button>
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setHPValue(1)">+</button>
+            </p>
+
+            <p class="text-light">
+              Level: {{ character.level }}
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setLevelValue(-1)">-</button>
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setLevelValue(1)">+</button>
+            </p>
+
+            <p class="text-light" *ngFor="let stat of this.stats index as i">
+              {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
+              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setStatValue(1, i)">+</button>
+            </p>
+          </div>
+        </div>
+        <!-- Equipment -->
+        <div class="col-lg-5 text-light">
+          <app-equipment [character]="this.character" [dmPortal]="true"></app-equipment>
+        </div>
+      </div>
+
+      <!-- Give EQ/XP -->
+      <div class="row mt-5 justify-content-around">
+        <div class="col-lg-5 float-left text-center text-light mb-lg-0 mb-5">
+          <app-giveitem [character]="this.character" [users]="[]"></app-giveitem>
+        </div>
+
+        <div class="col-lg-5 float-left text-center text-light">
+          <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

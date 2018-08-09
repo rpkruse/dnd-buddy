@@ -16,6 +16,9 @@ import { SubRace } from './api/race/subrace';
 
 import { ProficiencyChoices } from './api/proficiencychoices';
 
+import { ApiMonster } from './api/monster/apimonster';
+import { Monster } from './api/monster/monster';
+
 //Snackbar interfaces
 import { MessageOutput } from './ui/messageoutput'
 import { MessageType } from './ui/messagetype.enum';
@@ -54,6 +57,8 @@ export {
     RaceDetails,
     SubRace,
     ProficiencyChoices,
+    ApiMonster,
+    Monster,
     MessageOutput,
     MessageType,
     UserMessageData,

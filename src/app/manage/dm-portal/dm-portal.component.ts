@@ -5,16 +5,12 @@
  */
 import { Component, OnInit } from '@angular/core';
 
-import { ApiService, DndApiService, DataShareService, ItemManager } from '../../services/services';
+import { ApiService, DataShareService } from '../../services/services';
 
-import {
-  User, Character, Item, Game, RaceDetails, ClassDetails,
-  Equipment, EquipmentCategory, EquipmentCategoryDetails, MessageOutput, MessageType, XP
-} from '../../interfaces/interfaces';
+import { User, Character, Monster, Game, MessageOutput, MessageType } from '../../interfaces/interfaces';
 
 import 'rxjs/add/operator/takeWhile';
 import { Subscription, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'dm-portal',
@@ -29,22 +25,17 @@ export class DmPortalComponent implements OnInit {
 
   games: Observable<Game[]>;
   game: Game;
+  
+  monsters: Monster[] = [];
+  monster: Monster;
+  createMonster: boolean = false;
 
   character: Character;
-  race: Observable<RaceDetails>;
-  class: Observable<ClassDetails>;
 
-  equipmentTypes: EquipmentCategory;
-  equipmentList: EquipmentCategoryDetails;
-  item: Equipment;
 
-  slottedItem: boolean = false;
+  viewingCharacters: boolean = true;
 
-  show: boolean = true;
-
-  stats: string[] = ["STR: ", "DEX: ", "CON: ", "INT: ", "WIS: ", "CHA: "]
-
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _itemManager: ItemManager) { }
+  constructor(private _apiService: ApiService, private _dataShareService: DataShareService) { }
 
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
@@ -59,35 +50,50 @@ export class DmPortalComponent implements OnInit {
    */
   loadGame(game: Game) {
     this.character = null;
+    this.monster = null;
+    this.createMonster = false;
 
     let s: Subscription = this._apiService.getSingleEntity<Game>("Games/details/" + game.gameId).subscribe(
       d => this.game = d,
       err => console.log("unable to load game"),
-      () => s.unsubscribe()
+      () => { s.unsubscribe(); this.loadMonsters(); }
     );
   }
 
+  loadMonsters() {
+    let s: Subscription = this._apiService.getAllEntities<Monster>("Monsters/game/" + this.game.gameId).subscribe(
+      d => this.monsters = d,
+      err => console.log(err),
+      () => s.unsubscribe()
+    );
+  }
   /**
    * Called when the DM clicks a character in a game to load
    * 
    * @param {Character} character The character to load 
    */
   selectCharacter(character: Character) {
-    this.character = character;
-    this.race = this._dndApiService.getSingleEntity<RaceDetails>(this.character.race);
-    this.class = this._dndApiService.getSingleEntity<ClassDetails>(this.character.class);
+    this.monster = null;
+    this.createMonster = false;
 
-    let s: Subscription = this._dndApiService.getAllEntities<EquipmentCategory>("equipment-categories").subscribe(
-      d => this.equipmentTypes = d,
-      err => console.log("unable to get equipment types"),
-      () => s.unsubscribe()
-    )
+    this.character = character;
+  }
+
+  selectMonster(monster: Monster, createMonster: boolean) {
+    this.character = null;
+
+    this.createMonster = createMonster;
+    this.monster = monster;
   }
 
   /**
    * Called when the DM clicks save on a character, it updates them in the DB
    */
-  saveCharacter() {
+  saveCharacter(character: Character) {
+    if (!character) return;
+
+    this.character = character;
+
     let s: Subscription;
 
     s = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
@@ -100,120 +106,9 @@ export class DmPortalComponent implements OnInit {
     );
   }
 
-  /**
-   * Called to get the ability score of the character
-   * 
-   * @param {number} index The index of the stat to get 
-   * 
-   * @returns The value of the ability score at index "index"
-   */
-  getStatValue(index: number): number {
-    switch (index) {
-      case 0:
-        return this.character.abil_Score_Str;
-      case 1:
-        return this.character.abil_Score_Dex;
-      case 2:
-        return this.character.abil_Score_Con;
-      case 3:
-        return this.character.abil_Score_Int;
-      case 4:
-        return this.character.abil_Score_Wis;
-      case 5:
-        return this.character.abil_Score_Cha;
-      default:
-        return -1;
-    }
+  openTab(tab: string) {
+    this.viewingCharacters = tab === 'characters';
   }
-
-  /**
-   * Called when the DM increases or decreases the stat of a character
-   * 
-   * @param {number} val The value to increase the stat by 
-   * @param {number} index The index of the stat
-   */
-  setStatValue(val: number, index: number) {
-    switch (index) {
-      case 0:
-        this.character.abil_Score_Str += val;
-        break;
-      case 1:
-        this.character.abil_Score_Dex += val;
-        break;
-      case 2:
-        this.character.abil_Score_Con += val;
-        break;
-      case 3:
-        this.character.abil_Score_Int += val;
-        break;
-      case 4:
-        this.character.abil_Score_Wis += val;
-        break;
-      case 5:
-        this.character.abil_Score_Cha += val;
-        break;
-      default:
-        break;
-    }
-  }
-
-  setHPValue(val: number) {
-    this.character.max_HP += val;
-
-    if (this.character.max_HP <= 0) this.character.max_HP = 1;
-  }
-
-  setLevelValue(val: number) {
-    this.character.level += val;
-
-    if (this.character.level <= 0) this.character.level = 1;
-
-    let xp: XP;
-    let k: Subscription = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "xp/" + this.character.level).subscribe(
-      d => xp = d,
-      err => console.log(err),
-      () => {
-        k.unsubscribe();
-        this.character.xp = xp.xp;
-      }
-    );
-  }
-
-  giveXP(xp: number) {
-    this.character.xp += xp;
-
-    this.checkForLevelUp();
-  }
-
-  private checkForLevelUp() {
-    let s: Subscription;
-    let nextLevel: number = this.character.level + 1;
-    let xp: XP;
-    s = this._dndApiService.getSingleEntity<XP>(environment.dnd_api + "XP/" + nextLevel).subscribe(
-      d => xp = d,
-      err => console.log("unable to get xp for next level"),
-      () => {
-        s.unsubscribe();
-
-        if (xp.xp <= this.character.xp) this.character.level++;
-      }
-    )
-  }
-  /**
-   * Returns the ability modifier value for a given stat: FL((val - 10)/2)
-   * 
-   * @param {number} attrVal The value of the attribute
-   * 
-   * @returns The ability mod. value 
-   */
-  getModValue(attrVal: number): string {
-    let v: number = Math.floor((attrVal - 10) / 2);
-
-    if (v < 0) return "(" + v + ")";
-
-    return "(+" + v + ")";
-  }
-
   private triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,

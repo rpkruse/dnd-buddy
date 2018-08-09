@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="row mt-5 text-light">
+
+    <div class="col-12 content dark-border" *ngIf="this.creatingMonster">
+      MAKING NEW MONSTER
+    </div>
+
+    <div *ngIf="!this.creatingMonster">
+      EDITING A MONSTER
+    </div>
+  </div>
+</div>

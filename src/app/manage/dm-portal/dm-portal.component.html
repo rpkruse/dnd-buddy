@@ -1,97 +1,52 @@
-<div class="container">
-  <div class="row justify-content-around">
+<div class="container no-padding">
+  <div class="row justify-content-between mt-5">
 
     <!-- List of owned games -->
-    <div class="col-lg-5 mt-5">
+    <div class="col-lg-5 mb-5 mb-lg-0 no-padding">
       <h2 class="header mb-0">Games</h2>
       <ul class="list-group static-size-list short">
-        <li class="list-group-item content text-light game" (click)="loadGame(game)" *ngFor="let game of this.games | async">
+        <li class="list-group-item content text-light selectable-item" (click)="loadGame(game)" *ngFor="let game of this.games | async">
           {{ game.name }}
         </li>
       </ul>
     </div>
 
-    <!-- List of chars in selected game -->
-    <div class="col-lg-5 mt-5" *ngIf="this.game">
-      <h2 class="header mb-0">Characters In: {{ this.game.name }}</h2>
-      <ul class="list-group static-size-list short" *ngIf="this.game.character.length">
-        <li class="list-group-item content text-light character" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
-          {{ character.name }}
-        </li>
-      </ul>
-      <div *ngIf="!this.game.character.length">
-        <h3 class="text-center mb-0">There are no characters in this game.</h3>
+    <!-- Tabs -->
+    <div class="tab col-lg-5 text-center" *ngIf="this.game">
+      <div class="row">
+        <div class="col-6 tabButton" [class.active]="this.viewingCharacters" (click)="openTab('characters')">Characters</div>
+        <div class="col-6 tabButton" [class.active]="!this.viewingCharacters" (click)="openTab('monsters')">Monsters</div>
+      </div>
+
+      <div class="row mt-0">
+        <!-- Characters -->
+        <div class="col-12 no-padding" *ngIf="this.viewingCharacters">
+          <ul class="list-group static-size-list short" *ngIf="this.game.character.length">
+            <li class="list-group-item content text-light selectable-item" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
+              {{ character.name }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Monsters -->
+        <div class="col-12 no-padding" *ngIf="!this.viewingCharacters">
+          <ul class="list-group static-size-list short">
+            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(null, true)">New Monster</li>
+            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(monster, false)" *ngFor="let monster of this.monsters index as i">
+              {{ monster.name }} HP: {{ monster.hp }}/{{ monster.max_HP }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <div class="row mt-5 dark-border content" *ngIf="this.character">
-    <div class="col-md-12 mx-auto" *ngIf="this.character">
-
-      <div class="mb-5">
-        <h2 class="mb-0">
-          {{ this.character.name }}
-          <button type="button" class="btn btn-s btn-h float-right" (click)="saveCharacter()">Save</button>
-        </h2>
-      </div>
-
-
-      <!-- Stats ^ EQ -->
-      <div class="row justify-content-around">
-        <!-- Name/Stats -->
-        <div class="col-lg-5 float-left text-center text-light mb-lg-0 mb-5">
-          <h4>
-            Set Stats
-            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
-              ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
-            <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
-              ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
-          </h4>
-          <hr class="stat mt-0" />
-
-          <div *ngIf="show">
-            <p class="text-light d-inline" *ngIf="(this.race | async) as race">{{ race.name }}</p>
-            <p class="text-light d-inline" *ngIf="(this.class | async) as class">, {{ class.name }}</p>
-            <br>
-            <br>
-
-            <p class="text-light">
-              Max HP: {{ character.max_HP }}
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setHPValue(-1)">-</button>
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setHPValue(1)">+</button>
-            </p>
-
-            <p class="text-light">
-              Level: {{ character.level }}
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setLevelValue(-1)">-</button>
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setLevelValue(1)">+</button>
-            </p>
-
-            <p class="text-light" *ngFor="let stat of this.stats index as i">
-              {{ stat }} {{ getStatValue(i) }} {{ getModValue(getStatValue(i)) }}
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="setStatValue(-1, i)">-</button>
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="setStatValue(1, i)">+</button>
-            </p>
-          </div>
-        </div>
-        <!-- Equipment -->
-        <div class="col-lg-5 text-light">
-          <app-equipment [character]="this.character" [dmPortal]="true"></app-equipment>
-        </div>
-      </div>
-
-      <!-- Give EQ/XP -->
-      <div class="row mt-5 justify-content-around">
-        <div class="col-lg-5 float-left text-center text-light mb-lg-0 mb-5">
-          <app-giveitem [character]="this.character" [users]="[]"></app-giveitem>
-        </div>
-
-        <div class="col-lg-5 float-left text-center text-light">
-          <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
-        </div>
-      </div>
-
+  <div class="row">
+    <div class="col-12" *ngIf="this.character">
+      <app-edit-character [character]="this.character" (updatedCharacter)="saveCharacter($event)"></app-edit-character>
+    </div>
+    <div class="col-12" *ngIf="this.monster || this.createMonster">
+      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" *ngIf="this.game"></app-create-monster>
     </div>
   </div>
 </div>

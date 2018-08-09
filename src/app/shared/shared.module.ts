@@ -11,6 +11,8 @@ import { NgEnterDirective } from '../directives/directives';
 import { GiveitemComponent } from './giveitem/giveitem.component';
 import { GivexpComponent } from './givexp/givexp.component';
 import { RollComponent } from './roll/roll.component';
+import { CreateMonsterComponent } from './create-monster/create-monster.component';
+import { EditCharacterComponent } from './edit-character/edit-character.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { RollComponent } from './roll/roll.component';
     NgEnterDirective,
     GiveitemComponent,
     GivexpComponent,
-    RollComponent
+    RollComponent,
+    CreateMonsterComponent,
+    EditCharacterComponent
   ],
   exports: [
     EquipmentComponent,
@@ -36,6 +40,8 @@ import { RollComponent } from './roll/roll.component';
     GiveitemComponent,
     GivexpComponent,
     RollComponent,
+    EditCharacterComponent,
+    CreateMonsterComponent,
     SnackbarComponent,
     NgEnterDirective
   ]

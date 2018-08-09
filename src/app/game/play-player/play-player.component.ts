@@ -9,7 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subscription } from 'rxjs';
 
-import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, MessageOutput, MessageType, Item, ItemType } from '../../interfaces/interfaces';
+import { User, Game, Character, ItemMessageData, RollMessageData, Equipment, ClassDetails, ClassLevels, MessageType } from '../../interfaces/interfaces';
 
 import { PlayManager, DataShareService, MessageService, ItemManager } from '../../services/services';
 
