@@ -55,8 +55,6 @@ export class StatsComponent implements OnInit {
       this.lastCharID = this.character.characterId;
       this.getLevelDetails(this.cd);
     }
-
-    // if (this.character) this.getItems();
   }
 
   private getLevelDetails(cd: ClassDetails) {

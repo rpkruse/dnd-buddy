@@ -8,7 +8,7 @@
   <!-- Put our character in the middle of the screen-->
   <div class="row" *ngIf="!this.isGM && this.character">
     <div class="col-md-12 mx-auto">
-      <play-player [character]="this.character"></play-player>
+      <play-player [character]="this.character" (updateCharacter)="updateCharacter($event)"></play-player>
     </div>
   </div>
   <div class="row mt-4 justify-content-around">

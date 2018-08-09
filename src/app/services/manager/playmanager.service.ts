@@ -67,7 +67,7 @@ export class PlayManager {
       }
     );
   }
-
+  
   /*
     This method is called when we need to get details of a given item
   */

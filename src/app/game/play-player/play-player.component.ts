@@ -3,7 +3,7 @@
   The component controls all of the actions (and view) from players in the current game. It allows them to make rolls, cast spells, view their spell book/inventory
   and allows them to get equipment from the DM
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -40,8 +40,9 @@ export class PlayPlayerComponent implements OnInit {
   game: Game;
 
   show: boolean = true;
-  
+
   @Input() character: Character;
+  @Output() updateCharacter: EventEmitter<Character> = new EventEmitter<Character>();
 
   canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
 
@@ -52,7 +53,7 @@ export class PlayPlayerComponent implements OnInit {
   spellSlots: number[] = [];
 
   simpleView: boolean = false;
-  
+
   constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
@@ -117,8 +118,20 @@ export class PlayPlayerComponent implements OnInit {
   }
 
   public rest() {
-    this.spellSlots = this._playManager.setSpellSlots(this.levelDetail);
-    this.character.hp = this.character.max_HP;
+    let rested: boolean = false;
+
+    if (this.levelDetail.spellcasting) {
+      this.spellSlots = this._playManager.setSpellSlots(this.levelDetail);
+      rested = true;
+    }
+
+    if (this.character.hp !== this.character.max_HP) {
+      this.character.hp = this.character.max_HP;
+      this.updateCharacter.emit(this.character);
+      rested = true;
+    }
+    
+    if (rested) this._itemManager.triggerMessage("", "Rested", MessageType.Success);
   }
 
   /**

@@ -222,6 +222,14 @@ export class PlayGameComponent implements OnInit {
     }
   }
 
+  updateCharacter(character: Character) {
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", character, character.characterId).subscribe(
+      d => d = d,
+      err => console.log(err),
+      () => s.unsubscribe()
+    );
+  }
+
   /**
    * Called to get all the other players in the group (minus the current user)
    * 

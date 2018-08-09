@@ -124,7 +124,7 @@ export class ItemManager {
     this.itemSubj.next(this.items);
   }
 
-  private triggerMessage(message: string, action: string, level: MessageType) {
+  public triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,
       action: action,
