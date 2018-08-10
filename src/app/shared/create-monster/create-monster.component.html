@@ -1,12 +1,194 @@
-<div class="container">
-  <div class="row mt-5 text-light">
+<div class="container mb-5">
+  <div class="row mt-5 content dark-border text-light">
 
-    <div class="col-12 content dark-border" *ngIf="this.creatingMonster">
-      MAKING NEW MONSTER
-    </div>
+    <div class="col-12" *ngIf="this.creatingMonster">
+      <h2 class="text-center mb-3">Create Monster</h2>
+      <hr class="stat mt-0" />
 
-    <div *ngIf="!this.creatingMonster">
-      EDITING A MONSTER
+      <div class="row">
+        <!-- Search/Select list -->
+        <div class="col-lg-3">
+          <div class="row mx-auto">
+            <span class="gold-text">
+              <input type="search" [value]="searchString" placeholder="Search..." (input)="search($event.target.value)" />
+              <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+                ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
+              <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+                ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
+            </span>
+          </div>
+
+          <!-- Large monter list on lg+ screens -->
+          <div class="row mb-3 mb-lg-0 d-none d-lg-block">
+            <div class="col">
+              <ul class="list-group static-size-list half-height" *ngIf="this.matchingMonsters && this.show">
+                <li class="list-group-item content text-light selectable-item" (click)="getMonsterApiInfo(monster.url)" *ngFor="let monster of this.matchingMonsters index as i">
+                  {{ monster.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Small monster list on md- screens -->
+          <div class="row mb-3 mb-lg-0 d-lg-none text-center">
+            <div class="col">
+              <ul class="list-group static-size-list short" *ngIf="this.matchingMonsters && this.show">
+                <li class="list-group-item content text-light selectable-item" (click)="getMonsterApiInfo(monster.url)" *ngFor="let monster of this.matchingMonsters index as i">
+                  {{ monster.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Selected Monster details -->
+        <div class="col-lg-9" *ngIf="monsterInfo">
+          <div class="row mb-3">
+            <div class="col-12">
+              <h5 class="text-center">{{ monsterInfo.name }}</h5>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <span class="text-center">
+                <p>
+                  <strong>Type/Size:</strong> {{ monsterInfo.type }}, {{ monsterInfo.size }}</p>
+                <p>
+                  <strong>Alignment:</strong> {{ monsterInfo.alignment }}</p>
+                <p>
+                  <strong>AC:</strong> {{ monsterInfo.armor_class }}</p>
+                <p>
+                  <strong>Health:</strong> {{ monsterInfo.hit_points }} + {{ monsterInfo.hit_dice }}</p>
+                <p>
+                  <strong>Speed:</strong> {{ monsterInfo.speed }}</p>
+                <p *ngIf="monsterInfo.damage_vulnerabilities">
+                  <strong>Vulnerabilities:</strong> {{ monsterInfo.damage_vulnerabilities }}</p>
+                <p *ngIf="monsterInfo.damage_resistances">
+                  <strong>Resistances:</strong> {{ monsterInfo.damage_resistances }}</p>
+                <p *ngIf="monsterInfo.damage_immunities">
+                  <strong>Damage Immunities:</strong> {{ monsterInfo.damage_immunities }}</p>
+                <p *ngIf="monsterInfo.condition_immunities">
+                  <strong>Condition Immunities:</strong> {{ monsterInfo.condition_immunities }}</p>
+                <p *ngIf="monsterInfo.senses">
+                  <strong>Senses:</strong> {{ monsterInfo.senses }}</p>
+                <p *ngIf="monsterInfo.languages">
+                  <strong>Languages:</strong> {{ monsterInfo.languages }}</p>
+                <p *ngIf="monsterInfo.challenge_rating">
+                  <strong>Challenge Rating:</strong> {{ monsterInfo.challenge_rating }}</p>
+              </span>
+
+              <!-- Stats/Saves -->
+              <div class="row justify-content-center mb-3">
+                <div class="col-lg-4 text-center mb-3 mb-lg-0">
+                  <div class="row">
+                    <div class="col-lg-1 my-auto">
+                      <strong>Stats:</strong>
+                    </div>
+                    <div class="col-6 col-lg-6 text-center mx-auto no-padding">
+                      <ul class="list-group static-size-list ex-short content">
+                        <li>Str: {{ monsterInfo.strength }}</li>
+                        <li>Dex: {{ monsterInfo.dexterity }}</li>
+                        <li>Con: {{ monsterInfo.constitution }}</li>
+                        <li>Int: {{ monsterInfo.intelligence }}</li>
+                        <li>Wis: {{ monsterInfo.wisdom }}</li>
+                        <li>Cha: {{ monsterInfo.charisma }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Saves -->
+                <div class="col-lg-4 text-center mb-3" *ngIf="hasSaves()">
+                  <div class="row">
+                    <div class="col-lg-1 float-left my-auto">
+                      <strong>Saves:</strong>
+                    </div>
+                    <div class="col-6 col-lg-6 text-center mx-auto no-padding">
+                      <ul class="list-group static-size-list ex-short content">
+                        <li *ngIf="monsterInfo.strength_save">Str: {{ monsterInfo.strength_save }}</li>
+                        <li *ngIf="monsterInfo.dexterity_save">Dex: {{ monsterInfo.dexterity_save }}</li>
+                        <li *ngIf="monsterInfo.constitution_save">Con: {{ monsterInfo.constitution_save }}</li>
+                        <li *ngIf="monsterInfo.intelligence_save">Int: {{ monsterInfo.intelligence_save }}</li>
+                        <li *ngIf="monsterInfo.wisdom_save">Wis: {{ monsterInfo.wisdom_save }}</li>
+                        <li *ngIf="monsterInfo.charisma_save">Cha: {{ monsterInfo.charisma_save }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Abilities/Actions -->
+              <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.special_abilities">
+                <div class="row">
+                  <div class="col-lg-1 my-auto">
+                    <strong>Abilities</strong>
+                  </div>
+                  <div class="col-8 col-lg-8 mx-auto no-padding">
+                    <ul class="list-group static-size-list ex-short">
+                      <li class="list-group-item text-light content selectable-item" (click)="this.selectAbility(i, content)" *ngFor="let ab of monsterInfo.special_abilities index as i">
+                        {{ ab.name }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.actions">
+                <div class="row">
+                  <div class="col-lg-1 my-auto">
+                    <strong>Actions:</strong>
+                  </div>
+                  <div class="col-8 col-lg-8 mx-auto no-padding">
+                    <ul class="list-group static-size-list ex-short">
+                      <li class="list-group-item text-light content selectable-item" (click)="this.selectAction(i, content)" *ngFor="let ac of monsterInfo.actions index as i">
+                        {{ ac.name }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!this.creatingMonster">
+        EDITING A MONSTER
+      </div>
     </div>
   </div>
-</div>
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header header">
+      <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
+      <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+    </div>
+
+    <div class="modal-body content">
+
+      <div class="text-light" *ngIf="selectedAbility">
+        <p *ngIf="selectedAbility.atk_bonus">
+          <strong>Attack Bonus: </strong>{{ selectedAbility.atk_bonus }}</p>
+        {{ selectedAbility.desc }}
+      </div>
+
+      <div class="text-light" *ngIf="selectedAction">
+        <p *ngIf="selectedAction.attack_bonus">
+          <strong>Attack Bonus: </strong>{{ selectedAction.attack_bonus }}</p>
+        <p *ngIf="selectedAction.damage_bonus">
+          <strong>Damage Bonus: </strong>{{ selectedAction.damage_bonus }}</p>
+        <p *ngIf="selectedAction.damage_dice">
+          <strong>Dice: </strong>{{ selectedAction.damage_dice }}</p>
+        {{ selectedAction.desc }}
+      </div>
+    </div>
+
+    <div class="modal-footer content">
+      <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+    </div>
+  </ng-template>

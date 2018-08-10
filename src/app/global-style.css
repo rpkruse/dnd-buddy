@@ -7,6 +7,10 @@
     overflow-y: scroll;
 }
 
+.ex-short{
+    max-height: 5rem;
+}
+
 .short{
     max-height: 10rem;
 }
