@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ApiService, DndApiService } from '../../services/services';
+import { DndApiService } from '../../services/services';
 
 import { Game, Monster, ApiMonster } from '../../interfaces/interfaces';
 import { Results } from '../../interfaces/api/results';
@@ -51,7 +51,7 @@ export class CreateMonsterComponent implements OnInit {
 
   amountToAdd: number = 1;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _modalService: NgbModal) { }
+  constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
   ngOnInit() { }
 
@@ -115,6 +115,7 @@ export class CreateMonsterComponent implements OnInit {
     if (addToTotal) {
       this.monster.max_HP += val;
       if (this.monster.max_HP <= 0) this.monster.max_HP = 1;
+      if (this.monster.max_HP < this.monster.hp) this.monster.hp = this.monster.max_HP;
     }else{
       this.monster.hp += val;
       if (this.monster.hp <= 0) this.monster.hp = 1;
