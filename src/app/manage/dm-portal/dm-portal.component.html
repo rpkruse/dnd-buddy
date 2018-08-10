@@ -49,7 +49,7 @@
       <app-edit-character [character]="this.character" (updatedCharacter)="saveCharacter($event)"></app-edit-character>
     </div>
     <div class="col-12" *ngIf="this.monster || this.createMonster">
-      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" (outputMonster)="getNewMonster($event)"
+      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" (outputMonster)="getNewMonster($event)" (updateMonster)="updateMonster($event)"
         *ngIf="this.game"></app-create-monster>
     </div>
   </div>

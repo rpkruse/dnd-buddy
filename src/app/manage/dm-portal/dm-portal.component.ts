@@ -124,6 +124,17 @@ export class DmPortalComponent implements OnInit {
     }
   }
 
+  updateMonster(monster: Monster) {
+    let s: Subscription = this._apiService.putEntity<Monster>("Monsters", monster, monster.monsterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to update monster", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage(monster.name, "Updated", MessageType.Success);
+      }
+    );
+  }
+
   removeMonster(index: number, event) {
     event.stopPropagation();
     let s: Subscription;

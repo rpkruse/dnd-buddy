@@ -13,6 +13,7 @@ import { GivexpComponent } from './givexp/givexp.component';
 import { RollComponent } from './roll/roll.component';
 import { CreateMonsterComponent } from './create-monster/create-monster.component';
 import { EditCharacterComponent } from './edit-character/edit-character.component';
+import { ViewMonsterComponent } from './view-monster/view-monster.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { EditCharacterComponent } from './edit-character/edit-character.componen
     GivexpComponent,
     RollComponent,
     CreateMonsterComponent,
-    EditCharacterComponent
+    EditCharacterComponent,
+    ViewMonsterComponent
   ],
   exports: [
     EquipmentComponent,
@@ -42,6 +44,7 @@ import { EditCharacterComponent } from './edit-character/edit-character.componen
     RollComponent,
     EditCharacterComponent,
     CreateMonsterComponent,
+    ViewMonsterComponent,
     SnackbarComponent,
     NgEnterDirective
   ]

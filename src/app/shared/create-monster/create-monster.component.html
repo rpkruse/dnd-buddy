@@ -1,9 +1,9 @@
-<div class="container mb-5">
+<div class="container mb-5" *ngIf="this.creatingMonster || this.monster">
   <div class="row mt-5 content dark-border text-light">
 
     <div class="col-12" *ngIf="this.creatingMonster">
       <h2 class="text-center mb-3">
-        <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Cancel" (click)="creatingMonster = false"
+        <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Cancel" (click)="creatingMonster = false; this.monster = null"
         /> Create Monster
       </h2>
       <hr class="stat mt-0" />
@@ -165,45 +165,63 @@
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="!this.creatingMonster">
-        EDITING A MONSTER
+    <div class="col-12" *ngIf="!this.creatingMonster && this.monster">
+      <h4 class="text-center mb-3">
+        {{ this.monster.name }}
+        <img class="icon icon-sm float-left mt-2" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Cancel" (click)="this.monster = null"
+        />
+        <button type="button" class="btn btn-s btn-h float-right" (click)="sendUpdate()">Save</button>
+      </h4>
+      <div class="row">
+        <div class="col-12 text-center">
+          <p>
+            <strong>Current HP:</strong> {{ this.monster.hp}}
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, false)">-</button>
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, false)">+</button>
+          </p>
+          <p>
+            <strong>Max HP:</strong> {{ this.monster.max_HP}}
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, true)">-</button>
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, true)">+</button>
+          </p>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header header">
-      <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
-      <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header header">
+    <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
+    <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+  </div>
+
+  <div class="modal-body content">
+
+    <div class="text-light" *ngIf="selectedAbility">
+      <p *ngIf="selectedAbility.atk_bonus">
+        <strong>Attack Bonus: </strong>{{ selectedAbility.atk_bonus }}</p>
+      {{ selectedAbility.desc }}
     </div>
 
-    <div class="modal-body content">
-
-      <div class="text-light" *ngIf="selectedAbility">
-        <p *ngIf="selectedAbility.atk_bonus">
-          <strong>Attack Bonus: </strong>{{ selectedAbility.atk_bonus }}</p>
-        {{ selectedAbility.desc }}
-      </div>
-
-      <div class="text-light" *ngIf="selectedAction">
-        <p *ngIf="selectedAction.attack_bonus">
-          <strong>Attack Bonus: </strong>{{ selectedAction.attack_bonus }}</p>
-        <p *ngIf="selectedAction.damage_bonus">
-          <strong>Damage Bonus: </strong>{{ selectedAction.damage_bonus }}</p>
-        <p *ngIf="selectedAction.damage_dice">
-          <strong>Dice: </strong>{{ selectedAction.damage_dice }}</p>
-        {{ selectedAction.desc }}
-      </div>
+    <div class="text-light" *ngIf="selectedAction">
+      <p *ngIf="selectedAction.attack_bonus">
+        <strong>Attack Bonus: </strong>{{ selectedAction.attack_bonus }}</p>
+      <p *ngIf="selectedAction.damage_bonus">
+        <strong>Damage Bonus: </strong>{{ selectedAction.damage_bonus }}</p>
+      <p *ngIf="selectedAction.damage_dice">
+        <strong>Dice: </strong>{{ selectedAction.damage_dice }}</p>
+      {{ selectedAction.desc }}
     </div>
+  </div>
 
-    <div class="modal-footer content">
-      <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
-    </div>
-  </ng-template>
+  <div class="modal-footer content">
+    <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+  </div>
+</ng-template>

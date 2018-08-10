@@ -34,6 +34,7 @@ export class CreateMonsterComponent implements OnInit {
   @Input() monster: Monster;
 
   @Output() outputMonster: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() updateMonster: EventEmitter<Monster> = new EventEmitter<Monster>();
 
   monsterInfo: ApiMonster;
 
@@ -110,6 +111,18 @@ export class CreateMonsterComponent implements OnInit {
     if (this.amountToAdd <= 0) this.amountToAdd = 1;
   }
 
+  addHP(val: number, addToTotal: boolean) {
+    if (addToTotal) {
+      this.monster.max_HP += val;
+      if (this.monster.max_HP <= 0) this.monster.max_HP = 1;
+    }else{
+      this.monster.hp += val;
+      if (this.monster.hp <= 0) this.monster.hp = 1;
+
+      if (this.monster.hp > this.monster.max_HP) this.monster.max_HP = this.monster.hp;
+    }
+  }
+
   addMonster() {
     let monsters: any[] = [];
 
@@ -137,6 +150,10 @@ export class CreateMonsterComponent implements OnInit {
     }
 
     this.outputMonster.emit(monsters);
+  }
+
+  sendUpdate() {
+    this.updateMonster.emit(this.monster);
   }
 
   hasSaves(): boolean {
