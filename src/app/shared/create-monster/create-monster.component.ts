@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService, DndApiService } from '../../services/services';
@@ -33,6 +33,8 @@ export class CreateMonsterComponent implements OnInit {
   @Input() creatingMonster: boolean;
   @Input() monster: Monster;
 
+  @Output() outputMonster: EventEmitter<any[]> = new EventEmitter<any[]>();
+
   monsterInfo: ApiMonster;
 
   //Creating monster field:
@@ -46,7 +48,9 @@ export class CreateMonsterComponent implements OnInit {
 
   show: boolean = true;
 
-  constructor(private _apiService: ApiService, private _dndApiService: DndApiService,  private _modalService: NgbModal) { }
+  amountToAdd: number = 1;
+
+  constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
   ngOnInit() { }
 
@@ -64,7 +68,7 @@ export class CreateMonsterComponent implements OnInit {
   selectAction(index: number, content: any) {
     this.selectedAbility = null;
 
-    let a: Action =  {
+    let a: Action = {
       attack_bonus: this.monsterInfo.actions[index].attack_bonus,
       damage_bonus: this.monsterInfo.actions[index].damage_bonus,
       damage_dice: this.monsterInfo.actions[index].damage_dice,
@@ -73,7 +77,7 @@ export class CreateMonsterComponent implements OnInit {
     };
 
     this.selectedAction = a;
-    
+
     this._modalService.open(content);
   }
 
@@ -100,6 +104,41 @@ export class CreateMonsterComponent implements OnInit {
     this.matchingMonsters = this.listOfMonsters.filter(e => e.name.toLowerCase().includes(val.toLowerCase()));
   }
 
+  addAmount(val: number) {
+    this.amountToAdd += val;
+
+    if (this.amountToAdd <= 0) this.amountToAdd = 1;
+  }
+
+  addMonster() {
+    let monsters: any[] = [];
+
+    for (let j = 0; j < this.amountToAdd; j++) {
+
+      let hd: string[] = this.monsterInfo.hit_dice.split('d');
+
+      let n: number = parseInt(hd[0]);
+      let max: number = parseInt(hd[1]);
+
+      let totalHP: number = this.monsterInfo.hit_points;
+      for (let i = 0; i < n; i++) {
+        totalHP += this.getRandomInt(1, max);
+      }
+
+      let monster = {
+        gameId: this.game.gameId,
+        name: this.monsterInfo.name,
+        max_HP: totalHP,
+        hp: totalHP,
+        url: this.monsterInfo.url
+      };
+
+      monsters.push(monster);
+    }
+
+    this.outputMonster.emit(monsters);
+  }
+
   hasSaves(): boolean {
     if (this.monsterInfo.strength_save || this.monsterInfo.dexterity_save ||
       this.monsterInfo.constitution_save || this.monsterInfo.intelligence_save ||
@@ -122,6 +161,18 @@ export class CreateMonsterComponent implements OnInit {
       err => console.log(err),
       () => { s.unsubscribe(); this.matchingMonsters = this.listOfMonsters; }
     );
+  }
+
+  /**
+  * Gets a random number between two values
+  * 
+  * @param {number} min The min value 
+  * @param {number} max The max value
+  * 
+  * @returns A number between min and max, both inclusive
+  */
+  private getRandomInt(min: number, max: number): number {
+    return Math.floor(min + Math.random() * (max + 1 - min));
   }
 
 }

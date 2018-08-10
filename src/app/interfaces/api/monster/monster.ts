@@ -1,5 +1,5 @@
 export interface Monster {
-    id: number,
+    monsterId: number,
     name: string,
     max_HP: number, //hit_points + roll(hit_dice)
     hp: number, //current hp

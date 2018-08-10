@@ -2,7 +2,10 @@
   <div class="row mt-5 content dark-border text-light">
 
     <div class="col-12" *ngIf="this.creatingMonster">
-      <h2 class="text-center mb-3">Create Monster</h2>
+      <h2 class="text-center mb-3">
+        <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Cancel" (click)="creatingMonster = false"
+        /> Create Monster
+      </h2>
       <hr class="stat mt-0" />
 
       <div class="row">
@@ -21,7 +24,7 @@
           <!-- Large monter list on lg+ screens -->
           <div class="row mb-3 mb-lg-0 d-none d-lg-block">
             <div class="col">
-              <ul class="list-group static-size-list half-height" *ngIf="this.matchingMonsters && this.show">
+              <ul class="list-group static-size-list half-height-with-some" *ngIf="this.matchingMonsters && this.show">
                 <li class="list-group-item content text-light selectable-item" (click)="getMonsterApiInfo(monster.url)" *ngFor="let monster of this.matchingMonsters index as i">
                   {{ monster.name }}
                 </li>
@@ -44,9 +47,21 @@
 
         <!-- Selected Monster details -->
         <div class="col-lg-9" *ngIf="monsterInfo">
-          <div class="row mb-3">
+
+          <div class="row mb-1 text-center">
             <div class="col-12">
               <h5 class="text-center">{{ monsterInfo.name }}</h5>
+            </div>
+          </div>
+
+          <div class="row mb-1 text-center">
+            <div class="col-12">
+              <p class="text-light">
+                Amount: {{ amountToAdd }}
+                <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addAmount(-1)">-</button>
+                <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addAmount(1)">+</button>
+                <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addMonster()">Add</button>
+              </p>
             </div>
           </div>
 

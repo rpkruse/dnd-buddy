@@ -4,6 +4,7 @@
  * This component allows for the DM to modify player's in their game. They can change their ability scores and give them gear
  */
 import { Component, OnInit } from '@angular/core';
+import { trigger, state, animate, transition, style } from '@angular/animations';
 
 import { ApiService, DataShareService } from '../../services/services';
 
@@ -15,7 +16,22 @@ import { Subscription, Observable } from 'rxjs';
 @Component({
   selector: 'dm-portal',
   templateUrl: './dm-portal.component.html',
-  styleUrls: ['./dm-portal.component.css', '../../global-style.css']
+  styleUrls: ['./dm-portal.component.css', '../../global-style.css'],
+  animations: [
+    trigger(
+      'showState', [
+        state('show', style({
+          opacity: 1,
+          visibility: 'visible'
+        })),
+        state('hide', style({
+          opacity: 0,
+          visibility: 'hidden'
+        })),
+        transition('show => *', animate('400ms')),
+        transition('hide => show', animate('400ms')),
+      ])
+  ]
 })
 export class DmPortalComponent implements OnInit {
   private isAlive: boolean = true;
@@ -25,7 +41,7 @@ export class DmPortalComponent implements OnInit {
 
   games: Observable<Game[]>;
   game: Game;
-  
+
   monsters: Monster[] = [];
   monster: Monster;
   createMonster: boolean = false;
@@ -84,6 +100,45 @@ export class DmPortalComponent implements OnInit {
 
     this.createMonster = createMonster;
     this.monster = monster;
+  }
+
+  getNewMonster(monsters: any[]) {
+    let notif: string = monsters.length > 1 ? "Monsters Added" : "Monster Added";
+
+    for (let i = 0; i < monsters.length; i++) {
+      let newMonster: Monster;
+
+      let s: Subscription = this._apiService.postEntity<Monster>("Monsters", monsters[i]).subscribe(
+        d => newMonster = d,
+        err => this.triggerMessage("", "Unable to create new mosnter", MessageType.Failure),
+        () => {
+          this.monsters.push(newMonster);
+
+          if (i === monsters.length - 1) {
+            s.unsubscribe();
+            this.triggerMessage("", notif, MessageType.Success);
+            this.createMonster = false;
+          }
+        }
+      );
+    }
+  }
+
+  removeMonster(index: number, event) {
+    event.stopPropagation();
+    let s: Subscription;
+
+    let monster: Monster = this.monsters[index];
+
+    s = this._apiService.deleteEntity<Monster>("Monsters", monster.monsterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to delete monster", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.monsters.splice(index, 1);
+        this.triggerMessage("", "Monster Removed", MessageType.Success);
+      }
+    );
   }
 
   /**

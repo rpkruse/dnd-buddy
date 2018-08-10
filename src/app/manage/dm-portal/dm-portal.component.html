@@ -32,8 +32,11 @@
         <div class="col-12 no-padding" *ngIf="!this.viewingCharacters">
           <ul class="list-group static-size-list short">
             <li class="list-group-item content text-light selectable-item" (click)="selectMonster(null, true)">New Monster</li>
-            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(monster, false)" *ngFor="let monster of this.monsters index as i">
+            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(monster, false)" (mouseover)="this.mouseOver = i"
+              (mouseout)="this.mouseOver = -1" *ngFor="let monster of this.monsters index as i">
               {{ monster.name }} HP: {{ monster.hp }}/{{ monster.max_HP }}
+              <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="removeMonster(i, $event)"
+                placement="left" ngbTooltip="Delete Monster" src="assets/icons/x_icon.png">
             </li>
           </ul>
         </div>
@@ -46,7 +49,8 @@
       <app-edit-character [character]="this.character" (updatedCharacter)="saveCharacter($event)"></app-edit-character>
     </div>
     <div class="col-12" *ngIf="this.monster || this.createMonster">
-      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" *ngIf="this.game"></app-create-monster>
+      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" (outputMonster)="getNewMonster($event)"
+        *ngIf="this.game"></app-create-monster>
     </div>
   </div>
 </div>
