@@ -1,4 +1,5 @@
 import { Component, OnInit,  } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Router } from "@angular/router";
 
@@ -21,7 +22,7 @@ export class ProfileComponent implements OnInit {
   password: string = "";
   confirmPassword: string = "";
 
-  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, private _router: Router, private _storage: StorageService) { }
+  constructor(private _apiService: ApiService, private _dataShareService: DataShareService, private _router: Router, private _storage: StorageService, private _modalService: NgbModal) { }
 
   ngOnInit() {
     this._dataShareService.user.takeWhile(() => this.isAlive).subscribe(res => this.user = res);
@@ -45,14 +46,23 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  public deleteUser() {
+  public confirmDeleteCharacter(content: any) {
+    this._modalService.open(content).result.then((result) => { //On close via Confirm
+      this.deleteUser(); 
+    }, (reason) => { //on close via click off
+    });
+  }
+  
+  private deleteUser() {
     let s: Subscription = this._apiService.deleteEntity<User>("Users", this.user.userId).subscribe(
       d => d = d,
       err => this.triggerMessage("", "Unable to delete profile", MessageType.Failure),
       () =>{
         s.unsubscribe();
         this.triggerMessage("", "Profile deleted", MessageType.Success);
-        this._router.navigate(['/login']);
+        this._storage.setValue("loggedIn", false);
+        this._dataShareService.changeUser(null);
+        this._router.navigate(['login']);
       }
     );
   }

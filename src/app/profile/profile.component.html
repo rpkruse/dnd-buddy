@@ -33,7 +33,7 @@
       </form>
 
       <div class="row justify-content-center">
-        <button type="button" class="btn btn-sm btn-danger float-left" (click)="deleteUser()">Delete</button>
+        <button type="button" class="btn btn-sm btn-danger float-left" (click)="confirmDeleteCharacter(content)">Delete</button>
         <button type="button" class="btn btn-s btn-a btn-sm ml-3" (click)="cancelChanges()">Cancel</button>
         <button type="button" class="btn btn-s btn-sm ml-3" [ngClass]="madeChanges() ? 'btn-a' : ''" (click)="saveUser()" [disabled]="!madeChanges()">Save</button>
       </div>
@@ -41,3 +41,23 @@
 
   </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header header">
+      <h4 class="modal-title">Confirmation</h4>
+    </div>
+  
+    <div class="modal-body content">
+  
+      <body class="bg-transparent text-light">
+        Are you sure you want to <strong>delete</strong> your profile?
+      </body>
+  
+      <small class="text-light">*This action cannot be undone</small>
+    </div>
+  
+    <div class="modal-footer content">
+      <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
+      <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+    </div>
+  </ng-template>
