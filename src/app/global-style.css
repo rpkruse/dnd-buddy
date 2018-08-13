@@ -67,6 +67,11 @@
     color: #ffd553 !important; /* gold */
 }
 
+.dark-border {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
 .header {
     background: rgba(0,0,0,0.65);
 }

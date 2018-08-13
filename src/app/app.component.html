@@ -41,7 +41,7 @@
     <div ngbDropdown placement="bottom-right" *ngIf="this.getUser()">
       <h6 class="font-weight-bold text-light text-hover" ngbDropdownToggle>{{ this.getUser().username }}</h6>
       <div ngbDropdownMenu>
-        <button class="dropdown-item" [routerLink]="['/profile']" [disabled]="true">Profile</button>
+        <button class="dropdown-item" [routerLink]="['/profile']">Profile</button>
         <button class="dropdown-item " [routerLink]="['/login']" (click)="this.logout()">Logout</button>
       </div>
     </div>

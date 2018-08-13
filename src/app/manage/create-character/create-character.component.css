@@ -85,11 +85,6 @@ label {
     background: rgba(0, 0, 0, 0.35);
 }
 
-.dark-border {
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
 /*.list-group-item {
     color: white;
     background-color: #464646;
