@@ -31,7 +31,7 @@
               </select>
             </div>
           </div>
-          <div [class.panelHide]="!this.selectedSubRace" class="col-md-8" *ngIf="this.selectedSubRace">
+          <div [class.panelHide]="!this.selectedSubRace" class="col-md-8 text-light" *ngIf="this.selectedSubRace">
             <div class="card w-100 panel">
               <div class="card-header text-center header stat">
                 {{ this.selectedSubRace.name }}
@@ -95,64 +95,76 @@
             </div>
           </div>
           <div [class.panelHide]="!this.selectedClass" class="col-md-8" *ngIf="this.selectedClass">
-            <div class="card panel">
+            <div class="card panel text-light">
               <div class="card-header text-center header stat">{{ this.selectedClass.name }}</div>
               <div class="card-body content">
-                <p class="text-center">
-                  <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
+                <div class="row">
+                  <div class="col-lg-8">
+                    <p class="text-center">
+                      <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
 
-                <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
-                  <strong>Choose {{ this.choiceAmount }}</strong>
-                </button>
-                <div class="detailList" *ngIf="this.proficiencyChoiceListActive">
-                  <ul class="list-group w-100 static-size-list short">
-                    <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiency_choices[0].from index as i">
-                      {{ prof.name }}
-                      <button type="button" class="btn btn-sm btn-success float-right" *ngIf="!isSelected(prof.name)" (click)="selectProf(prof.name)"
-                        [disabled]="choiceAmount <= 0">Select</button>
-                      <button type="button" class="btn btn-sm btn-danger float-right" *ngIf="isSelected(prof.name)" (click)="unselectProf(prof.name)">Deselect</button>
-                    </li>
-                  </ul>
-                </div>
+                    <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
+                      <strong>Choose {{ this.choiceAmount }}</strong>
+                    </button>
+                    <div class="detailList" *ngIf="this.proficiencyChoiceListActive">
+                      <ul class="list-group w-100 static-size-list short">
+                        <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiency_choices[0].from index as i">
+                          {{ prof.name }}
+                          <button type="button" class="btn btn-sm btn-success float-right" *ngIf="!isSelected(prof.name)" (click)="selectProf(prof.name)"
+                            [disabled]="choiceAmount <= 0">Select</button>
+                          <button type="button" class="btn btn-sm btn-danger float-right" *ngIf="isSelected(prof.name)" (click)="unselectProf(prof.name)">Deselect</button>
+                        </li>
+                      </ul>
+                    </div>
 
 
-                <button (click)="proficiencyListActive = !proficiencyListActive" class="detailButton">Proficiencies
-                  <span class="float-right glyphicon glyphicon-menu-down"></span>
-                </button>
-                <div id="proficiencyList" class="detailList" *ngIf="this.proficiencyListActive">
-                  <ul class="list-group list-group-flush w-100 static-size-list short">
-                    <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiencies">
-                      {{ prof.name }}
-                    </li>
-                  </ul>
-                </div>
+                    <button (click)="proficiencyListActive = !proficiencyListActive" class="detailButton">Natural Proficiencies
+                      <span class="float-right glyphicon glyphicon-menu-down"></span>
+                    </button>
+                    <div id="proficiencyList" class="detailList" *ngIf="this.proficiencyListActive">
+                      <ul class="list-group list-group-flush w-100 static-size-list short">
+                        <li class="list-group-item light-content text-light" *ngFor="let prof of this.selectedClass.proficiencies">
+                          {{ prof.name }}
+                        </li>
+                      </ul>
+                    </div>
 
-                <button (click)="savingThrowsListActive = !savingThrowsListActive" class="detailButton">Saving Throws
-                  <span class="float-right glyphicon glyphicon-menu-down"></span>
-                </button>
-                <div id="savingThrowsList" class="detailList" *ngIf="this.savingThrowsListActive">
-                  <ul class="list-group w-100 static-size-list short">
-                    <li class="list-group-item light-content text-light" *ngFor="let save of this.selectedClass.saving_throws">
-                      {{ save.name }}
-                    </li>
-                  </ul>
-                </div>
+                    <button (click)="savingThrowsListActive = !savingThrowsListActive" class="detailButton">Saving Throws
+                      <span class="float-right glyphicon glyphicon-menu-down"></span>
+                    </button>
+                    <div id="savingThrowsList" class="detailList" *ngIf="this.savingThrowsListActive">
+                      <ul class="list-group w-100 static-size-list short">
+                        <li class="list-group-item light-content text-light" *ngFor="let save of this.selectedClass.saving_throws">
+                          {{ save.name }}
+                        </li>
+                      </ul>
+                    </div>
 
-                <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">Subclasses
-                  <span class="float-right glyphicon glyphicon-menu-down"></span>
-                </button>
-                <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
-                  <ul class="list-group w-100 static-size-list short">
-                    <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
-                      {{ subc.name }}
-                    </li>
-                  </ul>
+                    <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">Subclasses
+                      <span class="float-right glyphicon glyphicon-menu-down"></span>
+                    </button>
+                    <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
+                      <ul class="list-group w-100 static-size-list short">
+                        <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
+                          {{ subc.name }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 text-light dark-border bg-transparent">
+                    <p class="text-light bg-transparent">You may select <strong>{{ this.choiceAmount }}</strong> more Proficiencies. Click the first dropdown menu and select the proficiencies you want.</p>
+                    <p class="text-light bg-transparent">Your Natural Proficiencies and proficiencies that are given to your class automatically</p>
+                    <p class="text-light bg-transparent">Your Saving Throws are stats that you have a proficiency bonus in when making the save.</p>
+                  </div>
                 </div>
               </div>
+
+
             </div>
-            <small class="text-light mx-auto" *ngIf="choiceAmount > 0">
+            <!--<small class="text-light mx-auto" *ngIf="choiceAmount > 0">
               <strong>*You must select {{ choiceAmount }} more {{ choiceAmount > 1 ? 'proficiencies' : 'proficiency' }}</strong>
-            </small>
+            </small>-->
 
           </div>
         </div>
@@ -193,7 +205,7 @@
                 </p>
               </div>
 
-            
+
               <div class="col-4">
                 <ul class="list-group list-group-flush">
                   <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
