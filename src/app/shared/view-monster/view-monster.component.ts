@@ -34,6 +34,9 @@ export class ViewMonsterComponent implements OnInit {
   monster: Monster;
   monsterInfo: ApiMonster;
 
+  changeHealthBy: any = 1;
+  selectedIndex: number = -1;
+
   //Modal Fields:
   selectedAbility: Ability;
   selectedAction: Action;
@@ -50,21 +53,50 @@ export class ViewMonsterComponent implements OnInit {
   }
 
   addHP(val: number, addToTotal: boolean) {
+    if (!this.changeHealthBy) this.changeHealthBy = 1;
+    
+    try {
+      this.changeHealthBy = parseInt(this.changeHealthBy);
+    }catch {
+      this.changeHealthBy = 1;
+    }
+
+    if (!Number.isInteger(this.changeHealthBy) || Number.isNaN(this.changeHealthBy)) this.changeHealthBy = 1;
+
+
+    val *= this.changeHealthBy;
+
     if (addToTotal) {
       this.monster.max_HP += val;
-      if (this.monster.max_HP <= 0) this.monster.max_HP = 1;
       if (this.monster.max_HP < this.monster.hp) this.monster.hp = this.monster.max_HP;
     }else{
       this.monster.hp += val;
-      if (this.monster.hp <= 0) this.monster.hp = 1;
-
       if (this.monster.hp > this.monster.max_HP) this.monster.max_HP = this.monster.hp;
     }
   }
 
-  selectMonster(monster: Monster) {
+  selectMonster(monster: Monster, index: number) {
     this.monster = monster;
+    this.selectedIndex = index;
     this.getMonsterApiInfo(this.monster.url);
+  }
+
+  removeSelectedMoster() {
+    let index: number = this.monsters.findIndex(x => x.monsterId === this.monster.monsterId);
+
+    if (index < 0) return;
+
+    let s: Subscription = this._apiService.deleteEntity<Monster>("Monsters", this.monster.monsterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to delete monster", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.monsters.splice(index, 1);
+        this.triggerMessage(this.monster.name, "was killed", MessageType.Success);
+        this.monster = null;
+        this.selectedIndex = -1;
+      }
+    )
   }
 
   selectAction(index: number, content: any) {
@@ -95,6 +127,19 @@ export class ViewMonsterComponent implements OnInit {
     this.selectedAbility = a;
 
     this._modalService.open(content);
+  }
+
+  getStatString(val: number): string {
+    let s: string = "(";
+
+    let n: number = Math.floor((val-10)/2);
+
+    if (n >= 0) 
+      s += "+" + n + ")";
+    else
+      s += n + ")";
+
+    return s;
   }
 
   hasSaves(): boolean {

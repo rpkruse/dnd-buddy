@@ -9,7 +9,7 @@
   <hr class="stat mt-0" />
 
   <div *ngIf="this.show">
-    <div class="row justify-content-between">
+    <div class="row">
       <!-- List of monsters -->
       <div class="col-lg-4">
         <h5 class="text-center">
@@ -23,14 +23,14 @@
 
         <!-- Show long list on lg+ -->
         <ul class="list-group static-size-list half-height mb-3 mb-lg-0 d-none d-lg-block" *ngIf="this.monsters && this.showMonsterList">
-          <li class="list-group-item content selectable-item" (click)="selectMonster(monster)" *ngFor="let monster of this.monsters index as i">
+          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i)" *ngFor="let monster of this.monsters index as i">
             {{ monster.name }}
           </li>
         </ul>
 
-        <!-- Show short list on md- -->
+        <!-- Show short list on md -->
         <ul class="list-group static-size-list short mb-3 mb-lg-0 d-lg-none" *ngIf="this.monsters && this.showMonsterList">
-          <li class="list-group-item content selectable-item" (click)="selectMonster(monster); this.showMonsterList = false" *ngFor="let monster of this.monsters index as i">
+          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i); this.showMonsterList = false" *ngFor="let monster of this.monsters index as i">
             {{ monster.name }}
           </li>
         </ul>
@@ -45,74 +45,81 @@
           </div>
         </div>
 
-        <!-- Complex View -->
-        <div class="row justify-content-between" *ngIf="!simpleView">
+        <!-- Complex view -->
+        <div class="col-12" *ngIf="!simpleView">
+          <p>
+            <strong>Current HP:</strong> {{ this.monster.hp}}
+            <input type="input" class="d-inline" style="width: 50px;" [value]="changeHealthBy" (input)="changeHealthBy = $event.target.value" placeholder="Amount"/>
 
-          <div class="col-12">
-            <p>
-              <strong>Current HP:</strong> {{ this.monster.hp}}
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, false)">-</button>
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, false)">+</button>
-            </p>
-            <p>
-              <strong>Max HP:</strong> {{ this.monster.max_HP}}
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, true)">-</button>
-              <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, true)">+</button>
-            </p>
-            <p>
-              <strong>AC:</strong> {{ monsterInfo.armor_class }}</p>
-            <p>
-              <strong>Speed:</strong> {{ monsterInfo.speed }}</p>
-            <p *ngIf="monsterInfo.damage_vulnerabilities">
-              <strong>Vulnerabilities:</strong> {{ monsterInfo.damage_vulnerabilities }}</p>
-            <p *ngIf="monsterInfo.damage_resistances">
-              <strong>Resistances:</strong> {{ monsterInfo.damage_resistances }}</p>
-            <p *ngIf="monsterInfo.damage_immunities">
-              <strong>Damage Immunities:</strong> {{ monsterInfo.damage_immunities }}</p>
-            <p *ngIf="monsterInfo.condition_immunities">
-              <strong>Condition Immunities:</strong> {{ monsterInfo.condition_immunities }}</p>
-            <p *ngIf="monsterInfo.senses">
-              <strong>Senses:</strong> {{ monsterInfo.senses }}</p>
-            <p *ngIf="monsterInfo.languages">
-              <strong>Languages:</strong> {{ monsterInfo.languages }}</p>
-          </div>
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, false)">-</button>
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, false)">+</button>
 
+            <button type="button" class="btn btn-danger btn-sm ml-1" (click)="removeSelectedMoster()" *ngIf="this.monster.hp <= 0">Remove</button>
+          </p>
+          <p>
+            <strong>Max HP:</strong> {{ this.monster.max_HP}}
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, true)">-</button>
+            <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, true)">+</button>
+          </p>
+          <p>
+            <strong>AC:</strong> {{ monsterInfo.armor_class }}</p>
+          <p>
+            <strong>Speed:</strong> {{ monsterInfo.speed }}</p>
+          <p *ngIf="monsterInfo.damage_vulnerabilities">
+            <strong>Vulnerabilities:</strong> {{ monsterInfo.damage_vulnerabilities }}</p>
+          <p *ngIf="monsterInfo.damage_resistances">
+            <strong>Resistances:</strong> {{ monsterInfo.damage_resistances }}</p>
+          <p *ngIf="monsterInfo.damage_immunities">
+            <strong>Damage Immunities:</strong> {{ monsterInfo.damage_immunities }}</p>
+          <p *ngIf="monsterInfo.condition_immunities">
+            <strong>Condition Immunities:</strong> {{ monsterInfo.condition_immunities }}</p>
+          <p *ngIf="monsterInfo.senses">
+            <strong>Senses:</strong> {{ monsterInfo.senses }}</p>
+          <p *ngIf="monsterInfo.languages">
+            <strong>Languages:</strong> {{ monsterInfo.languages }}</p>
         </div>
 
         <!-- Simple View -->
-        <div class="row justify-content-between" *ngIf="simpleView">
-          <div class="col-12 text-center">
-            <p>
-              <strong>HP:</strong> {{ this.monster.hp }}/{{ this.monster.max_HP}}
-            </p>
-            <p>
-              <strong>AC:</strong> {{ monsterInfo.armor_class }}
-            </p>
+        <div class="col-12" *ngIf="simpleView">
+          <div class="row text-center">
+            <div class="col-12">
+              <p>
+                <strong>HP:</strong> {{ this.monster.hp }}/{{ this.monster.max_HP}}
+              </p>
+              <p>
+                <strong>AC:</strong> {{ monsterInfo.armor_class }}
+              </p>
+            </div>
+          </div>
 
-            <div class="row mb-3">
-              <div class="col-lg-6 text-center mb-3 mb-lg-0">
-                <div class="row justify-content-between">
-                  <div class="col-lg-1 float-left my-auto">
+          <div class="col-lg-12 mb-3">
+            <div class="row">
+              <!-- Stats -->
+              <div class="text-center mb-3 mb-lg-0" [ngClass]="!hasSaves() ? 'col-12' : 'col-lg-6'">
+                <div class="row">
+                  <div class="col-lg-1 my-auto">
                     <strong>Stats:</strong>
                   </div>
-                  <div class="col-lg-6 text-center mx-auto no-padding">
+                  <div class="col-lg-8 no-padding mx-auto pl-1">
                     <ul class="list-group static-size-list ex-short content">
-                      <li>Str: {{ monsterInfo.strength }}</li>
-                      <li>Dex: {{ monsterInfo.dexterity }}</li>
-                      <li>Con: {{ monsterInfo.constitution }}</li>
-                      <li>Int: {{ monsterInfo.intelligence }}</li>
-                      <li>Wis: {{ monsterInfo.wisdom }}</li>
-                      <li>Cha: {{ monsterInfo.charisma }}</li>
+                      <li>Str: {{ monsterInfo.strength }} {{ getStatString(monsterInfo.strength) }}</li>
+                      <li>Dex: {{ monsterInfo.dexterity }} {{ getStatString(monsterInfo.dexterity) }}</li>
+                      <li>Con: {{ monsterInfo.constitution }} {{ getStatString(monsterInfo.constitution) }}</li>
+                      <li>Int: {{ monsterInfo.intelligence }} {{ getStatString(monsterInfo.intelligence) }}</li>
+                      <li>Wis: {{ monsterInfo.wisdom }} {{ getStatString(monsterInfo.wisdom) }}</li>
+                      <li>Cha: {{ monsterInfo.charisma }} {{ getStatString(monsterInfo.charisma) }}</li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6 text-center mb-3" *ngIf="hasSaves()">
+
+              <!-- Saves -->
+              <div class="col-lg-6 text-center mb-3 mb-lg-0" *ngIf="hasSaves()">
                 <div class="row">
-                  <div class="col-lg-1 float-left my-auto">
+                  <div class="col-lg-1 my-auto">
                     <strong>Saves:</strong>
                   </div>
-                  <div class="col-lg-6 text-center mx-auto no-padding">
+                  <div class="col-lg-8 mx-auto">
                     <ul class="list-group static-size-list ex-short content">
                       <li *ngIf="monsterInfo.strength_save">Str: {{ monsterInfo.strength_save }}</li>
                       <li *ngIf="monsterInfo.dexterity_save">Dex: {{ monsterInfo.dexterity_save }}</li>
@@ -125,44 +132,42 @@
                 </div>
               </div>
             </div>
+          </div>
 
-
-            <!-- Abilities/Actions -->
-            <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.special_abilities">
-              <div class="row">
-                <div class="col-lg-1 my-auto">
-                  <strong>Abilities</strong>
-                </div>
-                <div class="col-8 col-lg-8 mx-auto no-padding">
-                  <ul class="list-group static-size-list ex-short">
-                    <li class="list-group-item text-light content selectable-item" (click)="this.selectAbility(i, content)" *ngFor="let ab of monsterInfo.special_abilities index as i">
-                      {{ ab.name }}
-                    </li>
-                  </ul>
-                </div>
+          <!-- Abilities/Actions -->
+          <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.special_abilities">
+            <div class="row">
+              <div class="col-lg-1 my-auto">
+                <strong>Abilities:</strong>
+              </div>
+              <div class="col-8 col-lg-8 mx-auto no-padding">
+                <ul class="list-group static-size-list ex-short">
+                  <li class="list-group-item text-light content selectable-item" (click)="this.selectAbility(i, content)" *ngFor="let ab of monsterInfo.special_abilities index as i">
+                    {{ ab.name }}
+                  </li>
+                </ul>
               </div>
             </div>
+          </div>
 
-            <!-- Actions -->
-            <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.actions">
-              <div class="row">
-                <div class="col-lg-1 my-auto">
-                  <strong>Actions:</strong>
-                </div>
-                <div class="col-8 col-lg-8 mx-auto no-padding">
-                  <ul class="list-group static-size-list ex-short">
-                    <li class="list-group-item text-light content selectable-item" (click)="this.selectAction(i, content)" *ngFor="let ac of monsterInfo.actions index as i">
-                      {{ ac.name }}
-                    </li>
-                  </ul>
-                </div>
+          <!-- Actions -->
+          <div class="col-lg-12 text-center mb-3" *ngIf="monsterInfo.actions">
+            <div class="row">
+              <div class="col-lg-1 my-auto">
+                <strong>Actions:</strong>
+              </div>
+              <div class="col-8 col-lg-8 mx-auto no-padding">
+                <ul class="list-group static-size-list ex-short">
+                  <li class="list-group-item text-light content selectable-item" (click)="this.selectAction(i, content)" *ngFor="let ac of monsterInfo.actions index as i">
+                    {{ ac.name }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -192,6 +197,6 @@
   </div>
 
   <div class="modal-footer content">
-    <button type="button" class="btn btn-success col-2" (click)="c()">Close</button>
+    <button type="button" class="btn btn-success" (click)="c()">Close</button>
   </div>
 </ng-template>
