@@ -48,14 +48,18 @@
     <!-- Class/Race Details -->
     <div class="col-md-6 mt-3">
       <!-- Race Detail -->
-      <div class="col-md-12" *ngIf="this.subrace">
-        <div class="card w-100">
-          <!--<img class="card-img-top mc-auto class-img" [src]="getRaceImage(this.subrace.name)">-->
-          <div class="card-header text-center header stat">
-            {{ this.subrace.name }}
-            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.subrace = null">Clear</button>
+      <div class="col-md-12 dark-border content" *ngIf="this.subrace">
+        <div class="row">
+          <div class="col-12">
+            <h4>
+              {{ this.subrace.name }}
+              <!-- <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.subrace = null">Clear</button> -->
+              <img class="icon icon-sm float-left" (click)="this.subrace = null" placement="left" ngbTooltip="Close" src="assets/icons/x_icon.png">
+            </h4>
+            <hr class="stat mt-0" />
           </div>
-          <div class="card-body content">
+
+          <div class="col-12">
             <p>{{ this.subrace.desc }}</p>
             <p>
               <b>Ability Bonuses: </b>{{ fixAbilityBonuses(this.subrace.ability_bonuses) }}</p>
@@ -75,7 +79,7 @@
             </button>
             <div id="languageList" class="detailList" [class.hide]="!this.languageListActive">
               <ul class="list-group list-group-flush">
-                <li class="list-group-item" *ngFor="let lang of this.subrace.languages">
+                <li class="list-group-item content" *ngFor="let lang of this.subrace.languages">
                   {{ lang.name }}
                 </li>
               </ul>
@@ -86,7 +90,7 @@
             </button>
             <div id="traitsList" class="detailList" [class.hide]="!this.traitsListActive">
               <ul class="list-group list-group-flush static-size-list short">
-                <li class="list-group-item" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
+                <li class="list-group-item content" (mouseover)="this.mouseOverTrait = i" (mouseout)="this.mouseOverTrait = -1" *ngFor="let trait of this.subrace.racial_traits index as i">
                   {{ trait.name }}
                   <button [@showState]="this.mouseOverTrait === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
                     (click)="getTraitDetails(trait.url, content)">Details</button>
@@ -99,14 +103,18 @@
       <!-- ^^End of race detail -->
 
       <!-- Class Detail -->
-      <div class="col-md-12" *ngIf="this.classDetail">
-        <div class="card bg-transparent border-0">
-          <img class="card-img-top mc-auto class-img" [src]="getClassImage(this.classDetail.name)">
-          <div class="card-header text-center header stat">
-            {{ this.classDetail.name }}
-            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.classDetail = null">Clear</button>
+      <div class="col-md-12 dark-border content" *ngIf="this.classDetail">
+        <div class="row">
+          <div class="col-12">
+            <!-- <img class="card-img-top mx-auto class-img text-center" [src]="getClassImage(this.classDetail.name)"> -->
+            <h4 class="text-center">
+              {{ this.classDetail.name }}
+              <!-- <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.classDetail = null">Clear</button> -->
+              <img class="icon icon-sm float-left" (click)="this.classDetail = null" placement="left" ngbTooltip="Close" src="assets/icons/x_icon.png">
+            </h4>
+            <hr class="stat mt-0"/>
           </div>
-          <div class="card-body content">
+          <div class="col-12">
             <p class="text-center">
               <b>Hit Die: </b>{{ this.classDetail.hit_die }}</p>
 
@@ -116,7 +124,7 @@
             </button>
             <div id="proficiencyChoiceList" class="detailList" [class.hide]="!this.proficiencyChoiceListActive">
               <ul class="list-group list-group-flush static-size-list half-height">
-                <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiency_choices[0].from">
+                <li class="list-group-item content" *ngFor="let prof of this.classDetail.proficiency_choices[0].from">
                   {{ prof.name }}
                 </li>
               </ul>
@@ -127,7 +135,7 @@
             </button>
             <div id="proficiencyList" class="detailList" [class.hide]="!this.proficiencyListActive">
               <ul class="list-group list-group-flush static-size-list half-height">
-                <li class="list-group-item" *ngFor="let prof of this.classDetail.proficiencies">
+                <li class="list-group-item content" *ngFor="let prof of this.classDetail.proficiencies">
                   {{ prof.name }}
                 </li>
               </ul>
@@ -138,7 +146,7 @@
             </button>
             <div id="savingThrowsList" class="detailList" [class.hide]="!this.savingThrowsListActive">
               <ul class="list-group list-group-flush static-size-list half-height">
-                <li class="list-group-item" *ngFor="let save of this.classDetail.saving_throws">
+                <li class="list-group-item content" *ngFor="let save of this.classDetail.saving_throws">
                   {{ save.name }}
                 </li>
               </ul>
@@ -149,7 +157,7 @@
             </button>
             <div id="subclassesList" class="detailList" [class.hide]="!this.subclassesListActive">
               <ul class="list-group list-group-flush static-size-list half-height">
-                <li class="list-group-item" *ngFor="let subc of this.classDetail.subclasses">
+                <li class="list-group-item content" *ngFor="let subc of this.classDetail.subclasses">
                   {{ subc.name }}
                 </li>
               </ul>
