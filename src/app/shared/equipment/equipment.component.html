@@ -1,10 +1,10 @@
 <div class="col-md-12 text-light">
   <h4 class="text-center">
     Equipment
-    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right" ngbTooltip="Hide"
-      (click)="show = !show" *ngIf="show" />
-    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right" ngbTooltip="Show"
-      (click)="show = !show" *ngIf="!show" />
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+      ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
+    <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+      ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
   </h4>
   <hr class="stat mt-0" />
   <div class="row" *ngIf="show">
@@ -78,37 +78,41 @@
 </div>
 
 <ng-template #ringModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h5 class="modal-title text-center">{{ this.selectedRing.name }}</h5>
+  <div class="modal-header header">
+    <h4 class="modal-title text-center">{{ this.selectedRing.name }}</h4>
   </div>
-  <div class="modal-body">
-    <p>{{ this.selectedRing.desc }}</p>
-    <div *ngIf="this.selectedRing.charge_spells">
-      <div *ngFor="let sp of this.selectedRing.charge_spells index as i">
-        <div>{{ i+1 }}) Name: {{ sp.name }}</div>
-        <div class="ml-4">Cost: {{ sp.cost }}</div>
-        <div class="ml-4" *ngIf="sp.save">Save: {{ sp.save }}</div>
-        <br>
+  <div class="modal-body content">
+    <div class="bg-transparent text-light">
+      <p>{{ this.selectedRing.desc }}</p>
+      <div *ngIf="this.selectedRing.charge_spells">
+        <div *ngFor="let sp of this.selectedRing.charge_spells index as i">
+          <div>{{ i+1 }}) Name: {{ sp.name }}</div>
+          <div class="ml-4">Cost: {{ sp.cost }}</div>
+          <div class="ml-4" *ngIf="sp.save">Save: {{ sp.save }}</div>
+          <br>
+        </div>
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-sm btn-success" (click)="d()">Close</button>
   </div>
 </ng-template>
 
 <ng-template #ringEquipModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h5 class="modal-title text-center">Swap With</h5>
+  <div class="modal-header header">
+    <h4 class="modal-title text-center">Swap With</h4>
   </div>
-  <div class="modal-body">
+  <div class="modal-body content">
+    <div class="bg-transparent text-light">
     <select class="custom-select col-sm-5" (change)="selectRingSlot($event.target.value)">
       <option selected>Choose</option>
       <option [value]="1">{{ this.ring_1.name }}</option>
       <option [value]="2">{{ this.ring_2.name }}</option>
     </select>
+    </div>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-sm btn-success" (click)="c()" [disabled]="slotSwapIndex === 0">Swap</button>
   </div>
 </ng-template>

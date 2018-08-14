@@ -19,30 +19,28 @@
     </div>
 
     <!-- Character detail -->
-    <div class="col-lg-9" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
-      <div class="card w-100 bg-transparent">
-        <div class="card-header text-center header">
-          <span class="stat">
-            <strong placement="top" ngbTooltip="Change Name" (click)="editName(changeName)">{{ this.selectedCharacter.name }}:</strong>
-            <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em>
-          </span>
-          <img class="icon icon-sm float-right" (click)="clearCharacter()" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
-        </div>
+    <div class="col-lg-9 content dark-border" *ngIf="this.selectedCharacter && this.raceDetail && this.classDetail">
+      <div class="col-12 bg-transparent">
+        <div class="row">
+          <div class="col-12 mb-3 text-center">
+            <img class="icon icon-sm float-left d-inline" (click)="clearCharacter()" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
+            <h4 placement="top" ngbTooltip="Change Name" (click)="editName(changeName)">
+              {{ this.selectedCharacter.name }}:
+              <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em>
+            </h4>
+          </div>
 
-        <div class="card-body content text-light">
-          <div class="row">
-            <div class="col-md-4 text-center">
-              <app-stats [character]="selectedCharacter"></app-stats>
-            </div>
-            <div class="col-md-8">
-              <app-equipment [character]="selectedCharacter"></app-equipment>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md-4 text-center text-light">
+                <app-stats [character]="selectedCharacter"></app-stats>
+              </div>
+              <div class="col-md-8">
+                <app-equipment [character]="selectedCharacter"></app-equipment>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="card-footer header">
-          <img class="icon icon-sm-med float-right" (click)="confirmDeleteCharacter(content, $event)" placement="right" ngbTooltip="Delete"
-            src="assets/icons/white_delete_icon.png">
         </div>
       </div>
     </div>
@@ -51,20 +49,20 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Confirmation</h4>
+  <div class="modal-header text-center header">
+    <h4 class="modal-title text-center">Confirmation</h4>
   </div>
 
-  <div class="modal-body">
+  <div class="modal-body content">
 
-    <body>Are you sure you want to delete:
+    <body class="bg-transparent text-light">Are you sure you want to delete:
       <b>{{ this.selectedCharacter.name }}?</b>
     </body>
 
-    <body class="text-muted">This action cannot be undone</body>
+    <small class="text-light">*This action cannot be undone</small>
   </div>
 
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-sm btn-danger" (click)="d()">Cancel</button>
     <button type="button" class="btn btn-sm btn-success" (click)="c()">Confim</button>
   </div>
@@ -78,8 +76,8 @@
   <div class="modal-body content">
 
     <body class="bg-transparent text-light">Enter your new name:
-        <input [value]="characterRename" (input)="characterRename = $event.target.value" type="text" class="form-control col-12" placeholder="Character Name"
-        (ngEnter)="c($event)" autofocus="autofocus">
+      <input [value]="characterRename" (input)="characterRename = $event.target.value" type="text" class="form-control col-12"
+        placeholder="Character Name" (ngEnter)="c($event)" autofocus="autofocus">
     </body>
   </div>
 
