@@ -65,8 +65,8 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
-    <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+    <button type="button" class="btn btn-sm btn-danger" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="c()">Confim</button>
   </div>
 </ng-template>
 
@@ -84,7 +84,7 @@
   </div>
 
   <div class="modal-footer content">
-    <button type="button" class="btn btn-secondary col-2" (click)="d()">Cancel</button>
-    <button type="button" class="btn btn-success col-2" (click)="c()" [disabled]="characterRename.length <=0 || characterRename === this.selectedCharacter.name">Save</button>
+    <button type="button" class="btn btn-sm btn-secondary" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="c()" [disabled]="characterRename.length <=0 || characterRename === this.selectedCharacter.name">Save</button>
   </div>
 </ng-template>
