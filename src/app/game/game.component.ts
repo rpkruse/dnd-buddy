@@ -46,6 +46,7 @@ export class GameComponent implements OnInit {
   hasClickedOff: boolean = false;
 
   selectedGame: Game;
+  selectedCharacter: Character;
 
   characterDetail: Character;
   classDetail: ClassDetails;
@@ -114,7 +115,8 @@ export class GameComponent implements OnInit {
     let g = {
       name: this.gameName,
       userId: this.user.userId,
-      gameState: newState
+      gameState: newState,
+      open: true
     };
 
     let game: Game;
@@ -144,6 +146,19 @@ export class GameComponent implements OnInit {
       d => this.selectedGame = d,
       err => console.log("Unable to load game", err),
       () => s.unsubscribe()
+    );
+  }
+
+  public toggleGame() {
+    this.selectedGame.open = !this.selectedGame.open;
+
+    let s: Subscription = this._apiService.putEntity<Game>("Games", this.selectedGame, this.selectedGame.gameId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to lock game", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage("", "Game locked", MessageType.Success);
+      }
     );
   }
 
@@ -212,7 +227,24 @@ export class GameComponent implements OnInit {
     }
   }
 
-  public removeSingleCharacterFromGame(index: number, event) {
+  /**
+   * Called when the user clicks the delete button on a character
+   * it opens a modal to confirm the delete
+   * 
+   * @param {any} content The modal 
+   * @param {any} event Used to stop propagation
+   * @param {Character} character The character to delete
+   */
+  public confirmRemoveCharacter(content, event, character: Character, index: number) {
+    event.stopPropagation();
+    this.selectedCharacter = character;
+    this._modalService.open(content).result.then((result) => { //On close via save
+      this.removeSingleCharacterFromGame(index); //When we save, we attempt to add all needed entities to the DB
+    }, (reason) => { //on close via click off
+    });
+  }
+
+  public removeSingleCharacterFromGame(index: number) {
     event.stopPropagation();
     this.deleteClickIndex = index;
 

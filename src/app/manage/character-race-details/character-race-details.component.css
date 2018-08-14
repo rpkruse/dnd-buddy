@@ -8,11 +8,6 @@
     overflow-y: scroll;
 }
 
-::-webkit-scrollbar{
-    background: transparent;
-    width: 0px;
-}
-
 .tall {
     height: 100%;
 }

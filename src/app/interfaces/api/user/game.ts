@@ -4,8 +4,9 @@ import { User } from './user'
 export interface Game {
     gameId: number,
     name: string,
+    gameState: string,
+    open: boolean, 
     userId: number,
-    gameState: string
 
     character: Character[],
     user: User;

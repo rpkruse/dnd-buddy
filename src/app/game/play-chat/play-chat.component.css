@@ -71,8 +71,3 @@
 .btn-s:hover{
     background-color: #ffd553;
 }
-
-::-webkit-scrollbar{
-    background: transparent;
-    width: 0px;
-}

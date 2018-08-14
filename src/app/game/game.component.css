@@ -1,8 +1,3 @@
-::-webkit-scrollbar{
-    background: transparent;
-    width: 0px;
-}
-
 .section{
     text-align: center;
     margin-top: 7em;
@@ -73,9 +68,10 @@ h1, h2 {
     background-color: #6b6b6b;
 }
 
-.btn:not(.btn-secondary):hover{
+.btn-s:hover{
     background-color: #ffd553;
 }
+
 
 @keyframes slideout {
     from {

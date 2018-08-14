@@ -3,6 +3,8 @@
     width: 0px;
 }
 
+html {overflow: -moz-scrollbars-none;}
+
 .static-size-list{
     overflow-y: scroll;
 }

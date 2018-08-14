@@ -20,8 +20,8 @@
         <form>
           <div class="input-group-prepend">
             <label class="input-group-text">Game Name:</label>
-            <input [value]="gameName" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header" placeholder="Game name"
-              [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
+            <input [value]="gameName" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header"
+              placeholder="Game name" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
           </div>
           <div class="fillSpace">
             <button type="button" class="btn btn-secondary float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create Game</button>
@@ -34,16 +34,22 @@
 
       <!-- Viewing a game -->
       <div class="col-md-8" *ngIf="this.selectedGame">
-        <h2 class="header mb-0">
-          {{ this.selectedGame.name }}
-          <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="left" ngbTooltip="Delete Game"
-            src="assets/icons/white_delete_icon.png" *ngIf="isGameOwner()">
-        </h2>
+        <div class="header text-light text-center">
+          <h2 class="mb-0 d-inline">
+            {{ this.selectedGame.name }}
+            <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="left" ngbTooltip="Delete Game"
+              src="assets/icons/white_delete_icon.png" *ngIf="isGameOwner()">
+          </h2>
+          <div class="d-inline" *ngIf="isGameOwner()">
+            <input type="checkbox" [checked]="!this.selectedGame.open" (change)="toggleGame()">{{ this.selectedGame.open ? "Lock Game" : "Unlock Game" }}
+          </div>
+        </div>
         <ul class="list-group list-group-flush static-size-list half-height">
-          <li [class.panelHide]="this.deleteClickIndex === i" class="list-group-item content text-light game panel" *ngFor="let character of this.selectedGame.character index as i" 
-              (click)="loadCharacterDetails(i, content)" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1">
+          <li [class.panelHide]="this.deleteClickIndex === i" class="list-group-item content text-light game panel" *ngFor="let character of this.selectedGame.character index as i"
+            (click)="loadCharacterDetails(i, content)" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1">
             {{ character.name }}
-            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm btn-secondary float-right" (click)="removeSingleCharacterFromGame(i, $event)" *ngIf="isGameOwner()">Remove</button>
+            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm btn-secondary float-right"
+              (click)="confirmRemoveCharacter(confirmCharacter, $event, character, i)" *ngIf="isGameOwner()">Remove</button>
           </li>
           <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
         </ul>
@@ -100,3 +106,23 @@
     <button type="button" class="btn btn-success" (click)="c()">Confim</button>
   </div>
 </ng-template>
+
+<ng-template #confirmCharacter let-c="close" let-d="dismiss">
+    <div class="modal-header header">
+      <h4 class="modal-title">Confirmation</h4>
+    </div>
+  
+    <div class="modal-body content">
+  
+      <body class="bg-transparent text-light">Are you sure you want to remove:
+        <strong>{{ this.selectedCharacter.name }}?</strong>
+      </body>
+  
+      <small class="bg-transparent text-light">*This action will <strong>DELETE</strong> this character and cannot be undone</small>
+    </div>
+  
+    <div class="modal-footer content">
+      <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
+      <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+    </div>
+  </ng-template>
