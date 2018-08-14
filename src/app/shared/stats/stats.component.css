@@ -9,7 +9,13 @@
     border: 2px solid white;
     margin: 2px;
 }
+
  .detailButton:hover {
+    background-color: #ffd553;
+    color: black;
+}
+
+.btn-s:hover {
     background-color: #ffd553;
     color: black;
 }

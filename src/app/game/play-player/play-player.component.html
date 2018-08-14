@@ -15,7 +15,7 @@
 
     <!-- Stats -->
     <div class="col-md-5 content text-light text-center dark-border">
-      <app-stats [character]="character"></app-stats>
+      <app-stats [character]="character" [playing]="true" (newHealth)="setHealth($event)"></app-stats>
     </div>
   </div>
 

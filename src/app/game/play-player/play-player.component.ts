@@ -134,6 +134,11 @@ export class PlayPlayerComponent implements OnInit {
     if (rested) this._itemManager.triggerMessage("", "Rested", MessageType.Success);
   }
 
+  public setHealth(hp: number) {
+    this.character.hp = hp;
+    this.updateCharacter.emit(this.character);
+  }
+
   /**
    * Called when our play manager returns the level details of the current character
    * 

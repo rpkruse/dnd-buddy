@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { DndApiService } from '../../services/services';
 import { Character, ClassDetails, ClassLevels, SubRace, Trait } from '../../interfaces/interfaces';
-import { Subscription } from '../../../../node_modules/rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators/debounceTime';
 
 @Component({
   selector: 'app-stats',
@@ -12,6 +13,9 @@ import { Subscription } from '../../../../node_modules/rxjs';
 })
 export class StatsComponent implements OnInit {
   @Input() character: Character;
+  @Input() playing: boolean = false;
+
+  @Output() newHealth: EventEmitter<number> = new EventEmitter<number>();
 
   levelInfo: ClassLevels;
   lastCharID: number = -1;
@@ -19,6 +23,8 @@ export class StatsComponent implements OnInit {
   cd: ClassDetails;
   raceDetails: SubRace;
   trait: Trait;
+
+  healthChanged: Subject<number> = new Subject<number>();
 
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
   
@@ -46,6 +52,8 @@ export class StatsComponent implements OnInit {
         }
       }
     );
+
+    let j: Subscription = this.healthChanged.pipe(debounceTime(500)).subscribe(res => this.saveNewHP(res));
   }
 
   ngOnChanges() {
@@ -55,6 +63,20 @@ export class StatsComponent implements OnInit {
       this.lastCharID = this.character.characterId;
       this.getLevelDetails(this.cd);
     }
+  }
+
+  public setHPValue(val: number) {
+    let lastHp: number = this.character.hp;
+
+    this.character.hp += val;
+
+    if (this.character.hp > this.character.max_HP) this.character.hp = this.character.max_HP;
+    
+    if (lastHp != this.character.hp) this.healthChanged.next(this.character.hp);
+  }
+
+  private saveNewHP(hp: number) {
+    this.newHealth.emit(hp);
   }
 
   private getLevelDetails(cd: ClassDetails) {
