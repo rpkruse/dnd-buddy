@@ -23,7 +23,7 @@
       <div class="card w-100 bg-transparent">
         <div class="card-header text-center header">
           <span class="stat">
-            <strong>{{ this.selectedCharacter.name }}:</strong>
+            <strong placement="top" ngbTooltip="Change Name" (click)="editName(changeName)">{{ this.selectedCharacter.name }}:</strong>
             <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em>
           </span>
           <img class="icon icon-sm float-right" (click)="this.selectedCharacter = null" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
@@ -67,5 +67,24 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-danger col-2" (click)="d()">Cancel</button>
     <button type="button" class="btn btn-success col-2" (click)="c()">Confim</button>
+  </div>
+</ng-template>
+
+<ng-template #changeName let-c="close" let-d="dismiss">
+  <div class="modal-header header">
+    <h4 class="modal-title">Name Change</h4>
+  </div>
+
+  <div class="modal-body content">
+
+    <body class="bg-transparent text-light">Enter your new name:
+        <input [value]="characterRename" (input)="characterRename = $event.target.value" type="text" class="form-control col-12" placeholder="Character Name"
+        (ngEnter)="c($event)" autofocus="autofocus">
+    </body>
+  </div>
+
+  <div class="modal-footer content">
+    <button type="button" class="btn btn-secondary col-2" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-success col-2" (click)="c()" [disabled]="characterRename.length <=0 || characterRename === this.selectedCharacter.name">Save</button>
   </div>
 </ng-template>

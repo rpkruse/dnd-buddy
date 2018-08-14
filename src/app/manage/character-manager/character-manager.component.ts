@@ -38,6 +38,8 @@ export class CharacterManagerComponent implements OnInit {
   characters: Character[] = [];
   selectedCharacter: Character;
 
+  characterRename: string = "";
+
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
 
@@ -87,7 +89,29 @@ export class CharacterManagerComponent implements OnInit {
       err => console.log("unable to get race info"),
       () => j.unsubscribe()
     );
+  }
 
+  public editName(changeName: any) {
+    this._modalService.open(changeName).result.then((result) => { //On close via save
+      if (this.characterRename.length > 0) {
+        this.selectedCharacter.name = this.characterRename;
+        this.updateCharacter();
+        this.characterRename = "";
+      }
+    }, (reason) => { //on close via click off
+      this.characterRename = "";
+    });
+  }
+
+  public updateCharacter() {
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", this.selectedCharacter, this.selectedCharacter.characterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to update character name", MessageType.Failure),
+      () => {
+        s.unsubscribe();
+        this.triggerMessage("", "Name updated", MessageType.Success);
+      }
+    )
   }
   
   /**
