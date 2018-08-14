@@ -103,6 +103,12 @@ export class CharacterManagerComponent implements OnInit {
     });
   }
 
+  public clearCharacter() {
+    this.selectedCharacter = null;
+    this.raceDetail = null;
+    this.classDetail = null;
+  }
+
   public updateCharacter() {
     let s: Subscription = this._apiService.putEntity<Character>("Characters", this.selectedCharacter, this.selectedCharacter.characterId).subscribe(
       d => d = d,

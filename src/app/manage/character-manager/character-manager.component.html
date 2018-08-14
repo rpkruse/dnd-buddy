@@ -26,7 +26,7 @@
             <strong placement="top" ngbTooltip="Change Name" (click)="editName(changeName)">{{ this.selectedCharacter.name }}:</strong>
             <em> Level {{ this.selectedCharacter.level }}, {{ this.raceDetail.name }} {{ this.classDetail.name }}</em>
           </span>
-          <img class="icon icon-sm float-right" (click)="this.selectedCharacter = null" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
+          <img class="icon icon-sm float-right" (click)="clearCharacter()" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
         </div>
 
         <div class="card-body content text-light">
