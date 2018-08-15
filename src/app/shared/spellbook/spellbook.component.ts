@@ -3,7 +3,7 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 
 import { ApiService, DndApiService } from '../../services/services';
 
-import { ClassDetails, Spell, SpellDetails } from '../../interfaces/interfaces';
+import { SubClass, ClassDetails, Spell, SpellDetails, Character } from '../../interfaces/interfaces';
 import { Subscription } from '../../../../node_modules/rxjs';
 import { Results } from '../../interfaces/api/results';
 
@@ -36,6 +36,7 @@ export interface SimpleSpell {
 
 export class SpellbookComponent implements OnInit {
   @Input() cd: ClassDetails;
+  @Input() character: Character;
   @Input() simpleView: boolean;
 
   @HostListener('window:resize', ['$event'])
@@ -79,14 +80,46 @@ export class SpellbookComponent implements OnInit {
         err => console.log("Unable to get spells at", i, err),
         () => {
           this.spellBook.push(spell);
-
+          // console.log(spell);
           if (i === 9) {
             s.unsubscribe();
-            this.setSimpleSpellBook();
+            if (this.character.subclass) this.getSubClassSpells(); else this.setSimpleSpellBook();
           }
         }
       );
     }
+  }
+
+  public getSubClassSpells() {
+    let sc: SubClass;
+    let s: Subscription = this._dndApiService.getAllEntities<SubClass>("subclasses/" + this.character.subclass).subscribe(
+      d => sc = d,
+      err => console.log("unable to get subclass"),
+      () => {
+        s.unsubscribe();
+        this.setSubClassSpells(sc);
+      }
+    );
+  }
+
+  public setSubClassSpells(sc: SubClass) {
+    if (!sc) {
+      this.setSimpleSpellBook();
+      return;
+    }
+    
+    for(let i=0; i<sc.spells.length; i++) {
+      let level: number = sc.spells[i].level_acquired;
+
+      let r: Results = {
+        name: sc.spells[i].spell.name,
+        url: sc.spells[i].spell.url
+      };
+
+      this.spellBook[level-1].results.push(r);
+    }
+
+    this.setSimpleSpellBook();
   }
 
   private setSimpleSpellBook() {

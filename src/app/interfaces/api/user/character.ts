@@ -5,6 +5,7 @@ export interface Character {
     characterId: number,
     name: string,
     class: string, //Url
+    subclass: string, //name
     race: string, //Url
     abil_Score_Str: number,
     abil_Score_Dex: number,

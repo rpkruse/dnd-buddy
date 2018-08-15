@@ -153,6 +153,7 @@
                         <ul class="list-group w-100 static-size-list short">
                           <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
                             {{ subc.name }}
+                            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getSubclassDetails(subc.url, subclass)">Details</button>
                           </li>
                         </ul>
                       </div>
@@ -300,6 +301,21 @@
 
   <div class="header modal-footer">
     <button type="button" class="btn btn-sm btn-secondary" (click)="c()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #subclass let-c="close" let-d="dismiss">
+  <div class="modal-header text-center header">
+    <h4 class="modal-title text-center">{{ this.subClass.name }}</h4>
+  </div>
+
+  <div class="modal-body content text-light">
+    {{ this.subClass.desc }}
+  </div>
+
+  <div class="header modal-footer">
+    <button type="button" class="btn btn-sm btn-secondary" (click)="c()">Close</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="setSubClass(this.subClass.name); c();">{{this.subClass.name === this.character.subclass ? 'Deselect' : 'Select' }}</button>
   </div>
 </ng-template>
 

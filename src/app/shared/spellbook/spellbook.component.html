@@ -45,7 +45,9 @@
         <h5 class="card-title text-center">{{spellDetail.name}}</h5>
         <p>Cast Time: {{spellDetail.casting_time}}</p>
         <p>Requires Concentration: {{spellDetail.concentration}}</p>
-        <p>{{spellDetail.desc}}</p>
+        <!-- <p>{{spellDetail.desc}}</p> -->
+        <p *ngFor="let line of spellDetail.desc">{{line}}</p>
+
       </div>
     </div>
   </div>

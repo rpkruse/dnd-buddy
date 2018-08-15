@@ -9,7 +9,7 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 
 import { DndApiService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait } from '../../interfaces/interfaces';
+import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait, SubClass } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -38,6 +38,8 @@ export class CharacterRaceDetails implements OnInit {
   raceDetail: RaceDetails;
   raceDetailIndex: number = -1;
   subrace: SubRace;
+  subClass: SubClass;
+
 
   classes: Class = null;
   classDetail: ClassDetails;
@@ -128,7 +130,17 @@ export class CharacterRaceDetails implements OnInit {
       err => console.log("unable to get subrace", err),
       () => s.unsubscribe()
     );
+  }
 
+  public getSubclassDetails(url: string, subclass) {
+    let s: Subscription = this._dndApiService.getSingleEntity<SubClass>(url).subscribe(
+      d => this.subClass = d,
+      err => console.log("unable to load subclass", err),
+      () => {
+        s.unsubscribe();
+        this._modalService.open(subclass, { size: 'lg' });
+      }
+    );
   }
 
   public resetTabs() {

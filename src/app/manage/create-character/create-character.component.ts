@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { Class, ClassDetails, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP, Trait } from '../../interfaces/interfaces';
+import { Class, ClassDetails, SubClass, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP, Trait } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 
@@ -36,6 +36,7 @@ export class CreateCharacterComponent implements OnInit {
 
   character: Character;
   trait: Trait;
+  subClass: SubClass;
 
   games: Game[] = [];
 
@@ -101,6 +102,7 @@ export class CreateCharacterComponent implements OnInit {
       characterId: null,
       name: "",
       class: "",
+      subclass: null,
       race: "",
       abil_Score_Str: 0,
       abil_Score_Dex: 0,
@@ -219,6 +221,7 @@ export class CreateCharacterComponent implements OnInit {
     let c = {
       name: this.character.name,
       class: this.character.class,
+      subclass: this.character.subclass,
       race: this.character.race,
       abil_Score_Str: this.character.abil_Score_Str,
       abil_Score_Dex: this.character.abil_Score_Dex,
@@ -346,6 +349,21 @@ export class CreateCharacterComponent implements OnInit {
         this._modalService.open(content, { size: 'lg' });
       }
     );
+  }
+
+  public getSubclassDetails(url: string, subclass) {
+    let s: Subscription = this._dndApiService.getSingleEntity<SubClass>(url).subscribe(
+      d => this.subClass = d,
+      err => console.log("unable to load subclass", err),
+      () => {
+        s.unsubscribe();
+        this._modalService.open(subclass, { size: 'lg' });
+      }
+    );
+  }
+
+  public setSubClass(name: string) {
+    this.character.subclass = name === this.character.subclass ? null : name;
   }
 
   /**

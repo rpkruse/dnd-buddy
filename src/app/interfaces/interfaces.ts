@@ -8,6 +8,7 @@ import { User } from './api/user/user';
 import { Class } from './api/class/class';
 import { ClassDetails } from './api/class/classdetails';
 import { ClassLevels } from './api/class/classlevels';
+import { SubClass } from './api/class/subclass';
 import { XP } from './api/class/XP';
 
 import { Race } from './api/race/race';
@@ -52,6 +53,7 @@ export {
     Class,
     ClassDetails,
     ClassLevels,
+    SubClass,
     XP,
     Race,
     RaceDetails,

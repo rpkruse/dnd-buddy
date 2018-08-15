@@ -3,7 +3,7 @@ export interface SpellDetails {
     id: string,
     index: number,
     name: string,
-    desc: string,
+    desc: string[],
     higher_level?: string,
     page: string,
     range: string,
