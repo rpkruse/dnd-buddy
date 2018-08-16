@@ -2,14 +2,14 @@
   Written by: Ryan Kruse
   This component controls all of the actions for the DM (and view). It allows them to make rolls and give items to the players in the game
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import 'rxjs/add/operator/takeWhile';
 import { Subscription } from 'rxjs';
 
 import {
   User, Game, ItemMessageData, RollMessageData,
   Equipment, EquipmentCategory, EquipmentCategoryDetails,
-  MessageOutput, MessageType, OnlineUser, XP, Character
+  MessageOutput, MessageType, OnlineUser, XP, Character, Monster
 } from '../../interfaces/interfaces';
 
 import { PlayManager, DataShareService, MessageService, DndApiService, ApiService } from '../../services/services';
@@ -30,6 +30,8 @@ export class PlayDmComponent implements OnInit {
   equipmentTypes: EquipmentCategory;
   equipmentList: EquipmentCategoryDetails;
   equipmentItem: Equipment;
+
+  deadMonster: Monster;
 
   constructor(private _playManager: PlayManager, private _dataShareService: DataShareService, private _messageService: MessageService, 
               private _dndApiService: DndApiService, private _apiService: ApiService) { }
@@ -63,6 +65,9 @@ export class PlayDmComponent implements OnInit {
     this.triggerMessage("", "Item given!", MessageType.Success);
   }
 
+  public setDeadMonster(monster: Monster) {
+    this.deadMonster = monster;
+  }
   public giveXP(amount: number) {
     if (!amount || amount === 0) return;
 

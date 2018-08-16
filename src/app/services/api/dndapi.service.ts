@@ -22,6 +22,10 @@ export class DndApiService {
     return this._http.get(path) as Observable<T>;
   }
 
+  public getSingleEntityEndpoint<T>(endpoint: string): Observable<T> {
+    return this._http.get(environment.dnd_api + endpoint) as Observable<T>;
+  }
+
   public getLevelInfo(c: string, level: number): Observable<ClassLevels>{
     c = c.toLocaleLowerCase();
     return this._http.get(environment.dnd_api + "classes/" + c +"/level/" + level) as Observable<ClassLevels>

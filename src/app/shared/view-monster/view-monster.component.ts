@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
 import { Game, Monster, ApiMonster, MessageType, MessageOutput } from '../../interfaces/interfaces';
-
+import { debounceTime } from 'rxjs/operators/debounceTime';
 import { Subscription } from 'rxjs';
 
 export interface Ability {
@@ -29,6 +29,7 @@ export interface Action {
 export class ViewMonsterComponent implements OnInit {
 
   @Input() game: Game;
+  @Output() deadMonster: EventEmitter<Monster> = new EventEmitter<Monster>();
 
   monsters: Monster[] = [];
   monster: Monster;
@@ -46,14 +47,21 @@ export class ViewMonsterComponent implements OnInit {
   showMonsterList: boolean = true;
   simpleView: boolean = true;
 
+  healthChanged: EventEmitter<number> = new EventEmitter<number>();
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _modalService: NgbModal) { }
 
   ngOnInit() {
     this.loadMonsters();
+
+    let j: Subscription = this.healthChanged.pipe(debounceTime(500)).subscribe(res => this.saveNewHP(res));
   }
 
   addHP(val: number, addToTotal: boolean) {
     if (!this.changeHealthBy) this.changeHealthBy = 1;
+
+    let lastHp: number = this.monster.hp;
+    let lastMHp: number = this.monster.max_HP;
     
     try {
       this.changeHealthBy = parseInt(this.changeHealthBy);
@@ -73,6 +81,16 @@ export class ViewMonsterComponent implements OnInit {
       this.monster.hp += val;
       if (this.monster.hp > this.monster.max_HP) this.monster.max_HP = this.monster.hp;
     }
+
+    if (this.monster.hp !== lastHp || this.monster.max_HP !== lastMHp) this.healthChanged.emit(this.monster.hp);
+  }
+
+  private saveNewHP(hp: number) {
+    let s: Subscription = this._apiService.putEntity<Monster>("Monsters", this.monster, this.monster.monsterId).subscribe(
+      d => d = d,
+      err => this.triggerMessage("", "Unable to update monster health", MessageType.Failure),
+      () => s.unsubscribe()
+    );
   }
 
   selectMonster(monster: Monster, index: number) {
@@ -92,11 +110,12 @@ export class ViewMonsterComponent implements OnInit {
       () => {
         s.unsubscribe();
         this.monsters.splice(index, 1);
+        this.deadMonster.emit(this.monster);
         this.triggerMessage(this.monster.name, "was killed", MessageType.Success);
         this.monster = null;
         this.selectedIndex = -1;
       }
-    )
+    );
   }
 
   selectAction(index: number, content: any) {

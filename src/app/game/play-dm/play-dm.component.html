@@ -22,15 +22,14 @@
   <div class="row mt-5 justify-content-around" *ngIf="getOtherGroupMembers().length">
     <!-- Give XP -->
     <div class="col-md-3 content text-light mb-md-0 mb-5 dark-border">
-      <app-givexp (xpOutput)="giveXP($event)"></app-givexp>
+      <app-givexp [monster]="this.deadMonster" (xpOutput)="giveXP($event)"></app-givexp>
     </div>
 
     <!-- Create Monster -->
     <div class="col-md-7 content text-light dark-border">
-        <app-view-monster [game]="this.game"></app-view-monster>
+      <app-view-monster [game]="this.game" (deadMonster)="this.setDeadMonster($event)"></app-view-monster>
     </div>
   </div>
-
   <!-- <div class="row mt-5 justify-content-around">
     <div class="col-12 content text-light dark-border">
       <app-view-monster [game]="this.game"></app-view-monster>
