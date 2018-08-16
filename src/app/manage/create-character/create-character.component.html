@@ -1,13 +1,19 @@
 <div class="container" *ngIf="this.classes && this.classes.results && this.races && this.races.results && this.games">
   <div class="row mt-5">
     <div class="col-12 mx-auto">
+      <div class="row">
+        <div class="col-8 mx-auto text-center">
+          <img class="img-sm mt-3 mb-2 ml-1 mr-1" [src]="currentPage > page ? 'assets/icons/step_done.png' : 'assets/icons/step_not_done.png'"
+            *ngFor="let page of pages index as i" />
+        </div>
+      </div>
       <h4 class="text-center">{{ this.title }}</h4>
 
       <div class="row justify-content-between" *ngIf="currentPage <= maxPage">
-
         <button type="button" class="btn btn-danger" [disabled]="!canMoveBack()" (click)="changePage(-1)">Back</button>
         <button type="button" class="btn btn-success" [disabled]="!canMoveOn()" (click)="changePage(1)">{{ buttonText }}</button>
       </div>
+
       <div class="mt-3" [ngSwitch]="currentPage">
 
         <!-- Race/Subrace -->
@@ -15,7 +21,7 @@
           <div class="col-md-4">
             <!-- Race -->
             <div class="form-group row">
-              <label class="col-sm-4 col-form-lable">Race Type:</label>
+              <label class="col-md-4 col-form-lable">Race Type:</label>
               <select class="custom-select col-md-8" (change)="selectRace($event.target.value)">
                 <option selected>Choose</option>
                 <option *ngFor="let race of this.races.results index as i" [value]="race.url">{{ race.name }}</option>
@@ -203,15 +209,22 @@
 
           <div [class.panelHide]="!this.finishedRolling()" class="col-md-5 dark-border content text-center" *ngIf="this.finishedRolling()">
             <!-- Stats Set-->
+            <div class="row">
+              <div class="col-12 text-light">
+                <p>As a <strong>{{ selectedClass.name }}</strong> your two main stats are:
+                  <em>{{ selectedClass.saving_throws[0].name }}</em> and <em>{{ selectedClass.saving_throws[1].name }}</em>
+                </p>
+              </div>
+            </div>
             <div class="row mt-4 panel">
-              <div class="col-8 text-light">
+              <div class="col-6 text-light">
                 <p class="mt-2 mb-4" *ngFor="let stat of this.stats index as i">
                   {{ stat }} ({{ getStatString(i) }})
                 </p>
               </div>
 
 
-              <div class="col-4">
+              <div class="col-6">
                 <ul class="list-group list-group-flush">
                   <li class="box list-group-item" [ngClass]="this.boxIndex === i ? 'box-clicked' : 'box'" *ngFor="let roll of this.keptRolls index as i"
                     (click)="clickBox(i)">
@@ -219,7 +232,7 @@
                   </li>
                 </ul>
               </div>
-              <small class="text-light">*Click two stats to swap them!</small>
+              <small class="text-light">*Click any two stats to swap them!</small>
             </div>
           </div>
         </div>
@@ -274,7 +287,8 @@
           </div>
           <div class="col-sm-4">
             <p class="dark-border content text-light">
-              When rolling for health, you can either keep your health for half of your max roll, or you can roll up to two times.
+              When rolling for health, you can either keep your health for half of your max roll, or you can roll up to two times. Your
+              constitution modifier is added to each roll.
               <br>
               <br> When you roll for the second time, you must keep the second value, even if the value is less than your original
               roll.
@@ -286,6 +300,8 @@
         </div>
 
       </div>
+      <!-- ^^end of current page -->
+
     </div>
   </div>
 </div>

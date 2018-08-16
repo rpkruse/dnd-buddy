@@ -60,6 +60,7 @@ export class CreateCharacterComponent implements OnInit {
   public buttonText: string = "Next";
   public currentPage: number = 1;
   public maxPage: number = 5;
+  public pages: number[] = [1, 2, 3, 4, 5];
 
   choiceAmount: number = -1;
   profChoices: string[] = [];
@@ -189,6 +190,7 @@ export class CreateCharacterComponent implements OnInit {
         this.choiceAmount = this.selectedClass.proficiency_choices[0].choose;
         this.character.profs = "";
         this.profChoices = [];
+        console.log(this.selectedClass);
       }
     );
   }
@@ -514,7 +516,7 @@ export class CreateCharacterComponent implements OnInit {
 
         this.hp_rolls[0] = this.selectedClass.hit_die;
         this.hpRollCount[0] = 2;
-        this.buttonText = "Finalize Character";
+        this.buttonText = "Finish";
         break;
       case 6:
         this.title = "Creating Character..."

@@ -110,8 +110,9 @@ hr:before {
     border-radius: 20px; 
 }
 
-img{
-    width: 50px;
+.img-sm{
+    width: 16px;
+    height: 16px
 }
 
 .img-left{
