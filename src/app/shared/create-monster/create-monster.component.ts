@@ -144,6 +144,7 @@ export class CreateMonsterComponent implements OnInit {
         name: this.monsterInfo.name,
         max_HP: totalHP,
         hp: totalHP,
+        CR: this.monsterInfo.challenge_rating,
         url: this.monsterInfo.url
       };
 
