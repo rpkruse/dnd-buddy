@@ -29,6 +29,8 @@ export class CreateCharacterComponent implements OnInit {
   selectedSubRace: SubRace = null;
   selectedGame: Game = null;
 
+  private changedClass: boolean = false;
+
   level: number = 1;
 
   hp_rolls: number[] = [];
@@ -56,7 +58,7 @@ export class CreateCharacterComponent implements OnInit {
 
   boxIndex: number = -1;
 
-  public title: string = "Select Race"
+  public title: string = "Select Game, Name, and Level"
   public buttonText: string = "Next";
   public currentPage: number = 1;
   public maxPage: number = 5;
@@ -190,6 +192,7 @@ export class CreateCharacterComponent implements OnInit {
         this.choiceAmount = this.selectedClass.proficiency_choices[0].choose;
         this.character.profs = "";
         this.profChoices = [];
+        this.changedClass = true;
       }
     );
   }
@@ -481,40 +484,43 @@ export class CreateCharacterComponent implements OnInit {
 
     switch(this.currentPage) {
       case 1:
+        this.title = "Select Game, Name, and Level";
+        this.selectedGame = null;
+        break;
+      case 2:
         this.title = "Select Race";
         this.selectedSubRace = null;
         break;
-      case 2:
+      case 3:
         this.title = "Select Class";
         this.selectedClass = null;
         break;
-      case 3:
-        this.title = "Roll Stats";
-        break;
       case 4:
-        this.title = "Select Game and Level";
-        this.selectedGame = null;
-        this.character.name = "";
+        this.title = "Roll Stats";
         this.buttonText = "Next";
-        
+        break;
+      case 5:
+        if (this.changedClass) { //only allow re-rolls if the changed classes
+          this.hp_rolls = [];
+          this.hpRollCount = [];
+
+          for(let i=0; i<this.level; i++) {
+            this.hp_rolls.push(0);
+            this.hpRollCount.push(0);
+          }
+  
+          this.hp_rolls[0] = this.selectedClass.hit_die;
+          this.hpRollCount[0] = 2;
+        }
+
         if (!this.statsSet) {
           for (let i = 0; i < this.stats.length; i++) {
             this.setAttr(i);
           }
           this.statsSet = true;
         }
-        break;
-      case 5:
-        this.hp_rolls = [];
-        this.hpRollCount = [];
 
-        for(let i=0; i<this.level; i++) {
-          this.hp_rolls.push(0);
-          this.hpRollCount.push(0);
-        }
-
-        this.hp_rolls[0] = this.selectedClass.hit_die;
-        this.hpRollCount[0] = 2;
+        this.changedClass = false;
         this.buttonText = "Finish";
         break;
       case 6:
@@ -536,13 +542,13 @@ export class CreateCharacterComponent implements OnInit {
   public canMoveOn(): boolean {
     switch (this.currentPage) {
       case 1:
-        return this.selectedSubRace !== null;
-      case 2:
-        return this.selectedClass !== null && this.choiceAmount <= 0;
-      case 3:
-        return !this.rolls.some(x => x < 2);
-      case 4:
         return this.selectedGame !== null && this.character.name.length > 0;
+      case 2:
+        return this.selectedSubRace !== null;
+      case 3:
+        return this.selectedClass !== null && this.choiceAmount <= 0;
+      case 4:
+        return !this.rolls.some(x => x < 2);
       case 5:
         return !this.hpRollCount.some(x => x < 2);
       default:
