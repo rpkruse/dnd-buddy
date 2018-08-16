@@ -39,6 +39,7 @@ export class GameComponent implements OnInit {
 
   private user: User;
   games: Game[] = [];
+  dmGames: Game[] = [];
 
   creatingGame: boolean = false;
   gameName: string = "";
@@ -52,6 +53,8 @@ export class GameComponent implements OnInit {
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
 
+  viewingDMGames: boolean = false;
+
   gameNameChanged: Subject<string> = new Subject<string>();
 
   mouseOver: number = -1;
@@ -64,7 +67,10 @@ export class GameComponent implements OnInit {
     let s: Subscription = this._apiService.getAllEntities<Game>("Games/user/" + this.user.userId).subscribe(
       d => this.games = d,
       err => console.log("Unable to get games"),
-      () => s.unsubscribe()
+      () => {
+        s.unsubscribe();
+        this.filterGames();
+      }
     );
 
     let j: Subscription = this.gameNameChanged.pipe(debounceTime(500)).subscribe(res => this.validateGamename(res));
@@ -126,7 +132,7 @@ export class GameComponent implements OnInit {
       () => {
         s.unsubscribe();
         this.triggerMessage("", "Game Created!", MessageType.Success);
-        this.games.push(game);
+        this.dmGames.push(game);
         this.loadGame(game);
         this.gameName = "";
       }
@@ -157,7 +163,8 @@ export class GameComponent implements OnInit {
       err => this.triggerMessage("", "Unable to lock game", MessageType.Failure),
       () => {
         s.unsubscribe();
-        this.triggerMessage("", "Game locked", MessageType.Success);
+        let msg: string = this.selectedGame.open ? "Game unlocked" : "Game locked";
+        this.triggerMessage("", msg, MessageType.Success);
       }
     );
   }
@@ -199,7 +206,7 @@ export class GameComponent implements OnInit {
         this.triggerMessage("", "Game Deleted!", MessageType.Success);
 
         let index: number = this.games.findIndex(x => x.gameId === this.selectedGame.gameId);
-        this.games.splice(index, 1);
+        this.dmGames.splice(index, 1);
 
         this.selectedGame = null;
       }
@@ -250,7 +257,7 @@ export class GameComponent implements OnInit {
 
     let c: Character = this.selectedGame.character[index];
 
-    let s: Subscription =  this._apiService.deleteEntity("Characters", c.characterId).subscribe(
+    let s: Subscription = this._apiService.deleteEntity("Characters", c.characterId).subscribe(
       d => d = d,
       err => this.triggerMessage("", "Unable to remove character", MessageType.Failure),
       () => {
@@ -295,11 +302,12 @@ export class GameComponent implements OnInit {
   }
 
   public typeGameName(name: string) {
-    if (!name.length) return;
+    // if (!name.length) return;
 
     this.gameName = name;
     this.gameNameChanged.next(this.gameName);
   }
+
 
   public openModal(content) {
     this._modalService.open(content).result.then((result) => { //On close via save
@@ -312,6 +320,11 @@ export class GameComponent implements OnInit {
   public clearCharacterDetails() {
     this.classDetail = null;
     this.raceDetail = null;
+  }
+
+  private filterGames() {
+    this.dmGames = this.games.filter(x => x.userId === this.user.userId);
+    this.games = this.games.filter(x => x.userId !== this.user.userId);
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {

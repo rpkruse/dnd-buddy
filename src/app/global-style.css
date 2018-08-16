@@ -158,3 +158,62 @@ img#playlist-img{
 .icon-lrg{
     width: 35px;
 }
+
+@keyframes slidein {
+    from {
+        opacity: 0;
+        margin-left: 150%;
+        width: 150%; 
+    }
+  
+    to {
+        opacity: 1;
+        margin-left: 0%;
+        width: 100%;
+    }
+}
+
+@keyframes slidein-left {
+    from {
+        opacity: 0;
+        margin-left: -150%;
+        width: 150%; 
+    }
+  
+    to {
+        opacity: 1;
+        margin-left: 0%;
+        width: 100%;
+    }
+}
+
+@keyframes slideout {
+    from {
+        display: block;
+        opacity: 1;
+        width: 100%;
+    }
+  
+    to {
+        display: none;
+        opacity: 0;
+        width: 0%;
+    }
+}
+
+.panel {
+    animation-fill-mode: forwards;
+    animation-name: slidein;
+    animation-duration: 0.45s;
+}
+
+.panel-left {
+    animation-fill-mode: forwards;
+    animation-name: slidein-left;
+    animation-duration: 0.45s;
+}
+
+.panel.panelHide {
+    animation-name: slideout;
+    animation-duration: 1.5s;
+}

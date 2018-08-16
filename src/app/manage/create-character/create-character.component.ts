@@ -190,7 +190,6 @@ export class CreateCharacterComponent implements OnInit {
         this.choiceAmount = this.selectedClass.proficiency_choices[0].choose;
         this.character.profs = "";
         this.profChoices = [];
-        console.log(this.selectedClass);
       }
     );
   }

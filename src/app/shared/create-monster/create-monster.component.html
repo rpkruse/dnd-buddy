@@ -36,7 +36,8 @@
           <div class="row mb-3 mb-lg-0 d-lg-none text-center">
             <div class="col">
               <ul class="list-group static-size-list short" *ngIf="this.matchingMonsters && this.show">
-                <li class="list-group-item content text-light selectable-item" (click)="getMonsterApiInfo(monster.url); this.show = false" *ngFor="let monster of this.matchingMonsters index as i">
+                <li class="list-group-item content text-light selectable-item" (click)="getMonsterApiInfo(monster.url); this.show = false"
+                  *ngFor="let monster of this.matchingMonsters index as i">
                   {{ monster.name }}
                 </li>
               </ul>
@@ -198,8 +199,10 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header header">
-    <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
-    <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+    <div class="col text-center">
+      <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
+      <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content">

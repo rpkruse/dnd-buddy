@@ -53,7 +53,9 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header text-center header">
-    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content text-light">

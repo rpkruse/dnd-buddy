@@ -31,10 +31,10 @@
       <div class="col-md-12 no-padding">
         <h4 class="text-center">
           Spell Info
-          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right" ngbTooltip="Hide"
-            (click)="show = !show" *ngIf="show" />
-          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right" ngbTooltip="Show"
-            (click)="show = !show" *ngIf="!show" />
+          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+            ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
+          <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+            ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
         </h4>
         <hr class="stat mt-0">
 
@@ -59,7 +59,7 @@
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
 
-    <div class="text-left">
+    <div class="col text-center">
       <h5 class="modal-title">
         {{this.classDetail.name}} Spell Book
       </h5>

@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div [class.panelHide]="!this.selectedSubRace" class="col-md-7 text-light dark-border content" *ngIf="this.selectedSubRace">
+          <div [class.panelHide]="!this.selectedSubRace" class="col-md-7 text-light dark-border content panel-left" *ngIf="this.selectedSubRace">
             <div class="col-12">
               <h4>{{ this.selectedSubRace.name }}</h4>
               <hr class="stat mt-0" />
@@ -211,8 +211,10 @@
             <!-- Stats Set-->
             <div class="row">
               <div class="col-12 text-light">
-                <p>As a <strong>{{ selectedClass.name }}</strong> your two main stats are:
-                  <em>{{ selectedClass.saving_throws[0].name }}</em> and <em>{{ selectedClass.saving_throws[1].name }}</em>
+                <p>As a
+                  <strong>{{ selectedClass.name }}</strong> your two main stats are:
+                  <em>{{ selectedClass.saving_throws[0].name }}</em> and
+                  <em>{{ selectedClass.saving_throws[1].name }}</em>
                 </p>
               </div>
             </div>
@@ -307,8 +309,10 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header text-center header">
-    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content text-light">
@@ -321,8 +325,10 @@
 </ng-template>
 
 <ng-template #subclass let-c="close" let-d="dismiss">
-  <div class="modal-header text-center header">
-    <h4 class="modal-title text-center">{{ this.subClass.name }}</h4>
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.subClass.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content text-light">

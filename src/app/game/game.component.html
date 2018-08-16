@@ -1,20 +1,57 @@
 <div class="container">
-  <div class="row">
+  <div class="row justify-content-between">
 
-    <!-- Viewing a game -->
-    <div class="col-md-4 mt-5">
-      <h2 class="header mb-0">Current Games</h2>
-      <ul class="list-group list-group-flush static-size-list half-height">
-        <li class="list-group-item text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
-          {{ i+1 }}. {{ game.name }}
-        </li>
-      </ul>
-      <div class="fillSpace fillColor">
-        <button type="button" class="btn btn-secondary float-right" (click)="createGame()">New Game</button>
+    <!-- Games Tabs -->
+    <div class="tab col-lg-5 text-center mt-5">
+      <div class="row">
+        <div class="col-6 tabButton" [class.active]="this.viewingDMGames" (click)="this.viewingDMGames = false">Characters Games</div>
+        <div class="col-6 tabButton" [class.active]="!this.viewingDMGames" (click)="this.viewingDMGames = true">DM Games</div>
+      </div>
+
+      <div class="row mt-0">
+        <div class="col-12 no-padding" *ngIf="!this.viewingDMGames">
+          <!-- Large list on lg+ -->
+          <ul class="list-group list-group-flush static-size-list half-height d-none d-lg-block">
+            <li class="list-group-item text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
+              {{ i+1 }}. {{ game.name }}
+            </li>
+          </ul>
+
+          <!-- Short list on md- -->
+          <ul class="list-group list-group-flush static-size-list short d-lg-none">
+            <li class="list-group-item text-light content game" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
+              {{ i+1 }}. {{ game.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row mt-0">
+        <div class="col-12 no-padding" *ngIf="this.viewingDMGames">
+          <!-- Large list on lg+ -->
+          <ul class="list-group list-group-flush static-size-list half-height d-none d-lg-block">
+            <li class="list-group-item text-light content game" *ngFor="let game of this.dmGames index as i" (click)="loadGame(game)">
+              {{ i+1 }}. {{ game.name }}
+            </li>
+          </ul>
+
+          <!-- Short list on md- -->
+          <ul class="list-group list-group-flush static-size-listshort d-lg-none">
+            <li class="list-group-item text-light content game" *ngFor="let game of this.dmGames index as i" (click)="loadGame(game)">
+              {{ i+1 }}. {{ game.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row fillSpace fillColor">
+        <div class="col-12 no-padding">
+          <button type="button" class="btn btn-s btn-h float-right" (click)="createGame()">New Game</button>
+        </div>
       </div>
     </div>
 
-    <div class="col mt-5">
+    <div class="col-lg-5 mt-5">
       <!-- Creating a new game -->
       <div *ngIf="this.creatingGame">
         <form>
@@ -33,96 +70,114 @@
       </div>
 
       <!-- Viewing a game -->
-      <div class="col-md-8" *ngIf="this.selectedGame">
-        <div class="header text-light text-center">
-          <h2 class="mb-0 d-inline">
-            {{ this.selectedGame.name }}
-            <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="left" ngbTooltip="Delete Game"
-              src="assets/icons/white_delete_icon.png" *ngIf="isGameOwner()">
-          </h2>
-          <div class="d-inline" *ngIf="isGameOwner()">
-            <input type="checkbox" [checked]="!this.selectedGame.open" (change)="toggleGame()">{{ this.selectedGame.open ? "Lock Game" : "Unlock Game" }}
+      <div [class.panelHide]="!this.selectedGame" class="col-12 panel dark-border content" *ngIf="this.selectedGame">
+        <div class="row">
+          <div class="col-12 text-light text-center">
+            <h2 class="mb-0 d-inline">
+              {{ this.selectedGame.name }}
+              <img class="icon icon-sm-med float-right" (click)="confirmDeleteGame(confirm)" placement="left" ngbTooltip="Delete Game"
+                src="assets/icons/white_delete_icon.png" *ngIf="isGameOwner()">
+            </h2>
+            <div class="d-inline" *ngIf="isGameOwner()">
+              <input type="checkbox" [checked]="!this.selectedGame.open" (change)="toggleGame()">{{ this.selectedGame.open ? "Lock Game" : "Unlock Game" }}
+            </div>
+            <hr class="stat mt-0" />
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <ul class="list-group list-group-flush static-size-list half-height">
+              <li [class.panelHide]="this.deleteClickIndex === i" class="list-group-item content text-light game panel-list" *ngFor="let character of this.selectedGame.character index as i"
+                (click)="loadCharacterDetails(i, content)" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1">
+                {{ character.name }}
+                <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm btn-secondary float-right"
+                  (click)="confirmRemoveCharacter(confirmCharacter, $event, character, i)" *ngIf="isGameOwner()">Remove</button>
+              </li>
+              <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
+            </ul>
+            <img class="icon icon-sm-med float-right mt-3" src="assets/icons/enter_icon_white.png" placement="left" ngbTooltip="Enter"
+              (click)="joinGame()" *ngIf="this.selectedGame.character.length" />
           </div>
         </div>
-        <ul class="list-group list-group-flush static-size-list half-height">
-          <li [class.panelHide]="this.deleteClickIndex === i" class="list-group-item content text-light game panel" *ngFor="let character of this.selectedGame.character index as i"
-            (click)="loadCharacterDetails(i, content)" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1">
-            {{ character.name }}
-            <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm btn-secondary float-right"
-              (click)="confirmRemoveCharacter(confirmCharacter, $event, character, i)" *ngIf="isGameOwner()">Remove</button>
-          </li>
-          <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try adding one!</li>
-        </ul>
-        <div class="fillSpace fillColor">
-          <button type="button" class="btn btn-s float-right" (click)="joinGame()" *ngIf="this.selectedGame.character.length">Join Game</button>
-        </div>
+
       </div>
+
+
     </div>
 
   </div>
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h5 class="modal-title">{{ this.characterDetail.name }}</h5>
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.characterDetail.name }}</h4>
+    </div>
   </div>
 
-  <div class="modal-body">
+  <div class="modal-body content">
     <div *ngIf="this.classDetail">
 
-      <body>Class: {{this.classDetail.name}}</body>
+      <body class="text-light bg-transparent text-center">Class: {{this.classDetail.name}}</body>
     </div>
     <div *ngIf="this.raceDetail">
 
-      <body>Race: {{this.raceDetail.name}}</body>
+      <body class="text-light bg-transparent text-center">Race: {{this.raceDetail.name}}</body>
     </div>
 
-    <body>Level: {{this.characterDetail.level}}</body>
+    <body class="text-light bg-transparent text-center">Level: {{this.characterDetail.level}}</body>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-success" (click)="c()">Close</button>
   </div>
 </ng-template>
 
 <ng-template #confirm let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Confirmation</h4>
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title">Confirmation</h4>
+    </div>
   </div>
 
-  <div class="modal-body">
+  <div class="modal-body content">
 
-    <body>Are you sure you want to the game delete:
+    <body class="text-light bg-transparent">Are you sure you want to the game delete:
       <b>{{ this.selectedGame.name }}?</b>
       <br>
     </body>
 
-    <body class="text-muted">This will also delete
-      <b>all</b> characters in the game and cannot be undone!</body>
+    <small class="text-light bg-transparent">*This will also delete
+      <b>all</b> characters in the game and cannot be undone!</small>
 
   </div>
 
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-danger" (click)="d()">Cancel</button>
     <button type="button" class="btn btn-success" (click)="c()">Confim</button>
   </div>
 </ng-template>
 
 <ng-template #confirmCharacter let-c="close" let-d="dismiss">
-    <div class="modal-header header">
+  <div class="modal-header header">
+    <div class="col text-center">
       <h4 class="modal-title">Confirmation</h4>
     </div>
-  
-    <div class="modal-body content">
-  
-      <body class="bg-transparent text-light">Are you sure you want to remove:
-        <strong>{{ this.selectedCharacter.name }}?</strong>
-      </body>
-  
-      <small class="bg-transparent text-light">*This action will <strong>DELETE</strong> this character and cannot be undone</small>
-    </div>
-  
-    <div class="modal-footer content">
-      <button type="button" class="btn btn-sm btn-danger" (click)="d()">Cancel</button>
-      <button type="button" class="btn btn-sm btn-success" (click)="c()">Confim</button>
-    </div>
-  </ng-template>
+  </div>
+
+  <div class="modal-body content">
+
+    <body class="bg-transparent text-light">Are you sure you want to remove:
+      <strong>{{ this.selectedCharacter.name }}?</strong>
+    </body>
+
+    <small class="bg-transparent text-light">*This action will
+      <strong>DELETE</strong> this character and cannot be undone</small>
+  </div>
+
+  <div class="modal-footer content">
+    <button type="button" class="btn btn-sm btn-danger" (click)="d()">Cancel</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="c()">Confim</button>
+  </div>
+</ng-template>

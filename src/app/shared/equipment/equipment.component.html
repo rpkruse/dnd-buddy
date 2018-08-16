@@ -79,7 +79,9 @@
 
 <ng-template #ringModal let-c="close" let-d="dismiss">
   <div class="modal-header header">
-    <h4 class="modal-title text-center">{{ this.selectedRing.name }}</h4>
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.selectedRing.name }}</h4>
+    </div>
   </div>
   <div class="modal-body content">
     <div class="bg-transparent text-light">
@@ -101,15 +103,17 @@
 
 <ng-template #ringEquipModal let-c="close" let-d="dismiss">
   <div class="modal-header header">
-    <h4 class="modal-title text-center">Swap With</h4>
+    <div class="col text-center">
+      <h4 class="modal-title text-center">Swap With</h4>
+    </div>
   </div>
   <div class="modal-body content">
     <div class="bg-transparent text-light">
-    <select class="custom-select col-sm-5" (change)="selectRingSlot($event.target.value)">
-      <option selected>Choose</option>
-      <option [value]="1">{{ this.ring_1.name }}</option>
-      <option [value]="2">{{ this.ring_2.name }}</option>
-    </select>
+      <select class="custom-select col-sm-5" (change)="selectRingSlot($event.target.value)">
+        <option selected>Choose</option>
+        <option [value]="1">{{ this.ring_1.name }}</option>
+        <option [value]="2">{{ this.ring_2.name }}</option>
+      </select>
     </div>
   </div>
   <div class="modal-footer content">

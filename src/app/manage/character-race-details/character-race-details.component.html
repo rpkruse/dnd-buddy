@@ -112,7 +112,7 @@
               <!-- <button type="button" class="btn btn-secondary btn-sm float-right" (click)="this.classDetail = null">Clear</button> -->
               <img class="icon icon-sm float-left" (click)="this.classDetail = null" placement="left" ngbTooltip="Close" src="assets/icons/x_icon.png">
             </h4>
-            <hr class="stat mt-0"/>
+            <hr class="stat mt-0" />
           </div>
           <div class="col-12">
             <p class="text-center">
@@ -174,7 +174,9 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header text-center header">
-    <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.trait.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content">
@@ -187,8 +189,10 @@
 </ng-template>
 
 <ng-template #subclass let-c="close" let-d="dismiss">
-  <div class="modal-header text-center header">
-    <h4 class="modal-title text-center">{{ this.subClass.name }}</h4>
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title">{{ this.subClass.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content text-light">

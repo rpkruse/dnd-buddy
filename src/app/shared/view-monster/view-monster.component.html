@@ -23,14 +23,16 @@
 
         <!-- Show long list on lg+ -->
         <ul class="list-group static-size-list half-height mb-3 mb-lg-0 d-none d-lg-block" *ngIf="this.monsters && this.showMonsterList">
-          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i)" *ngFor="let monster of this.monsters index as i">
+          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i)"
+            *ngFor="let monster of this.monsters index as i">
             {{ monster.name }}
           </li>
         </ul>
 
         <!-- Show short list on md -->
         <ul class="list-group static-size-list short mb-3 mb-lg-0 d-lg-none" *ngIf="this.monsters && this.showMonsterList">
-          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i); this.showMonsterList = false" *ngFor="let monster of this.monsters index as i">
+          <li class="list-group-item content selectable-item" [ngClass]="selectedIndex === i ? 'selected-item': ''" (click)="selectMonster(monster, i); this.showMonsterList = false"
+            *ngFor="let monster of this.monsters index as i">
             {{ monster.name }}
           </li>
         </ul>
@@ -49,7 +51,8 @@
         <div class="col-12" *ngIf="!simpleView">
           <p>
             <strong>Current HP:</strong> {{ this.monster.hp}}
-            <input type="input" class="d-inline" style="width: 50px;" [value]="changeHealthBy" (input)="changeHealthBy = $event.target.value" placeholder="Amount"/>
+            <input type="input" class="d-inline" style="width: 50px;" [value]="changeHealthBy" (input)="changeHealthBy = $event.target.value"
+              placeholder="Amount" />
 
             <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="addHP(-1, false)">-</button>
             <button type="button" class="btn btn-s btn-h btn-sm d-inline ml-1" (click)="addHP(1, false)">+</button>
@@ -173,8 +176,10 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header header">
-    <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
-    <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+    <div class="col text-center">
+      <h4 class="modal-title" *ngIf="selectedAbility">{{ selectedAbility.name }}</h4>
+      <h4 class="modal-title" *ngIf="selectedAction">{{ selectedAction.name }}</h4>
+    </div>
   </div>
 
   <div class="modal-body content">
