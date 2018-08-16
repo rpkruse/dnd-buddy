@@ -4,43 +4,42 @@
   <div class="row">
     <div class="col-md-6 mt-3">
       <!-- Tab links -->
-      <div class="header tab">
-        <button class="fas fa-angle-left tablinks" *ngIf="this.subMenuActive" (click)="this.subMenuActive = false;"></button>
-        <button class="float-right tablinks" [class.active]="!this.raceTabActive" (click)="openTab('classes')">Classes</button>
-        <button class="float-right tablinks" [class.active]="this.raceTabActive" (click)="openTab('races')">Races</button>
-      </div>
-      <!-- Tab content -->
-      <!-- Races -->
-      <div id="raceTab" [class.hide]="!this.raceTabActive" style="background: rgb(155, 153, 153)">
-        <div id="Races" [class.panelHide]="this.subMenuActive" class="panel tabcontent" *ngIf="!subMenuActive">
-          <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.races.count">
-            <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.races.results index as i"
-              (click)="changeSubRace(this.mouseOverRace + 1);this.subMenuActive = !this.subMenuActive;"> {{ subR.name }}
-              <i class="float-right fas fa-angle-right"></i>
-            </li>
-          </ul>
+      <div class="tab col-12 text-center">
+        <div class="row">
+          <div class="col-6 tabButton" [class.active]="!this.raceTabActive" (click)="openTab('classes')">Classes</div>
+          <div class="col-6 tabButton" [class.active]="this.raceTabActive" (click)="openTab('races')">Races</div>
         </div>
 
-        <div [class.hide]="!this.subMenuActive" id="subraces" *ngIf="subMenuActive">
-          <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.raceDetail">
-            <li class="list-group-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.raceDetail.subraces index as i">
-              {{ subR.name }}
-              <button [@showState]="this.mouseOverRace === i ? 'show' : 'hide'" type="button" class="btn btn-secondary btn-sm float-right"
-                (click)="getSubrace(subR.url)">Details</button>
-            </li>
-          </ul>
+        <!-- Tab info -->
+        <div class="row mt-0">
+          <!-- Classes -->
+          <div class="col-12 no-padding panel" [class.hide]="this.raceTabActive" *ngIf="!this.raceTabActive">
+            <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.classes.count">
+              <li class="list-group-item selectable-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" *ngFor="let class of this.classes.results index as i"
+                (click)="getClassDetails(class.url)"> {{ class.name }}
+                <i class="float-right fas fa-angle-right"></i>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Races -->
+          <div class="col-12 no-padding no-padding panel" [class.hide]="!this.raceTabActive" *ngIf="this.raceTabActive">
+            <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.races.count && !subMenuActive">
+              <li class="list-group-item selectable-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" *ngFor="let subR of this.races.results index as i"
+                (click)="changeSubRace(this.mouseOverRace + 1);this.subMenuActive = !this.subMenuActive;"> {{ subR.name }}
+                <i class="float-right fas fa-angle-right"></i>
+              </li>
+            </ul>
+
+            <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.raceDetail && subMenuActive">
+              <li class="list-group-item selectable-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" (click)="getSubrace(subR.url)"
+                *ngFor="let subR of this.raceDetail.subraces index as i">
+                {{ subR.name }}
+                <i class="float-right fas fa-angle-right"></i>
+              </li>
+            </ul>
+          </div>
         </div>
-
-      </div>
-
-      <!-- Classes -->
-      <div id="classTab" [class.hide]="this.raceTabActive" class="panel tabcontent">
-        <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.classes.count">
-          <li class="list-group-item" (mouseover)="this.mouseOverClass = i" (mouseout)="this.mouseOverClass = -1" *ngFor="let class of this.classes.results index as i"
-            (click)="getClassDetails(class.url)"> {{ class.name }}
-            <i class="float-right fas fa-angle-right"></i>
-          </li>
-        </ul>
       </div>
     </div>
     <!-- ^^End of race/class tabs -->

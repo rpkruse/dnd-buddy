@@ -53,7 +53,7 @@ export class CharacterRaceDetails implements OnInit {
   mouseOverRace: number = -1;
   mouseOverTrait: number = -1;
   subMenuActive: boolean = false;
-  raceTabActive: boolean = true;
+  raceTabActive: boolean = false;
   languageListActive: boolean = false;
   traitsListActive: boolean = false;
   proficiencyChoiceListActive: boolean = false;
