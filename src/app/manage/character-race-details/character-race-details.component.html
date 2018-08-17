@@ -35,7 +35,6 @@
               <li class="list-group-item selectable-item" (mouseover)="this.mouseOverRace = i" (mouseout)="this.mouseOverRace = -1" (click)="getSubrace(subR.url)"
                 *ngFor="let subR of this.raceDetail.subraces index as i">
                 {{ subR.name }}
-                <i class="float-right fas fa-angle-right"></i>
               </li>
             </ul>
           </div>

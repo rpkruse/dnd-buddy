@@ -47,6 +47,23 @@
       <div *ngIf="!this.ring_2">
         <p class="">Ring 2: None</p>
       </div>
+      <div *ngIf="this.money.length">
+
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text stat content">G:</span>
+          </div>
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[0]" (input)="setMoneyValue($event.target.value, 0)" placeholder="Gold" />
+          <div class="input-group-prepend">
+            <span class="input-group-text silver content">S:</span>
+          </div>
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[1]" (input)="setMoneyValue($event.target.value, 1)"placeholder="Silver" />
+          <div class="input-group-prepend">
+            <span class="input-group-text copper content">C:</span>
+          </div>
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[2]" (input)="setMoneyValue($event.target.value, 2)"placeholder="Copper" />
+        </div>
+      </div>
     </div>
   </div>
   <div class="row" *ngIf="show">

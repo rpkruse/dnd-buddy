@@ -24,6 +24,7 @@ export interface Character {
     ring_1: string,
     ring_2: string,
     xp: number,
+    gp: number,
     userId: number,
     gameId: number,
     user: User,

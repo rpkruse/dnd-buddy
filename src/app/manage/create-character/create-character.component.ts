@@ -124,6 +124,7 @@ export class CreateCharacterComponent implements OnInit {
       ring_1: null,
       ring_2: null,
       xp: 0,
+      gp: 0,
       userId: this.user.userId || null,
       gameId: null,
       user: this.user,
@@ -238,6 +239,7 @@ export class CreateCharacterComponent implements OnInit {
       profs: this.character.profs, //make this getProfs()
       level: this.level,
       xp: 0,
+      gp: 0,
       userId: this.character.user.userId,
       gameId: this.character.gameId,
     }

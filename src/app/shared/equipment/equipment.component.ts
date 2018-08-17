@@ -4,8 +4,9 @@ import { trigger, state, animate, transition, style } from '@angular/animations'
 
 import { ApiService, DndApiService, ItemManager } from '../../services/services';
 
-import { Character, Equipment, Item, ItemType } from '../../interfaces/interfaces';
-import { Subscription } from '../../../../node_modules/rxjs';
+import { Character, Equipment, Item, ItemType, MessageType } from '../../interfaces/interfaces';
+import { debounceTime } from 'rxjs/operators/debounceTime';
+import { Subscription, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-equipment',
@@ -46,14 +47,19 @@ export class EquipmentComponent implements OnInit {
   selectedRing: Equipment;
   slotSwapIndex: number = 0;
 
+  money: number[] = [];
+
   lastCharID: number = -1;
 
   bagVisible: boolean = false;
-  
+
   mouseOver: number = -1;
 
   show: boolean = true;
-  
+
+  moneyChanged: Subject<number[]> = new Subject<number[]>();
+  saveMoney: Subject<number> = new Subject<number>();
+
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
@@ -61,6 +67,9 @@ export class EquipmentComponent implements OnInit {
 
     this._itemManager.itemSubj.takeWhile(() => this.isAlive).subscribe(res => this.items = res);
     this._itemManager.newItem.takeWhile(() => this.isAlive).subscribe(res => this.getItems(res));
+
+    let j: Subscription = this.moneyChanged.pipe(debounceTime(250)).subscribe(res => this.updateMoney(res));
+    let k: Subscription = this.saveMoney.pipe(debounceTime(2000)).subscribe(res => this.saveMoneyToDB(res));
   }
 
   ngOnChanges() {
@@ -70,7 +79,79 @@ export class EquipmentComponent implements OnInit {
       this.lastCharID = this.character.characterId;
       this.resetValues();
       this.loadAllItems();
+      this.setMoneyArray();
     }
+  }
+
+  private setMoneyArray() {
+    let money: number[] = [0, 0, 0]; //GP, SP, CP (500, 55, 50)
+    let left: number = 0;
+
+    //Get Gold:
+    money[0] = Math.floor(this.character.gp);
+    left = (this.character.gp - Math.floor(this.character.gp)) * 100;
+
+    //Get Silver:
+    money[1] = Math.floor(left);
+    left = Math.floor((left - money[1]) * 100);
+
+    //Get Copper:
+    money[2] = left;
+
+    this.money = money;
+  }
+
+  public setMoneyValue(val: string, index: number) {
+    let amount: number;
+    if (!val) {
+      amount = 0;
+    } else {
+      amount = parseInt(val);
+      if (amount === NaN || !amount) amount = 0;
+    }
+
+    if (this.money[index] === amount) return;
+
+    let inputs: number[] = [amount, index];
+    this.moneyChanged.next(inputs);
+  }
+
+  private updateMoney(inputs: number[]) {
+    let total, gp, sp, cp, amount, index: number;
+    amount = inputs[0];
+    index = inputs[1];
+
+    if (index > 0) { //Silver or Copper
+      if (amount >= 100) {
+        this.money[index - 1] += Math.floor(amount / 100);
+
+        if (index > 1 && this.money[1] >= 100) {
+          this.money[0] += Math.floor(this.money[1] / 100);
+          this.money[1] %= 100;
+        }
+
+        amount = amount % 100;
+      }
+    }
+
+    this.money[index] = amount;
+
+    gp = this.money[0];
+    sp = this.money[1] / 100;
+    cp = this.money[2] / 10000;
+    total = gp + sp + cp;
+
+    this.character.gp = total;
+
+    this.saveMoney.next(this.character.gp);
+  }
+
+  private saveMoneyToDB(val: number) {
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
+      d => d = d,
+      err => this._itemManager.triggerMessage("", "Unable to update money", MessageType.Failure),
+      () => { s.unsubscribe(); this._itemManager.triggerMessage("", "Money updated", MessageType.Success);}
+    );
   }
 
   /**
@@ -99,7 +180,6 @@ export class EquipmentComponent implements OnInit {
    * @param ringEquipModal Modal
    */
   public getItemToEquip(item: Item, ringEquipModal) {
-    // console.log(item);
     let eq: Equipment;
     let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(item.url).subscribe(
       d => eq = d,

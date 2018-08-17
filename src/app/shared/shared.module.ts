@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -20,7 +21,8 @@ import { ViewMonsterComponent } from './view-monster/view-monster.component';
   imports: [
     CommonModule,
     RouterModule,
-    NgbModule
+    NgbModule,
+    FormsModule
   ],
   declarations: [
     SnackbarComponent,
