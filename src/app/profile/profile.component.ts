@@ -60,7 +60,7 @@ export class ProfileComponent implements OnInit {
       () =>{
         s.unsubscribe();
         this.triggerMessage("", "Profile deleted", MessageType.Success);
-        this._storage.setValue("loggedIn", false);
+        this._storage.clearAll();
         this._dataShareService.changeUser(null);
         this._router.navigate(['login']);
       }
