@@ -1,15 +1,23 @@
 <div class="container">
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <h1 class="d-inline title align-middle">D</h1>
+      <img class="d-inline mr-1 ml-1" src="assets/icons/d20.png" />
+      <h1 class="d-inline title title-red align-middle">B</h1>
+    </div>
+    <div class="col-12 text-center">
+      <small class="text-light">A web application for playing D&D online with friends!</small>
+    </div>
+  </div>
   <div class="row justify-content-between mt-5">
 
     <!-- Games -->
     <div class="col-lg-5 shadowblock mb-lg-0 mb-5 dark-border">
       <h2>Games</h2>
       <hr class="stat mt-0" />
-      <span class="description">
-        <p>
-          Create a new game as a DM or join a game as a player.
-        </p>
-      </span>
+      <p class="text-light">
+        Create a new game as a DM or join a game as a player.
+      </p>
       <div class="row justify-content-center">
         <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(0)">Join Game</button>
       </div>
@@ -19,11 +27,9 @@
     <div class="col-lg-5 shadowblock dark-border">
       <h2>Characters</h2>
       <hr class="stat mt-0" />
-      <span class="description">
-        <p>
-          Create a new character, manage current characters, or view class/race info.
-        </p>
-      </span>
+      <p class="text-light">
+        Create a new character, manage current characters, or view class/race info.
+      </p>
 
       <div class="row justify-content-around">
         <button type="button" class="btn btn-s btn-sm" (click)="moveToPage(3)">Create Character</button>

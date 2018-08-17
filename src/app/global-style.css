@@ -82,7 +82,7 @@ html {overflow: -moz-scrollbars-none;}
     background: rgba(0, 0, 0, 0.50);
 }
 
-h1, h2, h4 {
+h1:not(.title), h2, h4 {
     text-align: center;
     color: #ffd553; /* gold */
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
