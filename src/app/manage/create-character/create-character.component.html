@@ -3,7 +3,7 @@
     <div class="col-12 mx-auto">
       <div class="row">
         <div class="col-8 mx-auto text-center">
-          <img class="img-sm mt-3 mb-2 ml-1 mr-1" [src]="currentPage > page ? 'assets/icons/step_done.png' : 'assets/icons/step_not_done.png'"
+          <img class="img-sm mt-3 mb-2 ml-1 mr-1" [src]="currentPage >= page ? 'assets/icons/step_done.png' : 'assets/icons/step_not_done.png'"
             *ngFor="let page of pages index as i" />
         </div>
       </div>
