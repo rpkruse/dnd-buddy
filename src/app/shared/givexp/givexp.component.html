@@ -9,7 +9,7 @@
   <hr class="stat mt-0" />
 
   <div *ngIf="show">
-    <ul class="list-group list-group-flush static-size-list short">
+    <ul class="list-group list-group-flush static-size-list short" *ngIf="this.xpItems.length">
       <li class="list-group-item bg-transparent" *ngFor="let xItem of this.xpItems index as i">
         <input class="col-5" [value]="this.xpItems[i].amount" (input)="setXpAmount(i, $event.target.value)" placeholder="Amount"> x {{ this.xpItems[i].times }}
         <button type="button" class="btn btn-s btn-h btn-sm d-inline" (click)="changeTimes(-1, i)">-</button>

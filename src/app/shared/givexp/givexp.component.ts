@@ -55,6 +55,8 @@ export class GivexpComponent implements OnInit {
         this._storageService.setValue("xpItems", this.xpItems);
         return;
       }
+    }else {
+      amount = 0;
     }
 
     let x: XpItem = {
