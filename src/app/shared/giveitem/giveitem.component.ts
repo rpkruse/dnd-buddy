@@ -24,7 +24,7 @@ export class GiveitemComponent implements OnInit {
 
   finished: boolean = false;
 
-  canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
+  canEquip: string[] = ["Weapon", "Weapon (+1)", "Armor", "Armor (+1)", "Shield", "Rings"];
   giveAmount: number = 1;
 
   show: boolean = true;

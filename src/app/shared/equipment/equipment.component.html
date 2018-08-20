@@ -12,8 +12,8 @@
     <div class="col-md-12 text-center">
       <!-- Armor -->
       <div *ngIf="this.armor">
-        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
-        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
+        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ getAC(false) }})</p>
+        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ getAC(false) }}+{{ getAC(true) }} shield bonus)</p>
       </div>
       <div *ngIf="!this.armor">
         <p class="">Armor: None</p>
@@ -22,7 +22,7 @@
       <!-- Weapon -->
       <div *ngIf="this.weapon">
         <p class="">Weapon: {{ this.weapon.name }}</p>
-        <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value}}</p>
+        <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value }}</p>
         <p class="">Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
       </div>
       <div *ngIf="!this.weapon">

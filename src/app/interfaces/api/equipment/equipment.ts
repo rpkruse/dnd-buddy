@@ -36,6 +36,7 @@ export interface Equipment {
         long?: any
     }
     weight: number,
-    properties: Results[]
+    properties: Results[],
+    bonus?: number,
     url: string
 }

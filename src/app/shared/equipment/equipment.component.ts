@@ -150,7 +150,7 @@ export class EquipmentComponent implements OnInit {
     let s: Subscription = this._apiService.putEntity<Character>("Characters", this.character, this.character.characterId).subscribe(
       d => d = d,
       err => this._itemManager.triggerMessage("", "Unable to update money", MessageType.Failure),
-      () => { s.unsubscribe(); this._itemManager.triggerMessage("", "Money updated", MessageType.Success);}
+      () => { s.unsubscribe(); this._itemManager.triggerMessage("", "Money updated", MessageType.Success); }
     );
   }
 
@@ -191,6 +191,11 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
+  public getAC(shield: boolean): number{
+    if (shield) return this.shield.armor_class.base + this.shield.bonus;
+    return this.armor.armor_class.base + this.armor.bonus;
+  }
+
   /**
    * Called when the user attempts to swap their equipped item with one in their bag 
    * 
@@ -201,9 +206,71 @@ export class EquipmentComponent implements OnInit {
   public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
     let newItem: ItemType = null;
 
-    oldItem.count = 1;
-    switch (item.equipment_category) {
-      case "Weapon":
+    oldItem.count = 1; //Weapon (+1)
+    if (item.equipment_category.includes("Weapon")) {
+      if (this.weapon) {
+        oldItem.url = this.weapon.url;
+        oldItem.name = this.weapon.name;
+      } else {
+        oldItem.count = 0;
+      }
+
+      this.character.weapon = item.url;
+      newItem = ItemType.Weapon;
+    } else if (item.equipment_category.includes("Armor")) {
+      if (item.name.includes("Shield")) {
+        if (this.shield) {
+          oldItem.url = this.shield.url;
+          oldItem.name = this.shield.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.shield = item.url;
+        newItem = ItemType.Shield;
+      } else {
+        if (this.armor) {
+          oldItem.url = this.armor.url;
+          oldItem.name = this.armor.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.armor = item.url;
+        newItem = ItemType.Armor;
+      }
+    } else if (item.equipment_category.includes("Shield")) {
+      if (this.shield) {
+        oldItem.url = this.shield.url;
+        oldItem.name = this.shield.name;
+      } else {
+        oldItem.count = 0;
+      }
+
+      this.character.shield = item.url;
+      newItem = ItemType.Shield;
+    } else if (item.equipment_category === "Rings") {
+      this.selectedRing = item;
+      if (this.ring_1 === null) {
+        this.character.ring_1 = item.url;
+        newItem = ItemType.Ring_1;
+        oldItem.count = 0;
+      } else if (this.ring_2 === null) {
+        this.character.ring_2 = item.url;
+        newItem = ItemType.Ring_2;
+        oldItem.count = 0;
+      } else {
+        this._modal.open(ringEquipModal).result.then((result) => { //On close via swap
+          this.swapRings(oldItem);
+        }, (reason) => { //on close via click off
+        });
+        return;
+      }
+    }else {
+      return;
+    }
+    /*switch (item.equipment_category) {
+      case "Weapon" || "Weapon (+1)":
         if (this.weapon) {
           oldItem.url = this.weapon.url;
           oldItem.name = this.weapon.name;
@@ -214,7 +281,7 @@ export class EquipmentComponent implements OnInit {
         this.character.weapon = item.url;
         newItem = ItemType.Weapon;
         break;
-      case "Armor":
+      case "Armor" || "Armor (+1)":
         if (item.name === "Shield") {
           if (this.shield) {
             oldItem.url = this.shield.url;
@@ -268,7 +335,7 @@ export class EquipmentComponent implements OnInit {
         break;
       default:
         return;
-    }
+    }*/
 
     this._itemManager.updateItem(oldItem, "Item swapped!");
     this._itemManager.updateCharacterEquipment(this.character, newItem);
