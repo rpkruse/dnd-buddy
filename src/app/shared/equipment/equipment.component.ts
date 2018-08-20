@@ -206,7 +206,7 @@ export class EquipmentComponent implements OnInit {
   public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
     let newItem: ItemType = null;
 
-    oldItem.count = 1; //Weapon (+1)
+    oldItem.count = 1;
     if (item.equipment_category.includes("Weapon")) {
       if (this.weapon) {
         oldItem.url = this.weapon.url;
@@ -269,73 +269,6 @@ export class EquipmentComponent implements OnInit {
     }else {
       return;
     }
-    /*switch (item.equipment_category) {
-      case "Weapon" || "Weapon (+1)":
-        if (this.weapon) {
-          oldItem.url = this.weapon.url;
-          oldItem.name = this.weapon.name;
-        } else {
-          oldItem.count = 0;
-        }
-
-        this.character.weapon = item.url;
-        newItem = ItemType.Weapon;
-        break;
-      case "Armor" || "Armor (+1)":
-        if (item.name === "Shield") {
-          if (this.shield) {
-            oldItem.url = this.shield.url;
-            oldItem.name = this.shield.name;
-          } else {
-            oldItem.count = 0;
-          }
-
-          this.character.shield = item.url;
-          newItem = ItemType.Shield;
-          break;
-        }
-        if (this.armor) {
-          oldItem.url = this.armor.url;
-          oldItem.name = this.armor.name;
-        } else {
-          oldItem.count = 0;
-        }
-
-        this.character.armor = item.url;
-        newItem = ItemType.Armor;
-        break;
-      case "Shield":
-        if (this.shield) {
-          oldItem.url = this.shield.url;
-          oldItem.name = this.shield.name;
-        } else {
-          oldItem.count = 0;
-        }
-
-        this.character.shield = item.url;
-        newItem = ItemType.Shield;
-        break;
-      case "Rings":
-        this.selectedRing = item;
-        if (this.ring_1 === null) {
-          this.character.ring_1 = item.url;
-          newItem = ItemType.Ring_1;
-          oldItem.count = 0;
-        } else if (this.ring_2 === null) {
-          this.character.ring_2 = item.url;
-          newItem = ItemType.Ring_2;
-          oldItem.count = 0;
-        } else {
-          this._modal.open(ringEquipModal).result.then((result) => { //On close via swap
-            this.swapRings(oldItem);
-          }, (reason) => { //on close via click off
-          });
-          return;
-        }
-        break;
-      default:
-        return;
-    }*/
 
     this._itemManager.updateItem(oldItem, "Item swapped!");
     this._itemManager.updateCharacterEquipment(this.character, newItem);

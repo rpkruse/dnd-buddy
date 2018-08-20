@@ -193,6 +193,7 @@ export class CreateCharacterComponent implements OnInit {
         this.choiceAmount = this.selectedClass.proficiency_choices[0].choose;
         this.character.profs = "";
         this.profChoices = [];
+        this.getRaceTraitBonuses();
         this.changedClass = true;
       }
     );
@@ -300,11 +301,62 @@ export class CreateCharacterComponent implements OnInit {
     }
   }
 
-  public selectProf(val: string) {
-    this.choiceAmount--;
+  /**
+   * This is called everytime we select a class (it repulls to make sure we can always have clean data)
+   * It gets all of the racial traits from the DB
+   */
+  public getRaceTraitBonuses() {
+    let traits: Trait[] = [];
+
+    let s: Subscription
+    for(let i=0; i<this.selectedSubRace.racial_traits.length; i++) {
+      let t: Trait;
+
+      s = this._dndApiService.getSingleEntity<Trait>(this.selectedSubRace.racial_traits[i].url).subscribe(
+        d => t = d,
+        err => console.log("unable to get traits", err),
+        () => {
+          traits.push(t);
+
+          if (i === this.selectedSubRace.racial_traits.length - 1) {
+            s.unsubscribe();
+            this.setRaceTraitBonuses(traits);
+          }
+        }
+      )
+    }
+  }
+ 
+  /**
+   * Called everytime we select a class. It checks to see the race has a prof. bonus to a skill. If so, we add it
+   * to the character's list of prof. Furthermore, if we have a skill bonus that is already in the class' list of 
+   * choices, we remove it so that they don't double take it
+   * @param traits The traits to check for a skill bonus 
+   */
+  public setRaceTraitBonuses(traits: Trait[]) {
+    for(let i=0; i<traits.length; i++) {
+      let t: Trait = traits[i];
+
+      if (t.skill_bonus) {
+        let s: string[] = t.skill_bonus.split(",");
+        for(let j=0; j<s.length; j++) {
+          let toRemove: string = "Skill: " + s[j];
+
+          //Try to get the index of a matching skill
+          let index: number = this.selectedClass.proficiency_choices[0].from.findIndex(x => x.name === toRemove);
+          //If we get a matching skill bonus, we remove it from the list
+          if (index >= 0) this.selectedClass.proficiency_choices[0].from.splice(index, 1);
+
+          this.selectProf(toRemove, false);
+        }
+      }
+    }
+  }
+
+  public selectProf(val: string, removeTick: boolean = true) {
+    if (removeTick) this.choiceAmount--;
     this.profChoices.push(val);
 
-    // this.character.profs = this.profChoices.toString();
 
     //probably bad to do this every time
     this.character.profs = "";

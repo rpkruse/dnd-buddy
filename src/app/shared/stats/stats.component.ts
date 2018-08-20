@@ -30,6 +30,7 @@ export class StatsComponent implements OnInit {
   
   profsVisible: boolean = false;
   traitsVisible: boolean = false;
+  langVisible: boolean = false;
 
   show: boolean = true;
 

@@ -47,6 +47,17 @@
       </ul>
     </div>
 
+    <button (click)="langVisible = !langVisible" class="detailButton">Languages
+      <span class="float-right glyphicon glyphicon-menu-down"></span>
+    </button>
+    <div *ngIf="this.langVisible">
+      <ul class="list-group w-100 static-size-list short">
+        <li class="list-group-item light-content text-light" *ngFor="let lang of this.raceDetails.languages index as i">
+          {{ lang.name }}
+        </li>
+      </ul>
+    </div>
+
     <p class="text-muted">*proficiency in stat</p>
   </div>
 </div>
