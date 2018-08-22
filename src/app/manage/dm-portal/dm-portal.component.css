@@ -6,18 +6,6 @@
     background: rgba(0, 0, 0, 0.50);
 }
 
-.noPadding {
-    padding: 0px !important;
-}
-
-.fillSpace {
-    overflow: auto;
-}
-
-.fillColor {
-    background-color: #6b6b6b;
-}
-
 .btn-h:hover{
     background-color: #ffd553;
 }
@@ -35,29 +23,13 @@ h1, h2 {
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
 }
 
-.tab {
-    overflow: hidden; 
+:host ::ng-deep .customTabset a.nav-link {
+    background-color: rgba(0,0,0,0.65);
+    color: #f8f9fa;
 }
 
-/* Style the buttons that are used to open the tab content */
-.tab .tabButton {
-    color: #ffd553; /* gold */
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
+:host ::ng-deep .customTabset a.nav-link.active {
     background-color: rgba(0, 0, 0, 0.35);
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
-}
-
-/* Change background color of buttons on hover */
-.tab .tabButton:hover {
-    background-color: rgba(0,0,0,0.65);
-
-}
-
-/* Create an active/current tablink class */
-.tab .tabButton.active {
-    background-color: rgba(0,0,0,0.65);
+    color: #ffd553; /* gold */
 }

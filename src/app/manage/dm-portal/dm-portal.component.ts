@@ -48,9 +48,6 @@ export class DmPortalComponent implements OnInit {
 
   character: Character;
 
-
-  viewingCharacters: boolean = true;
-
   constructor(private _apiService: ApiService, private _dataShareService: DataShareService) { }
 
   ngOnInit() {
@@ -83,6 +80,7 @@ export class DmPortalComponent implements OnInit {
       () => s.unsubscribe()
     );
   }
+  
   /**
    * Called when the DM clicks a character in a game to load
    * 
@@ -172,9 +170,6 @@ export class DmPortalComponent implements OnInit {
     );
   }
 
-  openTab(tab: string) {
-    this.viewingCharacters = tab === 'characters';
-  }
   private triggerMessage(message: string, action: string, level: MessageType) {
     let out: MessageOutput = {
       message: message,

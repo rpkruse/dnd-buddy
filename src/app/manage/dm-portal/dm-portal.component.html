@@ -11,36 +11,36 @@
       </ul>
     </div>
 
-    <!-- Tabs -->
-    <div class="tab col-lg-5 text-center" *ngIf="this.game">
-      <div class="row">
-        <div class="col-6 tabButton" [class.active]="this.viewingCharacters" (click)="openTab('characters')">Characters</div>
-        <div class="col-6 tabButton" [class.active]="!this.viewingCharacters" (click)="openTab('monsters')">Monsters</div>
-      </div>
-
-      <div class="row mt-0">
+    <div class="col-lg-5" *ngIf="this.game">
+      <ngb-tabset class="customTabset" justify="fill">
         <!-- Characters -->
-        <div class="col-12 no-padding" *ngIf="this.viewingCharacters">
-          <ul class="list-group static-size-list short" *ngIf="this.game.character.length">
-            <li class="list-group-item content text-light selectable-item" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
-              {{ character.name }}
-            </li>
-          </ul>
-        </div>
+        <ngb-tab title="Characters">
+          <ng-template ngbTabContent>
+            <div class="col-12 no-padding">
+              <ul class="list-group static-size-list short" *ngIf="this.game.character.length">
+                <li class="list-group-item content text-light selectable-item" (click)="selectCharacter(character)" *ngFor="let character of this.game.character">
+                  {{ character.name }}
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </ngb-tab>
 
         <!-- Monsters -->
-        <div class="col-12 no-padding" *ngIf="!this.viewingCharacters">
-          <ul class="list-group static-size-list short">
-            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(null, true)">New Monster</li>
-            <li class="list-group-item content text-light selectable-item" (click)="selectMonster(monster, false)" (mouseover)="this.mouseOver = i"
-              (mouseout)="this.mouseOver = -1" *ngFor="let monster of this.monsters index as i">
-              {{ monster.name }} HP: {{ monster.hp }}/{{ monster.max_HP }}
-              <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="removeMonster(i, $event)"
-                placement="left" ngbTooltip="Delete Monster" src="assets/icons/x_icon.png">
-            </li>
-          </ul>
-        </div>
-      </div>
+        <ngb-tab title="Monsters">
+          <ng-template ngbTabContent>
+            <ul class="list-group static-size-list short">
+              <li class="list-group-item content text-light selectable-item" (click)="selectMonster(null, true)">New Monster</li>
+              <li class="list-group-item content text-light selectable-item" (click)="selectMonster(monster, false)" (mouseover)="this.mouseOver = i"
+                (mouseout)="this.mouseOver = -1" *ngFor="let monster of this.monsters index as i">
+                {{ monster.name }} HP: {{ monster.hp }}/{{ monster.max_HP }}
+                <img [@showState]="this.mouseOver === i ? 'show' : 'hide'" class="icon icon-sm float-right" (click)="removeMonster(i, $event)"
+                  placement="left" ngbTooltip="Delete Monster" src="assets/icons/x_icon.png">
+              </li>
+            </ul>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
     </div>
   </div>
 
@@ -49,8 +49,8 @@
       <app-edit-character [character]="this.character" (updatedCharacter)="saveCharacter($event)"></app-edit-character>
     </div>
     <div class="col-12" *ngIf="this.monster || this.createMonster">
-      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" (outputMonster)="getNewMonster($event)" (updateMonster)="updateMonster($event)"
-        *ngIf="this.game"></app-create-monster>
+      <app-create-monster [game]="this.game" [creatingMonster]="this.createMonster" [monster]="this.monster" (outputMonster)="getNewMonster($event)"
+        (updateMonster)="updateMonster($event)" *ngIf="this.game"></app-create-monster>
     </div>
   </div>
 </div>

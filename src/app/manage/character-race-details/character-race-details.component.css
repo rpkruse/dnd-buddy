@@ -4,59 +4,6 @@
     height: 200px;
 }
 
-.static-size-list{
-    overflow-y: scroll;
-}
-
-.tall {
-    height: 100%;
-}
-
-.header {
-    background: rgba(0,0,0,0.65);
-}
-
-.list-group-item {
-    color: white;
-    background-color: #464646;
-}
-
-body {
-    background: rgba(0, 0, 0, 0.50) !important;
-}
-
-.content {
-    color: white;
-}
-
-
-.tab {
-    overflow: hidden; 
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab .tabButton {
-    color: #ffd553; /* gold */
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    background-color: rgba(0, 0, 0, 0.35);
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
-}
-
-/* Change background color of buttons on hover */
-.tab .tabButton:hover {
-    background-color: rgba(0,0,0,0.65);
-
-}
-
-/* Create an active/current tablink class */
-.tab .tabButton.active {
-    background-color: rgba(0,0,0,0.65);
-}
-
 .selectable-item:hover {
     margin-left: 2%;
     color: #ffd553 !important; /* gold */
@@ -64,61 +11,9 @@ body {
     cursor: pointer;
 }
 
-@keyframes slidein {
-    from {
-        opacity: 0;
-        margin-left: -50%;
-        width: 150%; 
-    }
-  
-    to {
-        opacity: 1;
-        margin-left: 0%;
-        width: 100%;
-    }
-}
-
-@keyframes slideout {
-    from {
-        display: block;
-        opacity: 1;
-        width: 100%;
-    }
-  
-    to {
-        display: none;
-        opacity: 0;
-        width: 0%;
-    }
-}
-
-.panel {
-    animation-fill-mode: forwards;
-    animation-name: slidein;
-    animation-duration: .5s;
-}
-
-.panel.panelHide {
-    animation-name: slideout;
-    animation-duration: .5s;
-}
-
-#subraces {
-    animation-fill-mode: forwards;
-    animation-name: slidein;
-    animation-duration: .75s;
-}
-
-.tab.active {
-    background-color: darkgray;
-}
-
-.raceDetailList {
-    margin-left: 1%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    height: auto;
+.highlight {
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+    color: #ffd553; /* gold */
 }
 
 .detailButton {
@@ -134,10 +29,17 @@ body {
     color: black;
 }
 
-.hide {
-    display: none !important;
+.light-content {
+    background: rgba(0, 0, 0, 0.35);
 }
 
-#classlist {
-    overflow: hidden;
+:host ::ng-deep .customTabset a.nav-link {
+    background-color: rgba(0,0,0,0.65);
+    color: #f8f9fa;
+}
+
+:host ::ng-deep .customTabset a.nav-link.active {
+    background-color: rgba(0, 0, 0, 0.35);
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+    color: #ffd553; /* gold */
 }

@@ -36,7 +36,6 @@ export class CharacterRaceDetails implements OnInit {
 
   races: Race = null;
   raceDetail: RaceDetails;
-  raceDetailIndex: number = -1;
   subrace: SubRace;
   subClass: SubClass;
 
@@ -46,14 +45,7 @@ export class CharacterRaceDetails implements OnInit {
 
   trait: Trait;
 
-  selectedClassIndex: number = -1;
-  selectedRaceIndex: number = -1;
-
-  mouseOverClass: number = -1;
-  mouseOverRace: number = -1;
-  mouseOverTrait: number = -1;
   subMenuActive: boolean = false;
-  raceTabActive: boolean = false;
   languageListActive: boolean = false;
   traitsListActive: boolean = false;
   proficiencyChoiceListActive: boolean = false;
@@ -75,45 +67,6 @@ export class CharacterRaceDetails implements OnInit {
       err => console.log("unable to fetch races"),
       () => j.unsubscribe()
     );
-  }
-
-  /**
-   * Sets property on what tab is active
-   * 
-   * @param {string} tab The tab to be activated 
-   */
-  public openTab(tab: string) {
-    this.subMenuActive = false;
-
-    if (tab === 'races') {
-      this.raceTabActive = true;
-    } else if (tab === 'classes') {
-      this.raceTabActive = false;
-    }
-  }
-
-  public toggleLanguageList() {
-    this.languageListActive = !this.languageListActive;
-  }
-
-  public toggleTraitsList() {
-    this.traitsListActive = !this.traitsListActive;
-  }
-
-  public toggleProficiencyChoiceList() {
-    this.proficiencyChoiceListActive = !this.proficiencyChoiceListActive;
-  }
-
-  public toggleProficiencyList() {
-    this.proficiencyListActive = !this.proficiencyListActive;
-  }
-
-  public toggleSavingThrowsList() {
-    this.savingThrowsListActive = !this.savingThrowsListActive;
-  }
-
-  public toggleSubClassesList() {
-    this.subclassesListActive = !this.subclassesListActive;
   }
 
   /**
@@ -141,12 +94,6 @@ export class CharacterRaceDetails implements OnInit {
         this._modalService.open(subclass, { size: 'lg' });
       }
     );
-  }
-
-  public resetTabs() {
-    this.raceDetail = null;
-    this.raceDetailIndex = -1;
-    return;
   }
 
   /**
@@ -184,7 +131,6 @@ export class CharacterRaceDetails implements OnInit {
       err => console.log("unable to fetch race", err),
       () => {
         s.unsubscribe();
-        this.raceDetailIndex = this.raceDetailIndex === (index - 1) ? -1 : (index - 1);
       }
     );
   }

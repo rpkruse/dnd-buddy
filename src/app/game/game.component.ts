@@ -41,7 +41,6 @@ export class GameComponent implements OnInit {
   games: Game[] = [];
   dmGames: Game[] = [];
 
-  creatingGame: boolean = false;
   gameName: string = "";
   gamenameTaken: boolean = false;
   hasClickedOff: boolean = false;
@@ -52,8 +51,6 @@ export class GameComponent implements OnInit {
   characterDetail: Character;
   classDetail: ClassDetails;
   raceDetail: RaceDetails;
-
-  viewingDMGames: boolean = false;
 
   gameNameChanged: Subject<string> = new Subject<string>();
 
@@ -77,7 +74,6 @@ export class GameComponent implements OnInit {
   }
 
   public createGame() {
-    this.creatingGame = true;
     this.selectedGame = null;
   }
 
@@ -145,7 +141,6 @@ export class GameComponent implements OnInit {
    * @param {Game} game The game to get details for 
    */
   public loadGame(game: Game) {
-    this.creatingGame = false;
     let s: Subscription;
 
     s = this._apiService.getSingleEntity<Game>("Games/details/" + game.gameId).subscribe(

@@ -9,11 +9,11 @@
     background: rgba(0, 0, 0, 0.35);
 }
 
-:host ::ng-deep .tabset1 a.nav-link {
+:host ::ng-deep .customTabset a.nav-link {
     background-color: none;
     color: #f8f9fa !important
 }
 
-:host ::ng-deep .tabset1 a.nav-link.active {
+:host ::ng-deep .customTabset a.nav-link.active {
     background-color: rgba(0, 0, 0, 0.35);
 }
