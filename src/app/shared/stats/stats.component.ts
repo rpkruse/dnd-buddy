@@ -29,6 +29,7 @@ export class StatsComponent implements OnInit {
   stats: string[] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
   
   profsVisible: boolean = false;
+  featsVisible: boolean = false;
   traitsVisible: boolean = false;
   langVisible: boolean = false;
 

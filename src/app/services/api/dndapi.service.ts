@@ -30,6 +30,11 @@ export class DndApiService {
     c = c.toLocaleLowerCase();
     return this._http.get(environment.dnd_api + "classes/" + c +"/level/" + level) as Observable<ClassLevels>
   }
+
+  public getSpecificEndpointLevelInfo<T>(endpoint: string, c: string, level: number): Observable<T>{
+    c = c.toLocaleLowerCase();
+    return this._http.get(environment.dnd_api + endpoint + "/" + c + "/level/" + level) as Observable<T>;
+  }
   
   public getRaceInfo(index: number): Observable<RaceDetails> {
     return this._http.get(environment.dnd_api + "races/" + index) as Observable<RaceDetails>;

@@ -600,7 +600,10 @@ export class CreateCharacterComponent implements OnInit {
       case 2:
         return this.selectedSubRace !== null;
       case 3:
-        return this.selectedClass !== null && this.choiceAmount <= 0;
+        if (this.selectedClass !== null && this.selectedClass.required_subclass)
+          return this.selectedClass !== null && this.choiceAmount <= 0 && this.character.subclass !== null
+        else
+          return this.selectedClass !== null && this.choiceAmount <= 0;
       case 4:
         return !this.rolls.some(x => x < 2);
       case 5:

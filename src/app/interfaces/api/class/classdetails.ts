@@ -28,5 +28,6 @@ export interface ClassDetails {
         name: string,
         url: string
     },
+    required_subclass: boolean,
     url: string
 };

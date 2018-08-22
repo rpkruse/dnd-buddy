@@ -15,6 +15,7 @@ import { RollComponent } from './roll/roll.component';
 import { CreateMonsterComponent } from './create-monster/create-monster.component';
 import { EditCharacterComponent } from './edit-character/edit-character.component';
 import { ViewMonsterComponent } from './view-monster/view-monster.component';
+import { FeaturesComponent } from './features/features.component';
 
 
 @NgModule({
@@ -35,11 +36,13 @@ import { ViewMonsterComponent } from './view-monster/view-monster.component';
     RollComponent,
     CreateMonsterComponent,
     EditCharacterComponent,
-    ViewMonsterComponent
+    ViewMonsterComponent,
+    FeaturesComponent
   ],
   exports: [
     EquipmentComponent,
     SpellbookComponent,
+    FeaturesComponent,
     StatsComponent,
     GiveitemComponent,
     GivexpComponent,

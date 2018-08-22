@@ -74,52 +74,49 @@ export class SpellbookComponent implements OnInit {
     let s: Subscription;
     let spell: Spell;
 
-    for (let i = 0; i <= 9; i++) { //Spells only go up to 9th level
-      s = this._dndApiService.getAllEntities<Spell>("spells/" + this.cd.name + "/level/" + i).subscribe(
-        d => spell = d,
-        err => console.log("Unable to get spells at", i, err),
-        () => {
-          this.spellBook.push(spell);
-          // console.log(spell);
-          if (i === 9) {
-            s.unsubscribe();
-            if (this.character.subclass) this.getSubClassSpells(); else this.setSimpleSpellBook();
+    if (this.character.subclass) {
+      this.getSubClassSpells();
+    } else {
+      for (let i = 0; i <= 9; i++) { //Spells only go up to 9th level
+        s = this._dndApiService.getAllEntities<Spell>("spells/" + this.cd.name.toLowerCase() + "/level/" + i).subscribe(
+          d => spell = d,
+          err => console.log("Unable to get spells at", i, err),
+          () => {
+            this.spellBook.push(spell);
+            if (i === 9) {
+              s.unsubscribe();
+              this.setSimpleSpellBook();
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
 
   public getSubClassSpells() {
     let sc: SubClass;
-    let s: Subscription = this._dndApiService.getAllEntities<SubClass>("subclasses/" + this.character.subclass).subscribe(
+    let s: Subscription = this._dndApiService.getSingleEntityEndpoint<SubClass>("subclasses/" + this.character.subclass.toLowerCase()).subscribe(
       d => sc = d,
-      err => console.log("unable to get subclass"),
+      err => console.log(err),
       () => {
         s.unsubscribe();
         this.setSubClassSpells(sc);
       }
-    );
+    )
   }
 
   public setSubClassSpells(sc: SubClass) {
-    if (!sc) {
-      this.setSimpleSpellBook();
-      return;
-    }
-    
     for(let i=0; i<sc.spells.length; i++) {
-      let level: number = sc.spells[i].level_acquired;
-
-      let r: Results = {
+      let spell: SimpleSpell = {
+        level: sc.spells[i].level_acquired,
         name: sc.spells[i].spell.name,
         url: sc.spells[i].spell.url
       };
 
-      this.spellBook[level-1].results.push(r);
+      this.simpleSpellBook.push(spell);
     }
 
-    this.setSimpleSpellBook();
+    this.sortSimpleSpellBook();
   }
 
   private setSimpleSpellBook() {
@@ -128,7 +125,7 @@ export class SpellbookComponent implements OnInit {
 
       for (let j = 0; j < spells.length; j++) {
         let spell: SimpleSpell = {
-          level: i,
+          level: i+1,
           name: spells[j].name,
           url: spells[j].url
         };
@@ -136,6 +133,8 @@ export class SpellbookComponent implements OnInit {
         this.simpleSpellBook.push(spell);
       }
     }
+
+    // this.sortSimpleSpellBook();
   }
 
   /*
@@ -158,6 +157,10 @@ export class SpellbookComponent implements OnInit {
   public dismissSpell() {
     this.spellDetail = null;
     if (this.onMobile) this.show = true;
+  }
+
+  private sortSimpleSpellBook() {
+    this.simpleSpellBook.sort((a, b) => a.level > b.level ? -1 : 1);
   }
 
   ngOnDestroy() {

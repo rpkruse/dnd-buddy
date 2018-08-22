@@ -10,6 +10,7 @@ import { ClassDetails } from './api/class/classdetails';
 import { ClassLevels } from './api/class/classlevels';
 import { SubClass } from './api/class/subclass';
 import { XP } from './api/class/XP';
+import { Feature } from './api/class/feature';
 
 import { Race } from './api/race/race';
 import { RaceDetails } from './api/race/racedetails';
@@ -57,6 +58,7 @@ export {
     ClassLevels,
     SubClass,
     XP,
+    Feature,
     Race,
     RaceDetails,
     SubRace,

@@ -187,7 +187,8 @@
                         </ul>
                       </div>
 
-                      <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">Subclasses
+                      <div *ngIf="this.selectedClass.required_subclass">
+                      <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">{{ this.selectedClass.required_subclass ? 'Subclasses (required)' : 'Subclasses' }}
                         <span class="float-right glyphicon glyphicon-menu-down"></span>
                       </button>
                       <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
@@ -199,6 +200,7 @@
                         </ul>
                       </div>
                     </div>
+                  </div>
 
                     <div class="col-lg-4 text-light bg-transparent">
                       <p class="text-light bg-transparent">You may select

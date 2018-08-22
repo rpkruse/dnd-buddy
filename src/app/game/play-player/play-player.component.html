@@ -60,11 +60,14 @@
   <div class="modal-header">
 
     <div class="col text-center">
-      <h5 class="modal-title">
+      <h5 class="modal-title" *ngIf="!this.character.subclass">
         {{this.classDetail.name}} Spell Book
       </h5>
+      <h5 class="modal-title" *ngIf="this.character.subclass">
+          {{ this.character.subclass }} {{this.classDetail.name}} Spell Book
+        </h5>
     </div>
-    <div class="text-left">
+    <div class="text-left" *ngIf="!this.character.subclass">
       <input type="checkbox" [checked]="simpleView" (change)="simpleView = !simpleView">Tab View
     </div>
 

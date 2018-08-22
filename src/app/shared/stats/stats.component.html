@@ -35,14 +35,21 @@
       </ul>
     </div>
 
+    <button (click)="featsVisible = !featsVisible" class="detailButton">Features
+      <span class="float-right glyphicon glyphicon-menu-down"></span>
+    </button>
+    <div *ngIf="this.featsVisible">
+      <app-features [character]="this.character"></app-features>
+    </div>
+
     <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
       <span class="float-right glyphicon glyphicon-menu-down"></span>
     </button>
     <div class="detailList text-left" *ngIf="this.traitsListActive">
       <ul class="list-group w-100 static-size-list short">
-        <li class="list-group-item light-content text-light" *ngFor="let trait of this.raceDetails.racial_traits index as i">
+        <li class="list-group-item light-content text-light selectable-item" (click)="getTraitDetails(trait.url, content)" *ngFor="let trait of this.raceDetails.racial_traits index as i">
           {{ trait.name }}
-          <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button>
+          <!-- <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button> -->
         </li>
       </ul>
     </div>

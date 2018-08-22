@@ -1,0 +1,25 @@
+<ul class="list-group list-group-flush static-size-list short w-100" *ngIf="this.features && this.features.length">
+  <li class="list-group-item light-content selectable-item" (click)="getFeature(feat.url, content)" *ngFor="let feat of this.features index as i">
+    {{ feat.name }} (Level: {{ feat.level }})
+  </li>
+</ul>
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.feature.name }}</h4>
+    </div>
+  </div>
+
+  <div class="modal-body content text-light">
+    <p *ngFor="let line of this.feature.desc">
+      {{ line }}
+    </p>
+    <!-- {{ this.feature.desc }} -->
+  </div>
+
+  <div class="header modal-footer">
+    <button type="button" class="btn btn-sm btn-secondary" (click)="c()">Close</button>
+  </div>
+</ng-template>
