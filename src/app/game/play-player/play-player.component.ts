@@ -44,7 +44,7 @@ export class PlayPlayerComponent implements OnInit {
   @Input() character: Character;
   @Output() updateCharacter: EventEmitter<Character> = new EventEmitter<Character>();
 
-  canEquip: string[] = ["Weapon", "Armor", "Shield", "Rings"];
+  canEquip: string[] = ["Weapon", "Weapon (+1)", "Armor", "Armor (+1)", "Shield", "Rings"];
 
   //Character info fields
   classDetail: ClassDetails;

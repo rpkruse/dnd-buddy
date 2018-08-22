@@ -19,7 +19,7 @@ import { Subject, BehaviorSubject, Subscription, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ItemManager {
-
+  
   private items: Item[] = [];
   itemSubj: Subject<Item[]> = new BehaviorSubject<Item[]>([]);
 
