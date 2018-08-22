@@ -86,13 +86,13 @@ export class CreateCharacterComponent implements OnInit {
     s = this._dndApiService.getAllEntities<Class>("classes").subscribe(
       d => this.classes = d,
       err => console.log("unable to get classes"),
-      () => s.unsubscribe()
+      () => { s.unsubscribe(); this.sortClasses(); }
     );
 
     j = this._dndApiService.getAllEntities<Race>("races").subscribe(
       d => this.races = d,
       err => console.log("Unable to get races"),
-      () => j.unsubscribe()
+      () =>{ j.unsubscribe(); this.sortRaces(); }
     );
 
     k = this._apiService.getAllEntities<Game>("Games/open/" + this.user.userId).subscribe(
@@ -147,7 +147,7 @@ export class CreateCharacterComponent implements OnInit {
     s = this._dndApiService.getSingleEntity<RaceDetails>(raceUrl).subscribe(
       d => this.selectedRace = d,
       err => console.log("Unable to get details for selected race"),
-      () => s.unsubscribe()
+      () => { s.unsubscribe(); this.sortSubraces(); }
     );
   }
 
@@ -632,6 +632,18 @@ export class CreateCharacterComponent implements OnInit {
 
   public getAttrScoreValue(attr: number): number {
     return Math.floor((attr - 10) / 2);
+  }
+
+  private sortClasses() {
+    this.classes.results.sort((a, b) => a.name > b.name ? 1 : -1);
+  }
+
+  private sortRaces() {
+    this.races.results.sort((a, b) => a.name > b.name ? 1 : -1);
+  }
+
+  private sortSubraces() {
+    this.selectedRace.subraces.sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {

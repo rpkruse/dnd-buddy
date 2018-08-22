@@ -20,7 +20,7 @@
         <ngb-tab title="Races">
           <ng-template ngbTabContent>
             <ul class="list-group list-group-flush half-height static-size-list" *ngIf="this.races.count && !subMenuActive">
-              <li class="list-group-item selectable-item content text-light" *ngFor="let subR of this.races.results index as i" (click)="changeSubRace(i + 1);this.subMenuActive = !this.subMenuActive;">
+              <li class="list-group-item selectable-item content text-light" *ngFor="let subR of this.races.results index as i" (click)="getRaceDetails(subR.url)">
                 {{ subR.name }}
                 <i class="float-right fas fa-angle-right my-auto"></i>
               </li>
@@ -48,7 +48,7 @@
       </div>
 
       <!-- Class Details -->
-      <div class="row" *ngIf="this.classDetail">
+      <div class="row panel" [class.panelHide]="!this.classDetail" *ngIf="this.classDetail">
         <div class="col-12">
           <h4 class="text-center">
             {{ this.classDetail.name }}
@@ -108,25 +108,27 @@
       </div>
 
       <!-- Race Details -->
-      <div class="row" *ngIf="this.subrace">
+      <div class="row panel" [class.panelHide]="!this.subrace" *ngIf="this.subrace">
         <div class="col-12">
           <h4 class="text-center">
             {{ this.subrace.name }}
           </h4>
           <hr class="stat mt-0" />
           <p>{{ this.subrace.desc }}</p>
-          <p>
-            <b>Ability Bonuses: </b>{{ fixAbilityBonuses(this.subrace.ability_bonuses) }}</p>
-          <p>
-            <b>Age: </b>{{ this.subrace.age }}</p>
-          <p>
-            <b>Alignment: </b>{{ this.subrace.alignment }}</p>
-          <p>
-            <b>Preferred Class(es): </b>{{ this.subrace.preferred_class }}</p>
-          <p>
-            <b>Size: </b>{{ this.subrace.size }}</p>
-          <p>
-            <b>Speed: </b>{{ this.subrace.speed }}</p>
+          <div class="text-center">
+            <p>
+              <b>Ability Bonuses: </b>{{ fixAbilityBonuses(this.subrace.ability_bonuses) }}</p>
+            <p>
+              <b>Age: </b>{{ this.subrace.age }}</p>
+            <p>
+              <b>Alignment: </b>{{ this.subrace.alignment }}</p>
+            <p>
+              <b>Preferred Class(es): </b>{{ this.subrace.preferred_class }}</p>
+            <p>
+              <b>Size: </b>{{ this.subrace.size }}</p>
+            <p>
+              <b>Speed: </b>{{ this.subrace.speed }}</p>
+          </div>
 
           <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
             <span class="float-right glyphicon glyphicon-menu-down"></span>

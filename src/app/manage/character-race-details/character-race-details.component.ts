@@ -59,13 +59,13 @@ export class CharacterRaceDetails implements OnInit {
     let s: Subscription = this._dndApiService.getAllEntities<Class>("classes").subscribe(
       d => this.classes = d,
       err => console.log("unable to fetch classes", err),
-      () => s.unsubscribe()
+      () => { s.unsubscribe(); this.sortClasses(); }
     );
 
     let j: Subscription = this._dndApiService.getAllEntities<Race>("races").subscribe(
       d => this.races = d,
       err => console.log("unable to fetch races"),
-      () => j.unsubscribe()
+      () => { j.unsubscribe(); this.sortRaces(); }
     );
   }
 
@@ -75,13 +75,12 @@ export class CharacterRaceDetails implements OnInit {
    * @param {string} url The url of the selected race type 
    */
   public getSubrace(url: string) {
-    this.classDetail = null;
     let s: Subscription;
 
     s = this._dndApiService.getSingleEntity<SubRace>(url).subscribe(
       d => this.subrace = d,
       err => console.log("unable to get subrace", err),
-      () => s.unsubscribe()
+    () => { s.unsubscribe(); this.classDetail = null; }
     );
   }
 
@@ -97,25 +96,15 @@ export class CharacterRaceDetails implements OnInit {
   }
 
   /**
-   * Called whenever the user changes the subrace panel they are viewing
-   * 
-   * @param {number} num The panel number to change to 
-   */
-  public changeSubRace(num: number) {
-    this.getRaceDetails(num);
-  }
-
-  /**
    * Called when the user wants to get details of a specific class. It pulls it from the DB
    * 
    * @param {string} url The url of the class to get detailson
    */
   public getClassDetails(url: string) {
-    this.subrace = null;
     let s: Subscription = this._dndApiService.getSingleEntity<ClassDetails>(url).subscribe(
       d => this.classDetail = d,
       err => console.log("unable to fetch class", err),
-      () => s.unsubscribe()
+      () => { s.unsubscribe(); this.subrace = null; }
     );
   }
 
@@ -125,14 +114,19 @@ export class CharacterRaceDetails implements OnInit {
    * 
    * @param {number} index The index of the race to get details on 
    */
-  public getRaceDetails(index: number) {
-    let s: Subscription = this._dndApiService.getRaceInfo(index).subscribe(
+  public getRaceDetails(url: string) {
+    /*let s: Subscription = this._dndApiService.getRaceInfo(index).subscribe(
       d => this.raceDetail = d,
       err => console.log("unable to fetch race", err),
       () => {
         s.unsubscribe();
       }
-    );
+    );*/
+    let s: Subscription = this._dndApiService.getSingleEntity<RaceDetails>(url).subscribe(
+      d => this.raceDetail = d,
+      err => console.log("unable to fetch race", err),
+      () => { s.unsubscribe(); this.sortSubraces(); }
+    )
   }
 
   /**
@@ -152,6 +146,19 @@ export class CharacterRaceDetails implements OnInit {
     );
   }
 
+  private sortClasses() {
+    this.classes.results.sort((a, b) => a.name > b.name ? 1 : -1);
+  }
+
+  private sortRaces() {
+    this.races.results.sort((a, b) => a.name > b.name ? 1 : -1);
+  }
+
+  private sortSubraces() {
+    this.raceDetail.subraces.sort((a, b) => a.name > b.name ? 1 : -1);
+    this.subMenuActive = !this.subMenuActive; //after we sort, we allow the user to see
+  }
+
   /**
    * Appends words to each ability to make it look nicer on the DOM
    * 
@@ -160,12 +167,12 @@ export class CharacterRaceDetails implements OnInit {
   public fixAbilityBonuses(abilities: number[]): string[] { //str, dex, con, int, wis, char
     let s: string[] = [];
 
-    s[0] = "str: " + abilities[0];
-    s[1] = " dex: " + abilities[1];
-    s[2] = " con: " + abilities[2];
-    s[3] = " int: " + abilities[3];
-    s[4] = " wis: " + abilities[4];
-    s[5] = " char: " + abilities[5];
+    s[0] = "STR: " + abilities[0];
+    s[1] = " DEX: " + abilities[1];
+    s[2] = " CON: " + abilities[2];
+    s[3] = " INT: " + abilities[3];
+    s[4] = " WIS: " + abilities[4];
+    s[5] = " CHAR: " + abilities[5];
     return s;
   }
 
