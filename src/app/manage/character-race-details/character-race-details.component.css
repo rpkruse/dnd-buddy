@@ -3,34 +3,9 @@
     width: auto;
     height: 200px;
 }
-
-.selectable-item:hover {
-    margin-left: 2%;
-    color: #ffd553 !important; /* gold */
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
-    cursor: pointer;
-}
-
 .highlight {
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
     color: #ffd553; /* gold */
-}
-
-.detailButton {
-    width: 100%;
-    background-color:rgba(255, 255, 255, 0);
-    color: white;
-    border: 2px solid white;
-    margin: 2px;
-}
-
-.detailButton:hover {
-    background-color: #ffd553;
-    color: black;
-}
-
-.light-content {
-    background: rgba(0, 0, 0, 0.35);
 }
 
 :host ::ng-deep .customTabset a.nav-link {

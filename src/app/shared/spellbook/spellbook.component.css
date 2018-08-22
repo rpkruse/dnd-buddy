@@ -1,14 +1,3 @@
-.selectable-item:hover {
-    margin-left: 2%;
-    color: #ffd553 !important;
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
-    cursor: pointer;
-}
-
-.light-content {
-    background: rgba(0, 0, 0, 0.35);
-}
-
 :host ::ng-deep .customTabset a.nav-link {
     background-color: none;
     color: #f8f9fa !important

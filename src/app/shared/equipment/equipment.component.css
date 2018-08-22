@@ -3,18 +3,6 @@
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
 }
 
-.detailButton {
-    width: 100%;
-    background-color:rgba(255, 255, 255, 0);
-    color: white;
-    border: 2px solid white;
-    margin: 2px;
-}
- .detailButton:hover {
-    background-color: #ffd553;
-    color: black;
-}
-
 .copper {
     color: #b87333;
 }

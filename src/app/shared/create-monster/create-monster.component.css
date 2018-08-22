@@ -1,16 +1,4 @@
-.content {
-    background: rgba(0, 0, 0, 0.50);
-}
-
-.btn-h:hover{
-    background-color: #ffd553;
-}
-
-.gold-text {
-    color: #ffd553;
-}
-
-h1, h2, h5 {
+h5 {
     text-align: center;
     color: #ffd553; /* gold */
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
@@ -25,11 +13,4 @@ input[type="search"] {
    
    input[type="search"]::-webkit-search-cancel-button {
    -webkit-appearance: searchfield-cancel-button;
-}
-
-.selectable-item:hover {
-    margin-left: 2%;
-    color: #ffd553 !important; /* gold */
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
-    cursor: pointer;
 }

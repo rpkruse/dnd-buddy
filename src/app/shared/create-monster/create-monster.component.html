@@ -12,13 +12,13 @@
         <!-- Search/Select list -->
         <div class="col-lg-3">
           <div class="row mx-auto">
-            <span class="gold-text">
+            <div>
               <input type="search" [value]="searchString" placeholder="Search..." (input)="search($event.target.value)" />
               <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
                 ngbTooltip="Hide" (click)="show = !show" *ngIf="show" />
               <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
                 ngbTooltip="Show" (click)="show = !show" *ngIf="!show" />
-            </span>
+            </div>
           </div>
 
           <!-- Large monter list on lg+ screens -->

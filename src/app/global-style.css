@@ -51,6 +51,23 @@ html {overflow: -moz-scrollbars-none;}
     background: #c4bfbf
 }
 
+.btn-h:hover{
+    background-color: #ffd553;
+}
+
+.detailButton {
+    width: 100%;
+    background-color:rgba(255, 255, 255, 0);
+    color: white;
+    border: 2px solid white;
+    margin: 2px;
+}
+
+ .detailButton:hover {
+    background-color: #ffd553;
+    color: black;
+}
+
 #snackbar {
     min-width: 250px; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
@@ -82,6 +99,10 @@ html {overflow: -moz-scrollbars-none;}
     background: rgba(0, 0, 0, 0.50);
 }
 
+.light-content {
+    background: rgba(0, 0, 0, 0.35);
+}
+
 h1:not(.title), h2, h4 {
     text-align: center;
     color: #ffd553; /* gold */
@@ -108,6 +129,13 @@ hr:before {
     border-color: #ffd553; 
     border-width: 0 0 1px 0; 
     border-radius: 20px; 
+}
+
+.selectable-item:hover {
+    margin-left: 2%;
+    color: #ffd553 !important; /* gold */
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+    cursor: pointer;
 }
 
 .img-sm{

@@ -70,6 +70,7 @@ export class SpellbookComponent implements OnInit {
             if (i === 9) {
               s.unsubscribe();
               this.setSimpleSpellBook();
+              this.sortTabSpells();
             }
           }
         );
@@ -145,6 +146,11 @@ export class SpellbookComponent implements OnInit {
 
   private sortSimpleSpellBook() {
     this.simpleSpellBook.sort((a, b) => a.level > b.level ? -1 : 1);
+  }
+
+  private sortTabSpells() {
+    for (let i=0; i<this.spellBook.length; i++)
+      this.spellBook[i].results.sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
   ngOnDestroy() {

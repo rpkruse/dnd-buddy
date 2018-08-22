@@ -98,6 +98,17 @@
                   <b>Speed: </b>{{ this.selectedSubRace.speed }}</p>
               </div>
 
+              <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
+                <span class="float-right glyphicon glyphicon-menu-down"></span>
+              </button>
+              <div class="detailList" *ngIf="this.traitsListActive">
+                <ul class="list-group w-100 static-size-list short">
+                  <li class="list-group-item light-content text-light selectable-item" (click)="getTraitDetails(trait.url, content)" *ngFor="let trait of this.selectedSubRace.racial_traits index as i">
+                    {{ trait.name }}
+                  </li>
+                </ul>
+              </div>
+
               <button (click)="languageListActive = !languageListActive" class="detailButton">Languages
                 <span class="float-right glyphicon glyphicon-menu-down"></span>
               </button>
@@ -105,18 +116,6 @@
                 <ul class="list-group w-100 static-size-list short">
                   <li class="list-group-item light-content text-light" *ngFor="let lang of this.selectedSubRace.languages">
                     {{ lang.name }}
-                  </li>
-                </ul>
-              </div>
-
-              <button (click)="traitsListActive = !traitsListActive" class="detailButton">Traits
-                <span class="float-right glyphicon glyphicon-menu-down"></span>
-              </button>
-              <div class="detailList" *ngIf="this.traitsListActive">
-                <ul class="list-group w-100 static-size-list short">
-                  <li class="list-group-item light-content text-light" *ngFor="let trait of this.selectedSubRace.racial_traits index as i">
-                    {{ trait.name }}
-                    <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getTraitDetails(trait.url, content)">Details</button>
                   </li>
                 </ul>
               </div>
@@ -150,7 +149,8 @@
                       <p class="text-center">
                         <b>Hit Die: </b>{{ this.selectedClass.hit_die }}</p>
 
-                      <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency Choices |
+                      <button (click)="proficiencyChoiceListActive = !proficiencyChoiceListActive" class="detailButton">Proficiency
+                        Choices |
                         <strong>Choose {{ this.choiceAmount }}</strong>
                       </button>
                       <div class="detailList" *ngIf="this.proficiencyChoiceListActive">
@@ -188,26 +188,29 @@
                       </div>
 
                       <div *ngIf="this.selectedClass.required_subclass">
-                      <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">{{ this.selectedClass.required_subclass ? 'Subclasses (required)' : 'Subclasses' }}
-                        <span class="float-right glyphicon glyphicon-menu-down"></span>
-                      </button>
-                      <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
-                        <ul class="list-group w-100 static-size-list short">
-                          <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
-                            {{ subc.name }}
-                            <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getSubclassDetails(subc.url, subclass)">Details</button>
-                          </li>
-                        </ul>
+                        <button (click)="subclassesListActive = !subclassesListActive" class="detailButton">{{ this.selectedClass.required_subclass
+                          ? 'Subclasses (required)' : 'Subclasses' }}
+                          <span class="float-right glyphicon glyphicon-menu-down"></span>
+                        </button>
+                        <div id="subclassesList" class="detailList" *ngIf="this.subclassesListActive">
+                          <ul class="list-group w-100 static-size-list short">
+                            <li class="list-group-item light-content text-light" *ngFor="let subc of this.selectedClass.subclasses">
+                              {{ subc.name }}
+                              <button type="button" class="btn btn-secondary btn-sm float-right" (click)="getSubclassDetails(subc.url, subclass)">Details</button>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
                     <div class="col-lg-4 text-light bg-transparent">
                       <p class="text-light bg-transparent">You may select
-                        <strong>{{ this.choiceAmount }}</strong> more Proficiencies. Click the first dropdown menu and select the
-                        proficiencies you want.</p>
-                      <p class="text-light bg-transparent">Your Natural Proficiencies and proficiencies that are given to your class automatically</p>
-                      <p class="text-light bg-transparent">Your Saving Throws are stats that you have a proficiency bonus in when making the save.</p>
+                        <strong>{{ this.choiceAmount }}</strong> more Proficiencies. Click the first dropdown menu and select
+                        the proficiencies you want.</p>
+                      <p class="text-light bg-transparent">Your Natural Proficiencies and proficiencies that are given to
+                        your class automatically</p>
+                      <p class="text-light bg-transparent">Your Saving Throws are stats that you have a proficiency bonus
+                        in when making the save.</p>
                     </div>
                   </div>
                 </div>
@@ -226,7 +229,8 @@
               <div [ngClass]="this.finishedRolling() ? 'col-lg-12' : 'col-lg-6'">
                 <p *ngFor="let r of this.rolls index as i">
                   Roll: {{ this.keptRolls[i] }} {{ getStatString(i) }}
-                  <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{ this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+                  <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.rolls[i] == 2" (click)="rollStat(i)">{{
+                    this.rolls[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
                   <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.rolls[i] == 2 || this.rolls[i] <= 0" (click)="this.rolls[i] = 2">Keep</button>
                 </p>
               </div>
@@ -282,7 +286,8 @@
             <h6>Max Roll: {{ hp_rolls[0] }}</h6>
             <p *ngFor="let roll of this.hp_rolls index as i">
               Level {{ i+1 }}: {{ roll }} {{ getAttrScoreString(this.character.abil_Score_Con) }}
-              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.hpRollCount[i] === 2" (click)="rollHP(i)">{{ this.hpRollCount[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
+              <button type="button" class="btn btn-sm btn-primary ml-2" [disabled]="this.hpRollCount[i] === 2" (click)="rollHP(i)">{{
+                this.hpRollCount[i] > 0 ? 'Re-Roll' : 'Roll' }}</button>
               <button type="button" class="btn btn-sm btn-s btn-h ml-2" [disabled]="this.hpRollCount[i] >= 1" (click)="keepHalfHealthRoll(i)">Half</button>
               <button type="button" class="btn btn-sm btn-success ml-2" [disabled]="this.hpRollCount[i] === 2 || this.hpRollCount[i] <= 0"
                 (click)="this.hpRollCount[i] = 2">Keep</button>
@@ -294,8 +299,8 @@
               When rolling for health, you can either keep your health for half of your max roll, or you can roll up to two times. Your
               constitution modifier is added to each roll.
               <br>
-              <br> When you roll for the second time, you must keep the second value, even if the value is less than your original
-              roll.
+              <br> When you roll for the second time, you must keep the second value, even if the value is less than your
+              original roll.
               <br>
               <br> You may
               <strong>not</strong> keep for half if you have already rolled at least one time.
@@ -339,7 +344,8 @@
 
   <div class="header modal-footer">
     <button type="button" class="btn btn-sm btn-secondary" (click)="c()">Close</button>
-    <button type="button" class="btn btn-sm btn-success" (click)="setSubClass(this.subClass.name); c();">{{this.subClass.name === this.character.subclass ? 'Deselect' : 'Select' }}</button>
+    <button type="button" class="btn btn-sm btn-success" (click)="setSubClass(this.subClass.name); c();">{{this.subClass.name
+      === this.character.subclass ? 'Deselect' : 'Select' }}</button>
   </div>
 </ng-template>
 
