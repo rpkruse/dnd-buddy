@@ -27,9 +27,9 @@ export interface localFeature {
 export class FeaturesComponent implements OnInit {
 
   @Input() character: Character;
+  @Input() className: string;
 
   subclassName: string;
-  className: string;
 
   level: number;
 
@@ -38,23 +38,27 @@ export class FeaturesComponent implements OnInit {
 
   constructor(private _dndApiService: DndApiService, private _modalService: NgbModal) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnChanges() {
-    if (!this.character) return;
+    if (!this.character || !this.className) return;
 
     this.subclassName = this.character.subclass;
     this.level = this.character.level;
 
 
-    let s: Subscription = this._dndApiService.getSingleEntityEndpoint<SubClass>("subclasses/" + this.subclassName.toLowerCase()).subscribe(
-      d => this.className = d.class.name,
-      err => console.log(err),
-      () => {
-        s.unsubscribe();
-        this.getAllFeatures();
-      }
-    );
+    // if (this.subclassName) {
+    //   let s: Subscription = this._dndApiService.getSingleEntityEndpoint<SubClass>("subclasses/" + this.subclassName.toLowerCase()).subscribe(
+    //     d => this.className = d.class.name,
+    //     err => console.log(err),
+    //     () => {
+    //       s.unsubscribe();
+    //       this.getAllFeatures();
+    //     }
+    //   );
+    // }
+
+    this.getAllFeatures();
   }
 
   public getAllFeatures() {
@@ -63,23 +67,25 @@ export class FeaturesComponent implements OnInit {
     for (let i = 1; i <= this.level; i++) {
       let r: pull;
 
-      s = this._dndApiService.getSpecificEndpointLevelInfo<pull>("features", this.subclassName, i).subscribe(
-        d => r = d,
-        err => console.log(err),
-        () => {
-          for (let j = 0; j < r.count; j++) {
-            let lf: localFeature = {
-              name: r.results[j].name,
-              level: i,
-              url: r.results[j].url
-            };
+      if (this.subclassName) {
+        s = this._dndApiService.getSpecificEndpointLevelInfo<pull>("features", this.subclassName, i).subscribe(
+          d => r = d,
+          err => console.log(err),
+          () => {
+            for (let j = 0; j < r.count; j++) {
+              let lf: localFeature = {
+                name: r.results[j].name,
+                level: i,
+                url: r.results[j].url
+              };
 
-            this.features.push(lf);
+              this.features.push(lf);
+            }
+
+            if (i === this.level) { s.unsubscribe(); this.sortFeatures(); }
           }
-
-          if (i === this.level) { s.unsubscribe(); this.sortFeatures(); }
-        }
-      );
+        );
+      }
 
       s = this._dndApiService.getSpecificEndpointLevelInfo<pull>("features", this.className, i).subscribe(
         d => r = d,

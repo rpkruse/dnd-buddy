@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { trigger, state, animate, transition, style } from '@angular/animations';
 
 import { ApiService, DndApiService } from '../../services/services';
 
@@ -16,22 +15,7 @@ export interface SimpleSpell {
 @Component({
   selector: 'app-spellbook',
   templateUrl: './spellbook.component.html',
-  styleUrls: ['./spellbook.component.css', '../../global-style.css'],
-  animations: [
-    trigger(
-      'showState', [
-        state('show', style({
-          opacity: 1,
-          visibility: 'visible'
-        })),
-        state('hide', style({
-          opacity: 0,
-          visibility: 'hidden'
-        })),
-        transition('show => *', animate('400ms')),
-        transition('hide => show', animate('400ms')),
-      ])
-  ]
+  styleUrls: ['./spellbook.component.css', '../../global-style.css']
 })
 
 export class SpellbookComponent implements OnInit {

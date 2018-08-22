@@ -24,6 +24,13 @@ export class RollComponent implements OnInit {
   ngOnInit() {
   }
 
+  public setRollValue(val: string) {
+    let r: number = parseInt(val);
+
+    this.rollMax = r;
+    this.roll = 0;
+  }
+
   /**
    * Called whenever the user clicks the roll button, it will roll n number die and send the value rolled
    * to all other users in the game iff hiden is false

@@ -9,7 +9,7 @@
   </div>
   <div class="row justify-content-around">
     <!-- Rolling -->
-    <div class="col-md-5 content text-light mb-sm-0 mb-5 dark-border">
+    <div class="col-md-5 content text-light mb-md-0 mb-5 dark-border">
       <app-roll (rollOutput)="rollDice($event)"></app-roll>
     </div>
 
@@ -22,7 +22,7 @@
   <div class="row mt-5 justify-content-around">
 
     <!-- Equipment -->
-    <div class="content text-light mb-sm-0 mb-5 dark-border" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-md-5' : 'col-md-12'">
+    <div class="content text-light mb-md-0 mb-5 dark-border" [ngClass]="this.levelDetail && this.levelDetail.spellcasting ? 'col-md-5' : 'col-md-12'">
       <app-equipment [character]="character"></app-equipment>
     </div>
 
@@ -57,26 +57,26 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header">
+  <div class="modal-header header">
 
     <div class="col text-center">
-      <h5 class="modal-title" *ngIf="!this.character.subclass">
+      <h4 class="modal-title" *ngIf="!this.character.subclass">
         {{this.classDetail.name}} Spell Book
-      </h5>
-      <h5 class="modal-title" *ngIf="this.character.subclass">
+      </h4>
+      <h4 class="modal-title" *ngIf="this.character.subclass">
           {{ this.character.subclass }} {{this.classDetail.name}} Spell Book
-        </h5>
+        </h4>
     </div>
-    <div class="text-left" *ngIf="!this.character.subclass">
+    <div class="text-left text-light" *ngIf="!this.character.subclass">
       <input type="checkbox" [checked]="simpleView" (change)="simpleView = !simpleView">Tab View
     </div>
 
 
   </div>
-  <div class="modal-body">
+  <div class="modal-body content">
     <app-spellbook [cd]="this.classDetail" [character]="this.character" [simpleView]="simpleView"></app-spellbook>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer content">
     <button type="button" class="btn btn-success btn-sm" (click)="d()">Close</button>
   </div>
 </ng-template>
