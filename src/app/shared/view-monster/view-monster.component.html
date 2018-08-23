@@ -9,7 +9,17 @@
   <hr class="stat mt-0" />
 
   <div *ngIf="this.show">
-    <div class="row">
+    <!-- No monsters -->
+    <div class="row" *ngIf="!this.monsters.length">
+      <div class="col-12">
+        <h6 class="text-light text-center">
+          You do not have any monsters in this game...<a class="text-white" [routerLink]="['/dmPortal']">(Try adding some!)</a>
+        </h6>
+      </div>
+    </div>
+
+    <!-- Has monsters -->
+    <div class="row" *ngIf="this.monsters.length">
       <!-- List of monsters -->
       <div class="col-lg-4">
         <h5 class="text-center">

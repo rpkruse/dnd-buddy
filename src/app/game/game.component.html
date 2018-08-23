@@ -10,12 +10,18 @@
               <li class="list-group-item text-light content selectable-item" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
                 {{ i+1 }}. {{ game.name }}
               </li>
+              <li class="list-group-item text-light content" *ngIf="!this.games.length">
+                  You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
+              </li>
             </ul>
 
             <!-- Short list on md- -->
             <ul class="list-group list-group-flush static-size-list short d-lg-none">
               <li class="list-group-item text-light content selectable-item" *ngFor="let game of this.games index as i" (click)="loadGame(game)">
                 {{ i+1 }}. {{ game.name }}
+              </li>
+              <li class="list-group-item text-light content" *ngIf="!this.games.length">
+                  You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
               </li>
             </ul>
           </ng-template>
@@ -29,12 +35,18 @@
               <li class="list-group-item text-light content selectable-item" *ngFor="let game of this.dmGames index as i" (click)="loadGame(game)">
                 {{ i+1 }}. {{ game.name }}
               </li>
+              <li class="list-group-item text-light content" *ngIf="!this.dmGames.length">
+                  You do not own any games...try creating one!
+              </li>
             </ul>
 
             <!-- Short list on md- -->
             <ul class="list-group list-group-flush static-size-listshort d-lg-none">
               <li class="list-group-item text-light content selectable-item" *ngFor="let game of this.dmGames index as i" (click)="loadGame(game)">
                 {{ i+1 }}. {{ game.name }}
+              </li>
+              <li class="list-group-item text-light content" *ngIf="!this.dmGames.length">
+                  You do not own any games...try creating one!
               </li>
             </ul>
           </ng-template>
@@ -43,10 +55,9 @@
         <!-- Create Game -->
         <ngb-tab title="Create Game">
           <ng-template ngbTabContent>
-            <form>
               <div class="input-group-prepend">
                 <label class="input-group-text">Game Name:</label>
-                <input [value]="gameName" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header"
+                <input [value]="gameName" (ngEnter)="saveNewGame()" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header"
                   placeholder="Game name" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
               </div>
               <div>
@@ -58,7 +69,6 @@
                 <small id="usernameHelpBlock" class="form-text text-light float-left" *ngIf="gameName.length">{{!gamenameTaken
                   ? "Game name is available!" : "Game name is taken."}}</small>
               </div>
-            </form>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>
@@ -92,9 +102,8 @@
                 <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm btn-secondary float-right"
                   (click)="confirmRemoveCharacter(confirmCharacter, $event, character, i)" *ngIf="isGameOwner()">Remove</button>
               </li>
-              <li class="list-group-item content text-light" *ngIf="!this.selectedGame.character.length">No players, try
-                adding one!</li>
             </ul>
+            <p class="text-light text-center" *ngIf="!this.selectedGame.character.length">This game contains no players.</p>
             <img class="icon icon-sm-med float-right mt-3" src="assets/icons/enter_icon_white.png" placement="left" ngbTooltip="Enter"
               (click)="joinGame()" *ngIf="this.selectedGame.character.length" />
           </div>

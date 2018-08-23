@@ -108,6 +108,10 @@ export class GameComponent implements OnInit {
    * Called when the user clicks save game, it adds the game to the backend and makes them the DM on it
    */
   public saveNewGame() {
+    if (this.gamenameTaken || this.gameName.length <= 0) {
+      return;
+    }
+    
     let s: Subscription;
     let newState = '';
     for (let x = 0; x < 100; x++) {
