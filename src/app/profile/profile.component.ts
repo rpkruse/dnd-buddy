@@ -44,7 +44,9 @@ export class ProfileComponent implements OnInit {
         this.user.password = null;
         this._storage.saveToLocal('savedUsername', this.user.username);
         this.oldUsername = this.user.username;
-
+        this.password = "";
+        this.confirmPassword ="";
+        
         this._dataShareService.changeUser(this.user);
       }
     );
