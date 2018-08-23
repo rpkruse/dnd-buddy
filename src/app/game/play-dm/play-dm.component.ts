@@ -65,9 +65,21 @@ export class PlayDmComponent implements OnInit {
     this.triggerMessage("", "Item given!", MessageType.Success);
   }
 
+  /**
+   * Called when the view-monster page outputs a mosnter that has been killed (hp <=0)
+   * 
+   * @param {Monster} monster The monster who died 
+   */
   public setDeadMonster(monster: Monster) {
     this.deadMonster = monster;
   }
+
+  /**
+   * Called when the DM clicks the give xp button. It will check to see how many users are currently connected 
+   * and divides that amount by the number of players (floored)
+   * 
+   * @param {number} amount The amount of xp to give 
+   */
   public giveXP(amount: number) {
     if (!amount || amount === 0) return;
 
@@ -86,6 +98,12 @@ export class PlayDmComponent implements OnInit {
     }
   }
 
+  /**
+   * Called whenever XP is given to a player, it checks to see if they leveled up, if so, it increases their level.
+   * Either way, the character's XP is changed in the DB
+   * 
+   * @param {Character} character The character to check
+   */
   private checkForLevelUp(character: Character) {
     let s: Subscription;
     let nextLevel: number = character.level + 1;
@@ -103,6 +121,11 @@ export class PlayDmComponent implements OnInit {
     )
   }
 
+  /**
+   * Called every time a character is updated, it updates them in the DB
+   * 
+   * @param {Character} character The character to update 
+   */
   private updateCharacter(character: Character) {
     let s: Subscription = this._apiService.putEntity<Character>("Characters", character, character.characterId).subscribe(
       d => d = d,

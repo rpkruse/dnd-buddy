@@ -29,6 +29,9 @@ export class ProfileComponent implements OnInit {
     this.oldUsername = this.user.username;
   }
 
+  /**
+   * Called when the user clicks the update button. It will update their info in the DB
+   */
   public saveUser() {
     if (this.password.length > 0) this.user.password = this.password;
 
@@ -40,12 +43,19 @@ export class ProfileComponent implements OnInit {
         this.triggerMessage("", "Profile updated!", MessageType.Success);
         this.user.password = null;
         this._storage.saveToLocal('savedUsername', this.user.username);
+        this.oldUsername = this.user.username;
 
         this._dataShareService.changeUser(this.user);
       }
     );
   }
 
+  /**
+   * Called when the user clicks the delete profile button. It will open a modal and 
+   * ask them to confirm their delete
+   * 
+   * @param content The delete user modal
+   */
   public confirmDeleteCharacter(content: any) {
     this._modalService.open(content).result.then((result) => { //On close via Confirm
       this.deleteUser(); 
@@ -53,6 +63,10 @@ export class ProfileComponent implements OnInit {
     });
   }
   
+  /**
+   * Called when the user clicks yes to the confirm delete profile modal. It removes the user from
+   * the database and moves the user to the login page
+   */
   private deleteUser() {
     let s: Subscription = this._apiService.deleteEntity<User>("Users", this.user.userId).subscribe(
       d => d = d,
@@ -67,6 +81,9 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user clicks cancel, it resets all of their changed values
+   */
   public cancelChanges() {
     this.user.username = this.oldUsername;
     this.password = "";

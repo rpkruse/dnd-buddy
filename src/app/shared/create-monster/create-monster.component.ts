@@ -66,6 +66,12 @@ export class CreateMonsterComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the dm clicks on an action. It opens it in a modal
+   * 
+   * @param {number} index The index of action to pull
+   * @param {any} content The modal to view the action in 
+   */
   selectAction(index: number, content: any) {
     this.selectedAbility = null;
 
@@ -82,6 +88,12 @@ export class CreateMonsterComponent implements OnInit {
     this._modalService.open(content);
   }
 
+  /**
+   * Called when the D< clicks on an ability. It opens it in a modal
+   * 
+   * @param {number} index The index of the ability to open 
+   * @param {any} content The ability modal 
+   */
   selectAbility(index: number, content: any) {
     this.selectedAction = null;
 
@@ -96,6 +108,11 @@ export class CreateMonsterComponent implements OnInit {
     this._modalService.open(content);
   }
 
+  /**
+   * Called when the DM searches for a monster. This method reduces the monster list to match the  search value
+   * 
+   * @param {string} val The value searched 
+   */
   search(val: string) {
     if (val.length <= 0) {
       this.matchingMonsters = this.listOfMonsters;
@@ -105,12 +122,23 @@ export class CreateMonsterComponent implements OnInit {
     this.matchingMonsters = this.listOfMonsters.filter(e => e.name.toLowerCase().includes(val.toLowerCase()));
   }
 
+  /**
+   * Called when the DM clicks the +/- button for adding monsters
+   * 
+   * @param {number} val The value to add or remove from the amount of monsters to add -1 || 1 
+   */
   addAmount(val: number) {
     this.amountToAdd += val;
 
     if (this.amountToAdd <= 0) this.amountToAdd = 1;
   }
 
+  /**
+   * Called when the DM clicks the -/+ button on either the current or max hp of the selected monster.
+   * 
+   * @param {number} val -1, 1 the amount to add to the max or current HP of a monster 
+   * @param {boolean} addToTotal If the amount added should be to the max hp or not 
+   */
   addHP(val: number, addToTotal: boolean) {
     if (addToTotal) {
       this.monster.max_HP += val;
@@ -124,6 +152,10 @@ export class CreateMonsterComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the DM clicks the add monsters button. It will roll each of their HP and assign it.
+   * Once everything is rolled and setup, the page will output the list of monsters to the parent page
+   */
   addMonster() {
     let monsters: any[] = [];
 
@@ -154,10 +186,16 @@ export class CreateMonsterComponent implements OnInit {
     this.outputMonster.emit(monsters);
   }
 
+  /**
+   * Called when the DM updates a monster, it outputs to the parent page
+   */
   sendUpdate() {
     this.updateMonster.emit(this.monster);
   }
 
+  /**
+   * @reutrns If the monster has saves to a stat 
+   */
   hasSaves(): boolean {
     if (this.monsterInfo.strength_save || this.monsterInfo.dexterity_save ||
       this.monsterInfo.constitution_save || this.monsterInfo.intelligence_save ||

@@ -52,6 +52,9 @@ export class SpellbookComponent implements OnInit {
     this.getSpells();
   }
 
+  /**
+   * Called on init, returns all of the spells for the class
+   */
   private getSpells() {
     if (this.spellBook.length) return;
 
@@ -78,6 +81,9 @@ export class SpellbookComponent implements OnInit {
     }
   }
 
+  /**
+   * If the character has a subclass, we also pull their spells
+   */
   public getSubClassSpells() {
     let sc: SubClass;
     let s: Subscription = this._dndApiService.getSingleEntityEndpoint<SubClass>("subclasses/" + this.character.subclass.toLowerCase()).subscribe(
@@ -104,6 +110,10 @@ export class SpellbookComponent implements OnInit {
     this.sortSimpleSpellBook();
   }
 
+  /**
+   * Called once we get all the spells, it puts the spells in a single list for easy viewing.
+   * This is the only list that subclasses can see
+   */
   private setSimpleSpellBook() {
     for (let i = 0; i < this.spellBook.length; i++) {
       let spells: Results[] = this.spellBook[i].results;
@@ -118,8 +128,6 @@ export class SpellbookComponent implements OnInit {
         this.simpleSpellBook.push(spell);
       }
     }
-
-    // this.sortSimpleSpellBook();
   }
 
   /*

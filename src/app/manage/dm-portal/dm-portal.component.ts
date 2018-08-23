@@ -93,6 +93,12 @@ export class DmPortalComponent implements OnInit {
     this.character = character;
   }
 
+  /**
+   * Called when the DM clicks a monster or create monster button
+   * 
+   * @param {Monster} monster The monster to load 
+   * @param {boolean} createMonster If the DM is creating a monster or not 
+   */
   selectMonster(monster: Monster, createMonster: boolean) {
     this.character = null;
 
@@ -100,6 +106,11 @@ export class DmPortalComponent implements OnInit {
     this.monster = monster;
   }
 
+  /**
+   * Called when the create monster page returns a list of monsters (len >= 1)
+   * 
+   * @param {any[]} monsters A list of monster (like) objects to add to the DB 
+   */
   getNewMonster(monsters: any[]) {
     let notif: string = monsters.length > 1 ? "Monsters Added" : "Monster Added";
 
@@ -122,6 +133,11 @@ export class DmPortalComponent implements OnInit {
     }
   }
 
+  /**
+   * Called when the monster view page outputs a monster it updates it in the backend
+   * 
+   * @param {Monster} monster The monster to update 
+   */
   updateMonster(monster: Monster) {
     let s: Subscription = this._apiService.putEntity<Monster>("Monsters", monster, monster.monsterId).subscribe(
       d => d = d,
@@ -133,7 +149,13 @@ export class DmPortalComponent implements OnInit {
     );
   }
 
-  removeMonster(index: number, event) {
+  /**
+   * Called when the DM removes a monster
+   * 
+   * @param {number} index The index of the monster to remove 
+   * @param {any} event The event to stop propagation
+   */
+  removeMonster(index: number, event: any) {
     event.stopPropagation();
     let s: Subscription;
 

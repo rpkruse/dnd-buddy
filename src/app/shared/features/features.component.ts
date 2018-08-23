@@ -46,18 +46,6 @@ export class FeaturesComponent implements OnInit {
     this.subclassName = this.character.subclass;
     this.level = this.character.level;
 
-
-    // if (this.subclassName) {
-    //   let s: Subscription = this._dndApiService.getSingleEntityEndpoint<SubClass>("subclasses/" + this.subclassName.toLowerCase()).subscribe(
-    //     d => this.className = d.class.name,
-    //     err => console.log(err),
-    //     () => {
-    //       s.unsubscribe();
-    //       this.getAllFeatures();
-    //     }
-    //   );
-    // }
-
     this.getAllFeatures();
   }
 

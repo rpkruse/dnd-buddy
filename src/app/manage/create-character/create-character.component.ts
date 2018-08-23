@@ -587,10 +587,10 @@ export class CreateCharacterComponent implements OnInit {
   }
 
   /**
-   * 1 -> Race
-   * 2 -> Class
-   * 3 -> Stats
-   * 4 -> Game, Name, Level
+   * 1 -> Game, Name, Level
+   * 2 -> Race 
+   * 3 -> Class
+   * 4 -> Stats
    * 5 -> Health
    */
   public canMoveOn(): boolean {

@@ -115,6 +115,10 @@ export class PlayPlayerComponent implements OnInit {
     this.spellSlots[index]--;
   }
 
+  /**
+   * Called whenever the user clicks the "rest" button. It will reset their spells casts (if applicable)
+   * and will reset their health if they have lost any
+   */
   public rest() {
     let rested: boolean = false;
 
@@ -132,6 +136,11 @@ export class PlayPlayerComponent implements OnInit {
     if (rested) this._itemManager.triggerMessage("", "Rested", MessageType.Success);
   }
 
+  /**
+   * Called when the stats output a hp value
+   * 
+   * @param {number} hp The HP to set the character to 
+   */
   public setHealth(hp: number) {
     this.character.hp = hp;
     this.updateCharacter.emit(this.character);

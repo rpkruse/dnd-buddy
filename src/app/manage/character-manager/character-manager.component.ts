@@ -91,6 +91,12 @@ export class CharacterManagerComponent implements OnInit {
     );
   }
 
+  /**
+   * Called when the user clicks on their character's name to change it. It opens a modal,
+   * allowing them to change their character's name
+   * 
+   * @param changeName The name change modal
+   */
   public editName(changeName: any) {
     this._modalService.open(changeName).result.then((result) => { //On close via save
       if (this.characterRename.length > 0) {
