@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row pr-1 pl-1 pl-sm-0 pr-sm-3">
 
   <div class="col-md-6" *ngIf="simpleView">
     <ngb-tabset class="customTabset" *ngIf="this.spellBook && this.spellBook.length">
@@ -11,7 +11,7 @@
             <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
               (click)="show = !show" *ngIf="!show" />
           </h3>
-          <ul class="list-group static-size-list half-height" *ngIf="show">
+          <ul class="list-group static-size-list half-height mb-3 mb-sm-0 dark-border" *ngIf="show">
             <li class="list-group-item selectable-item light-content text-light" *ngFor="let spell of spellLevel.results index as j" (click)="getSpellDetail(spell.url)">
               {{spell.name}}
             </li>
@@ -29,7 +29,7 @@
       <img class="icon icon-middle icon-ex-sm  no-padding d-inline" src="assets/icons/shrink_button.png" placement="right" ngbTooltip="Show"
         (click)="show = !show" *ngIf="!show" />
     </h3>
-    <ul class="list-group static-size-list half-height" *ngIf="show">
+    <ul class="list-group static-size-list half-height mb-3 mb-sm-0 dark-border" *ngIf="show">
       <li class="list-group-item selectable-item light-content text-light" *ngFor="let spell of simpleSpellBook index as i" (click)="getSpellDetail(spell.url)">
         {{ spell.name }} (Level {{ spell.level }})
       </li>
@@ -37,16 +37,6 @@
   </div>
 
   <div class="col-md-6 dark-border content no-padding" *ngIf="this.spellDetail">
-    <!-- <div class="card w-100">
-      <div class="card-body static-size-list half-height-with-some">
-        <img class="icon icon-ex-sm float-left d-inline" (click)="dismissSpell()" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
-        <h5 class="card-title text-center">{{spellDetail.name}}</h5>
-        <p>Cast Time: {{spellDetail.casting_time}}</p>
-        <p>Requires Concentration: {{spellDetail.concentration}}</p>
-        <p *ngFor="let line of spellDetail.desc">{{line}}</p>
-
-      </div>
-    </div> -->
     <img class="icon icon-ex-sm float-left d-inline" (click)="dismissSpell()" placement="right" ngbTooltip="Close" src="assets/icons/x_icon.png">
     <h5 class="text-center text-light">{{ spellDetail.name }}</h5>
     <div class="col-12 text-light"> <!-- Added col-12 for text padding-->

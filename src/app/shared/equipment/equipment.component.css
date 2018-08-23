@@ -10,3 +10,23 @@
 .silver {
     color: #C0C0C0
 }
+
+.dropdown-menu.show {
+    overflow: visible;
+    min-width: 0rem !important;
+    width: fit-content;
+    background-color: #f8f9fa;
+}
+
+.dropdown-item:hover {
+    background-color: #bdbdbd;
+}
+
+.dropdown-toggle::after {
+    display:none;
+}
+
+.bag-list {
+    overflow-x: visible !important;
+    overflow-y: scroll;
+}

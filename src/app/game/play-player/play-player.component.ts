@@ -177,6 +177,8 @@ export class PlayPlayerComponent implements OnInit {
       name: eq.name,
       url: eq.url,
       count: 1,
+      cost: eq.cost.quantity,
+      cost_type: eq.cost.unit,
       canEquip: canEquip,
       characterId: this.character.characterId,
     };

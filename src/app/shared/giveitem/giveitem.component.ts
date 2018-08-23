@@ -146,10 +146,12 @@ export class GiveitemComponent implements OnInit {
       name: eq.name,
       url: eq.url,
       count: this.giveAmount,
+      cost: eq.cost.quantity,
+      cost_type: eq.cost.unit,
       canEquip: canEquip,
       characterId: this.character.characterId
     }
-
+    
     this._itemManager.addItem(nItem, nItem.url);
 
     this.giveAmount = 1;

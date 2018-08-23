@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { trigger, state, animate, transition, style } from '@angular/animations';
 
@@ -34,6 +34,16 @@ export class EquipmentComponent implements OnInit {
 
   @Input() dmPortal: boolean = false; //If true, then we can add items with a "+" button
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.width = window.innerWidth;
+
+    this.onMobile = this.width <= 400;
+  }
+
+  onMobile: boolean = false;
+  private width: number;
+  
   private isAlive: boolean = true;
 
   items: Item[] = [];
@@ -47,7 +57,7 @@ export class EquipmentComponent implements OnInit {
   selectedRing: Equipment;
   slotSwapIndex: number = 0;
 
-  money: number[] = [];
+  money: number[] = []; //GP, SP, CP
 
   lastCharID: number = -1;
 
@@ -174,6 +184,31 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.removeItem(index);
   }
 
+  public sellItem(index: number) {
+    let item: Item = this.items[index];
+
+    let inputs: number[] = []; //Amount, Index (gp, sp, cp)
+    switch(item.cost_Type) {
+      case "gp":
+        inputs[0] = item.cost + this.money[0];
+        inputs[1] = 0;
+        break;
+      case "sp":
+        inputs[0] = item.cost + this.money[1];
+        inputs[1] = 1;
+        break;
+      case "cp":
+        inputs[0] = item.cost + this.money[2];
+        inputs[1] = 2;
+        break;
+      default:
+        return;
+    }
+
+    this.updateMoney(inputs);
+    this.removeItemCount(index);
+  }
+
   /**
    * 
    * @param {Item} item The item to equip
@@ -189,11 +224,6 @@ export class EquipmentComponent implements OnInit {
         this.equipItem(eq, item, ringEquipModal);
       }
     );
-  }
-
-  public getAC(shield: boolean): number{
-    if (shield) return this.shield.armor_class.base + this.shield.bonus;
-    return this.armor.armor_class.base + this.armor.bonus;
   }
 
   /**

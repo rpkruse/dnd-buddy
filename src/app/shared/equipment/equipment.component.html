@@ -12,8 +12,8 @@
     <div class="col-md-12 text-center">
       <!-- Armor -->
       <div *ngIf="this.armor">
-        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ getAC(false) }})</p>
-        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ getAC(false) }}+{{ getAC(true) }} shield bonus)</p>
+        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
+        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
       </div>
       <div *ngIf="!this.armor">
         <p class="">Armor: None</p>
@@ -32,7 +32,9 @@
       <!-- Rings -->
       <div *ngIf="this.ring_1">
         <p class="">Ring 1:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">{{ this.ring_1.name }}</button>
+          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">{{ this.ring_1.name
+            }}
+          </button>
         </p>
       </div>
       <div *ngIf="!this.ring_1">
@@ -41,7 +43,9 @@
 
       <div *ngIf="this.ring_2">
         <p class="">Ring 2:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name }}</button>
+          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name
+            }}
+          </button>
         </p>
       </div>
       <div *ngIf="!this.ring_2">
@@ -53,15 +57,18 @@
           <div class="input-group-prepend">
             <span class="input-group-text stat content">G:</span>
           </div>
-          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[0]" (input)="setMoneyValue($event.target.value, 0)" placeholder="Gold" />
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[0]" (input)="setMoneyValue($event.target.value, 0)"
+            placeholder="Gold" />
           <div class="input-group-prepend">
             <span class="input-group-text silver content">S:</span>
           </div>
-          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[1]" (input)="setMoneyValue($event.target.value, 1)"placeholder="Silver" />
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[1]" (input)="setMoneyValue($event.target.value, 1)"
+            placeholder="Silver" />
           <div class="input-group-prepend">
             <span class="input-group-text copper content">C:</span>
           </div>
-          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[2]" (input)="setMoneyValue($event.target.value, 2)"placeholder="Copper" />
+          <input type="text" class="form-control bg-transparent text-light" [(ngModel)]="this.money[2]" (input)="setMoneyValue($event.target.value, 2)"
+            placeholder="Copper" />
         </div>
       </div>
     </div>
@@ -75,16 +82,24 @@
           <span class="float-right glyphicon glyphicon-menu-down"></span>
         </button>
         <div *ngIf="this.bagVisible">
-          <ul class="list-group list-group-flush static-size-list short">
+          <ul class="list-group list-group-flush bag-list short">
             <li class="list-group-item content w-100" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
-              {{ item.name }} (x{{ item.count }})
 
-              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
-                (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
-              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 float-right"
-                (click)="removeItemCount(i)">-</button>
-              <button [@showState]="this.mouseOver === i ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 float-right"
-                (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
+              <span class="d-inline">{{ item.name }} (x{{ item.count }})</span>
+              <div class="float-right">
+                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 d-inline"
+                  (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
+                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 d-inline"
+                  (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
+                <div class="d-inline" placement="left" ngbDropdown>
+                  <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2"
+                    ngbDropdownToggle>-</button>
+                  <div class="dropdown text-center" ngbDropdownMenu>
+                    <button class="dropdown-item" (click)="removeItemCount(i)">Use</button>
+                    <button class="dropdown-item" (click)="sellItem(i)">Sell</button>
+                  </div>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
