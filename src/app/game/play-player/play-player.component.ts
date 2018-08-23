@@ -44,8 +44,6 @@ export class PlayPlayerComponent implements OnInit {
   @Input() character: Character;
   @Output() updateCharacter: EventEmitter<Character> = new EventEmitter<Character>();
 
-  canEquip: string[] = ["Weapon", "Weapon (+1)", "Armor", "Armor (+1)", "Shield", "Rings"];
-
   //Character info fields
   classDetail: ClassDetails;
   levelDetail: ClassLevels;
@@ -161,9 +159,9 @@ export class PlayPlayerComponent implements OnInit {
    * @param {Equipment} item The item given to the player 
    */
   private handleWeaponType(item: Equipment) {
-    let canEq = this.canEquip.some(i => i === item.equipment_category);
+    // let canEq = this.canEquip.some(i => i === item.equipment_category);
 
-    this.addItemToBag(item, canEq);
+    this.addItemToBag(item, this._itemManager.canEquipItem(item));
     this._messageService.sendItem(null); //reset so we don't double up
   }
 

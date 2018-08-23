@@ -8,7 +8,7 @@
 */
 import { Injectable } from '@angular/core';
 
-import { Item, MessageOutput, MessageType, ItemType, Character } from '../../interfaces/interfaces';
+import { Item, MessageOutput, MessageType, ItemType, Character, Equipment } from '../../interfaces/interfaces';
 
 import { ApiService } from '../api/api.service';
 import { DataShareService } from '../data/data-share.service';
@@ -19,7 +19,9 @@ import { Subject, BehaviorSubject, Subscription, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ItemManager {
-  
+
+  private equipableItems: string[] = ["Weapon", "Weapon (+1)", "Armor", "Armor (+1)", "Shield", "Rings"];
+
   private items: Item[] = [];
   itemSubj: Subject<Item[]> = new BehaviorSubject<Item[]>([]);
 
@@ -122,6 +124,10 @@ export class ItemManager {
   public setItems(items: Item[]) {
     this.items = items;
     this.itemSubj.next(this.items);
+  }
+
+  public canEquipItem(item: Equipment): boolean {
+    return this.equipableItems.some(x => x === item.equipment_category);
   }
 
   public triggerMessage(message: string, action: string, level: MessageType) {

@@ -170,7 +170,7 @@ export class ViewMonsterComponent implements OnInit {
   }
   
   private loadMonsters() {
-    let s: Subscription = this._apiService.getAllEntities<Monster>("Monsters").subscribe(
+    let s: Subscription = this._apiService.getAllEntities<Monster>("Monsters/game/" + this.game.gameId).subscribe(
       d => this.monsters = d,
       err => console.log(err),
       () => s.unsubscribe()

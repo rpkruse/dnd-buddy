@@ -24,7 +24,6 @@ export class GiveitemComponent implements OnInit {
 
   finished: boolean = false;
 
-  canEquip: string[] = ["Weapon", "Weapon (+1)", "Armor", "Armor (+1)", "Shield", "Rings"];
   giveAmount: number = 1;
 
   show: boolean = true;
@@ -136,9 +135,9 @@ export class GiveitemComponent implements OnInit {
    * @param {Equipment} item The item to give 
    */
   setItem(item: Equipment) {
-    let cq = this.canEquip.some(x => x === item.equipment_category);
-
-    this.createNewItem(item, cq);
+    // let cq = this.canEquip.some(x => x === item.equipment_category);
+    
+    this.createNewItem(item, this._itemManager.canEquipItem(item));
   }
 
   private createNewItem(eq: Equipment, canEquip: boolean) {
