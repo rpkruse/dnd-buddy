@@ -18,6 +18,8 @@ import { SubRace } from './api/race/subrace';
 
 import { ProficiencyChoices } from './api/proficiencychoices';
 
+import { God } from './api/god/god';
+
 //Monster interfaces
 import { ApiMonster } from './api/monster/apimonster';
 import { Monster } from './api/monster/monster';
@@ -63,6 +65,7 @@ export {
     RaceDetails,
     SubRace,
     ProficiencyChoices,
+    God,
     ApiMonster,
     Monster,
     MonsterXP,

@@ -8,9 +8,10 @@ import { Router } from '@angular/router';
 
 import { ApiService, DndApiService, DataShareService } from '../../services/services';
 
-import { Class, ClassDetails, SubClass, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP, Trait } from '../../interfaces/interfaces';
+import { Class, ClassDetails, SubClass, Race, RaceDetails, SubRace, Game, Character, User, MessageType, MessageOutput, XP, Trait, God } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
+import { Pull } from '../../interfaces/api/pull';
 
 @Component({
   selector: 'app-create-character',
@@ -28,6 +29,7 @@ export class CreateCharacterComponent implements OnInit {
   selectedRace: RaceDetails = null;
   selectedSubRace: SubRace = null;
   selectedGame: Game = null;
+  selectedGod: God = null;
 
   private changedClass: boolean = false;
 
@@ -41,6 +43,7 @@ export class CreateCharacterComponent implements OnInit {
   subClass: SubClass;
 
   games: Game[] = [];
+  gods: Pull;
 
   private numOfDice: number = 6;
   private numOfDiceToKeep: number = 3;
@@ -61,8 +64,8 @@ export class CreateCharacterComponent implements OnInit {
   public title: string = "Select Game, Name, and Level"
   public buttonText: string = "Next";
   public currentPage: number = 1;
-  public maxPage: number = 5;
-  public pages: number[] = [1, 2, 3, 4, 5];
+  public maxPage: number = 6;
+  public pages: number[] = [1, 2, 3, 4, 5, 6];
 
   choiceAmount: number = -1;
   profChoices: string[] = [];
@@ -79,26 +82,32 @@ export class CreateCharacterComponent implements OnInit {
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _dataShareService: DataShareService, private _router: Router, private _modalService: NgbModal) { }
 
   ngOnInit() {
-    let s, j, k: Subscription;
+    let s, j, k, z: Subscription;
 
     this._dataShareService.user.subscribe(res => this.user = res);
 
     s = this._dndApiService.getAllEntities<Class>("classes").subscribe(
       d => this.classes = d,
       err => console.log("unable to get classes"),
-      () => { s.unsubscribe(); this.sortClasses(); }
+      () => { s.unsubscribe(); this.classes =  this.sortPullList(this.classes); }
     );
 
     j = this._dndApiService.getAllEntities<Race>("races").subscribe(
       d => this.races = d,
       err => console.log("Unable to get races"),
-      () =>{ j.unsubscribe(); this.sortRaces(); }
+      () =>{ j.unsubscribe(); this.races = this.sortPullList(this.races); }
     );
 
     k = this._apiService.getAllEntities<Game>("Games/open/" + this.user.userId).subscribe(
       d => this.games = d,
       err => console.log("Unable to find games"),
       () => k.unsubscribe()
+    );
+
+    z = this._dndApiService.getAllEntities<Pull>("gods").subscribe(
+      d => this.gods = d,
+      err => console.log("unable to get gods"),
+      () => { z.unsubscribe(); this.gods = this.sortPullList(this.gods); }
     );
 
     this.character = {
@@ -207,6 +216,19 @@ export class CreateCharacterComponent implements OnInit {
   public selectGame(index: number) {
     if (this.games[index] === undefined) return;
     this.selectedGame = this.games[index];
+  }
+
+  public selectGod(url: string) {
+    if (url === "Choose") {
+      this.selectedGod = null;
+      return;
+    }
+
+    let s: Subscription = this._dndApiService.getSingleEntity<God>(url).subscribe(
+      d => this.selectedGod = d,
+      err => console.log("unable to get god", err),
+      () => s.unsubscribe()
+    );
   }
 
   /**
@@ -524,7 +546,8 @@ export class CreateCharacterComponent implements OnInit {
 
   public canSubmitCharacter(): boolean {
     return this.character.name.length > 0 && this.character.class.length > 0 && this.character.race.length > 0
-      && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null && this.finishedRolling();
+      && this.selectedGame !== null && this.level !== null && this.selectedRace !== null && this.selectedSubRace !== null 
+      && this.selectedGod !== null && this.finishedRolling();
   }
 
    /**
@@ -575,9 +598,12 @@ export class CreateCharacterComponent implements OnInit {
         }
 
         this.changedClass = false;
-        this.buttonText = "Finish";
         break;
       case 6:
+        this.title = "Select God";
+        this.buttonText = "Finish";
+        break;
+      case 7:
         this.title = "Creating Character..."
         this.confirmCharacter();
         break;
@@ -592,6 +618,7 @@ export class CreateCharacterComponent implements OnInit {
    * 3 -> Class
    * 4 -> Stats
    * 5 -> Health
+   * 6 -> God
    */
   public canMoveOn(): boolean {
     switch (this.currentPage) {
@@ -608,6 +635,8 @@ export class CreateCharacterComponent implements OnInit {
         return !this.rolls.some(x => x < 2);
       case 5:
         return !this.hpRollCount.some(x => x < 2);
+      case 6:
+        return this.selectedGod !== null;
       default:
         return false;
     }
@@ -634,16 +663,14 @@ export class CreateCharacterComponent implements OnInit {
     return Math.floor((attr - 10) / 2);
   }
 
-  private sortClasses() {
-    this.classes.results.sort((a, b) => a.name > b.name ? 1 : -1);
-  }
-
-  private sortRaces() {
-    this.races.results.sort((a, b) => a.name > b.name ? 1 : -1);
-  }
-
   private sortSubraces() {
     this.selectedRace.subraces.sort((a, b) => a.name > b.name ? 1 : -1);
+  }
+
+  private sortPullList(pull: Pull): Pull{
+    pull.results = pull.results.sort((a, b) => a.name > b.name ? 1 : -1);
+
+    return pull;
   }
 
   private triggerMessage(message: string, action: string, level: MessageType) {

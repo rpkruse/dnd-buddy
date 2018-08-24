@@ -308,6 +308,33 @@
           </div>
         </div>
 
+        <!-- Gods -->
+        <div class="row" *ngSwitchCase="6">
+          <div class="col-md-6 mb-sm-0 mb-5">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-lable">Gods:</label>
+              <select class="custom-select col-md-8" (change)="selectGod($event.target.value)">
+                <option selected>Choose</option>
+                <option *ngFor="let god of this.gods.results" [value]="god.url">{{ god.name }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div [class.panelHide]="!this.selectedGod" class="col-md-6" *ngIf="this.selectedGod">
+            <div class="row panel dark-border content text-light">
+              <div class="col-12">
+                <h4 class="text-center">{{ this.selectedGod.name }}, {{ this.selectedGod.god_of }}</h4>
+                <hr class="stat mt-0" />
+              </div>
+              <div class="col-12">
+                <p class="text-center"><strong>Alignment:</strong> {{ this.selectedGod.alignment }}</p>
+                <p class="text-center" *ngIf="this.selectedGod.boon"><strong>Boon: </strong>{{ this.selectedGod.boon }}</p>
+                <p *ngFor="let line of this.selectedGod.desc">{{ line }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
       <!-- ^^end of current page -->
 

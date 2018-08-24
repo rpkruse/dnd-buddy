@@ -11,6 +11,7 @@ import { DndApiService } from '../../services/services';
 
 import { Class, ClassDetails, Race, RaceDetails, SubRace, Trait, SubClass } from '../../interfaces/interfaces';
 import { Subscription } from 'rxjs';
+import { Pull } from '../../interfaces/api/pull';
 
 @Component({
   selector: 'character-race-details',
@@ -59,13 +60,13 @@ export class CharacterRaceDetails implements OnInit {
     let s: Subscription = this._dndApiService.getAllEntities<Class>("classes").subscribe(
       d => this.classes = d,
       err => console.log("unable to fetch classes", err),
-      () => { s.unsubscribe(); this.sortClasses(); }
+      () => { s.unsubscribe(); this.classes = this.sortPullList(this.classes); }
     );
 
     let j: Subscription = this._dndApiService.getAllEntities<Race>("races").subscribe(
       d => this.races = d,
       err => console.log("unable to fetch races"),
-      () => { j.unsubscribe(); this.sortRaces(); }
+      () => { j.unsubscribe(); this.races = this.sortPullList(this.races); }
     );
   }
 
@@ -115,13 +116,6 @@ export class CharacterRaceDetails implements OnInit {
    * @param {number} index The index of the race to get details on 
    */
   public getRaceDetails(url: string) {
-    /*let s: Subscription = this._dndApiService.getRaceInfo(index).subscribe(
-      d => this.raceDetail = d,
-      err => console.log("unable to fetch race", err),
-      () => {
-        s.unsubscribe();
-      }
-    );*/
     let s: Subscription = this._dndApiService.getSingleEntity<RaceDetails>(url).subscribe(
       d => this.raceDetail = d,
       err => console.log("unable to fetch race", err),
@@ -145,13 +139,11 @@ export class CharacterRaceDetails implements OnInit {
       }
     );
   }
+  
+  private sortPullList(pull: Pull): Pull{
+    pull.results = pull.results.sort((a, b) => a.name > b.name ? 1 : -1);
 
-  private sortClasses() {
-    this.classes.results.sort((a, b) => a.name > b.name ? 1 : -1);
-  }
-
-  private sortRaces() {
-    this.races.results.sort((a, b) => a.name > b.name ? 1 : -1);
+    return pull;
   }
 
   private sortSubraces() {
