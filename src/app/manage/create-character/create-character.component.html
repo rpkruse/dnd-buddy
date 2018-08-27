@@ -323,13 +323,12 @@
           <div [class.panelHide]="!this.selectedGod" class="col-md-6" *ngIf="this.selectedGod">
             <div class="row panel dark-border content text-light">
               <div class="col-12">
-                <h4 class="text-center">{{ this.selectedGod.name }}, {{ this.selectedGod.god_of }}</h4>
+                <h4 class="text-center">{{ this.selectedGod.name }}</h4>
                 <hr class="stat mt-0" />
               </div>
               <div class="col-12">
-                <p class="text-center"><strong>Alignment:</strong> {{ this.selectedGod.alignment }}</p>
-                <p class="text-center" *ngIf="this.selectedGod.boon"><strong>Boon: </strong>{{ this.selectedGod.boon }}</p>
-                <p *ngFor="let line of this.selectedGod.desc">{{ line }}</p>
+                <p class="">{{ this.selectedGod.desc }}</p>
+                <p class="" *ngIf="this.selectedGod.boon.name"><strong>Boon: </strong>{{ this.selectedGod.boon.name }} - {{ this.selectedGod.boon.desc }}</p>
               </div>
             </div>
           </div>

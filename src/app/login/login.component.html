@@ -12,7 +12,7 @@
           required autofocus>
         <input [value]="password" (input)="password = $event.target.value" type="password" class="form-control" id="inputPassword3"
           placeholder="Password" (ngEnter)="loginClicked($event)" required>
-        <button class="btn btn-lg btn-primary btn-block" type="button" (click)="loginClicked()" [disabled]="!allFieldsFilled()">Sign In</button>
+        <button class="btn btn-lg btn-s btn-h btn-block" type="button" (click)="loginClicked()" [disabled]="!allFieldsFilled()">Sign In</button>
         <label class="checkbox pull-left text-light">
           <input type="checkbox" [checked]="rememberMe" (change)="rememberMe = !rememberMe">Remember me</label>
       </form>
