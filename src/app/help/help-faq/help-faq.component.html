@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      The page isn't displaying, what's wrong?
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[0] = !show[0]" *ngIf="show[0]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[0] = !show[0]" *ngIf="!show[0]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="show[0]">
+      <p>
+        Since D&D Buddy is hosted on free servers, they "fall asleep" after a short period of time of no use. When someone wakes
+        up the servers the first request takes much longer than normal requests. Simply wait a few moments while the servers
+        wake up and try again.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      I joined a game as a DM, but can only see the roll panel, why?
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[1] = !show[1]" *ngIf="show[1]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[1] = !show[1]" *ngIf="!show[1]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="show[1]">
+      <p>
+        If you join a game as a DM and there is no one else in the game with you, then you cannot to make changes to characters until
+        the join the game. If you need to make changes to a character, go to the <a [routerLink]="['/dmPortal']">DM
+          Portal.
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      I don't see the game I want to join when creating a character
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[2] = !show[2]" *ngIf="show[2]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[2] = !show[2]" *ngIf="!show[2]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="show[2]">
+      <p>
+        If you are unable to join the game you want, make sure that you don't already have a character in the game and that the DM
+        doesn't have the game locked.
+      </p>
+    </div>
+  </div>
+</div>

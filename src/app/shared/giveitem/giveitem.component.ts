@@ -145,10 +145,16 @@ export class GiveitemComponent implements OnInit {
       name: eq.name,
       url: eq.url,
       count: this.giveAmount,
+      magic_Type: "none",
       cost: eq.cost.quantity,
       cost_type: eq.cost.unit,
       canEquip: canEquip,
       characterId: this.character.characterId
+    }
+
+    if (eq.equipment_category === "Magical Items") {
+      nItem.magic_Type = eq.armor_category;
+      nItem.canEquip = eq.worn;
     }
     
     this._itemManager.addItem(nItem, nItem.url);

@@ -1,0 +1,30 @@
+:host ::ng-deep .customTabset a.nav-link {
+    background-color: rgba(0,0,0,0.65);
+    color: #f8f9fa;
+}
+
+:host ::ng-deep .customTabset a.nav-link.active {
+    background-color: rgba(0, 0, 0, 0.35);
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, 0 0 0.4em black;
+    color: #ffd553; /* gold */
+}
+
+.bag-list {
+    overflow-x: visible !important;
+    overflow-y: scroll;
+}
+
+.dropdown-menu.show {
+    overflow: visible;
+    min-width: 0rem !important;
+    width: fit-content;
+    background-color: #f8f9fa;
+}
+
+.dropdown-item:hover {
+    background-color: #bdbdbd;
+}
+
+.dropdown-toggle::after {
+    display:none;
+}

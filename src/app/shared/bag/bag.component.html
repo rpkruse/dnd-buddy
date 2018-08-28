@@ -1,0 +1,98 @@
+<div class="col-12 no-padding">
+  <ngb-tabset class="customTabset" justify="fill">
+
+    <!-- Items -->
+    <ngb-tab title="Items">
+      <ng-template ngbTabContent>
+        <ul class="list-group list-group-flush bag-list short">
+          <li class="list-group-item light-content selectable-item" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1"
+            (click)="getItem(item.url, item, content)" *ngFor="let item of this.normal index as i">
+            <span class="d-inline">{{ item.name }} (x{{ item.count }})</span>
+            <div class="float-right" [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'">
+              <div class="d-inline" placement="left" ngbDropdown #dropdown="ngbDropdown">
+                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-0 no-padding border-0"
+                  ngbDropdownToggle (click)="$event.stopPropagation()">-</button>
+                <div class="dropdown text-center" ngbDropdownMenu>
+                  <button class="dropdown-item" (click)="performAction(item, 'use', $event); dropdown.close()">Use</button>
+                  <button class="dropdown-item" (click)="performAction(item, 'sell', $event); dropdown.close()">Sell</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ng-template>
+    </ngb-tab>
+
+    <!-- Equipable -->
+    <ngb-tab title="Equipable">
+      <ng-template ngbTabContent>
+        <ul class="list-group list-group-flush bag-list short">
+          <li class="list-group-item light-content selectable-item" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1"
+            (click)="getItem(item.url, item, content)" *ngFor="let item of this.equip index as i">
+            <span class="d-inline my-auto">{{ item.name }} (x{{ item.count }})</span>
+            <div class="float-right" [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'">
+              <button type="button" class="btn btn-sm bg-transparent text-light ml-md-2 d-inline" (click)="performAction(item, 'equip', $event)">Equip</button>
+
+              <div class="d-inline" placement="left" ngbDropdown #dropdown="ngbDropdown">
+                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-0 no-padding border-0"
+                  ngbDropdownToggle (click)="$event.stopPropagation()">-</button>
+                <div class="dropdown text-center" ngbDropdownMenu>
+                  <button class="dropdown-item" (click)="performAction(item, 'use', $event); dropdown.close()">Use</button>
+                  <button class="dropdown-item" (click)="performAction(item, 'sell', $event); dropdown.close()">Sell</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ng-template>
+    </ngb-tab>
+
+    <!-- Magical Items -->
+    <ngb-tab title="Magical">
+      <ng-template ngbTabContent>
+        <ul class="list-group list-group-flush bag-list short">
+          <li class="list-group-item light-content selectable-item" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1"
+            (click)="getItem(item.url, item, content)" *ngFor="let item of this.magical index as i">
+            <span class="d-inline">{{ item.name }} (x{{ item.count }})</span>
+            <div class="float-right" [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'">
+
+              <div class="float-right" [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'">
+                <button type="button" class="btn btn-sm bg-transparent text-light ml-md-2 d-inline" (click)="performAction(item, 'equip', $event)"
+                  *ngIf="item.canEquip">Equip</button>
+                <div class="d-inline" placement="left" ngbDropdown #dropdown="ngbDropdown">
+                  <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-0 no-padding border-0"
+                    ngbDropdownToggle (click)="$event.stopPropagation()">-</button>
+                  <div class="dropdown text-center" ngbDropdownMenu>
+                    <button class="dropdown-item" (click)="performAction(item, 'use', $event); dropdown.close()">Use</button>
+                    <button class="dropdown-item" (click)="performAction(item, 'sell', $event); dropdown.close()">Sell</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.selectedEquipment.name }}</h4>
+    </div>
+  </div>
+  <div class="modal-body content">
+    <div class="bg-transparent text-light">
+      <p *ngFor="let line of this.selectedEquipment.desc">{{ line }}</p>
+    </div>
+
+    <div class="bg-transparent text-light text-center" *ngIf="this.selectedEquipment.cost">
+      <p>Worth: {{ this.selectedEquipment.cost.quantity | number}}{{ this.selectedEquipment.cost.unit }}</p>
+      <p *ngIf="this.selectedEquipment.rank">Rarity: {{ this.selectedEquipment.rank }}</p>
+    </div>
+  </div>
+  <div class="modal-footer content">
+    <button type="button" class="btn btn-sm btn-s btn-h" (click)="d();">Cancel</button>
+  </div>
+</ng-template>

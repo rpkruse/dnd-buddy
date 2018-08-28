@@ -5,6 +5,7 @@ export interface Item {
     name: string,
     url: string,
     count: number,
+    magic_Type: string,
     cost: number,
     cost_Type: string,
     canEquip: boolean,

@@ -1,0 +1,193 @@
+<div class="container mb-3 mb-sm-4">
+  <input type="checkbox" [checked]="tldr" (change)="tldr = !tldr"><span class="text-light">TLDR View</span>
+  <!-- Abilities -->
+  <div class="col-12 dark-border content text-light mt-sm-5 mt-3">
+    <h4 class="mb-2 mb-sm-3">
+      Abilities (Stats)
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[0] = !show[0]" *ngIf="show[0]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[0] = !show[0]" *ngIf="!show[0]" />
+    </h4>
+    <div class="row" *ngIf="show[0]">
+      <div class="col-sm-6" *ngIf="!tldr">
+        <p>Each creature has six abilities to describe their physical and mental characteristics.</p>
+        <p>
+          The three main rolls of the game--the ability check, the saving throw, and the attack roll--rely on the six ability scores
+          of your character's stats.
+        </p>
+      </div>
+      <div [ngClass]="tldr ? 'col-sm-12' : 'col-sm-6'">
+        <p><strong>Strength (STR)</strong>:- Measures bodily power, athletic ability, and extent to which you can exert raw
+          physical force</p>
+        <p><strong>Dexterity (DEX)</strong>:- Measures agility, reflexes, and balance.</p>
+        <p><strong>Constitution (CON)</strong>:- Measures health, stamina, and vital force.</p>
+        <p><strong>Intelligence (INT)</strong>:- Measures mental acuity, accuracy of recall, and the ability to reason.</p>
+        <p><strong>Wisdom (WIS)</strong>:- Measures how attuned you are to the world around you and represents perceptiveness
+          and intuition</p>
+        <p><strong>Charisma (CHA)</strong>:- Measures your ability to interact effectively with others.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Abil score/mods -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Ability Scores and Modifiers
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[1] = !show[1]" *ngIf="show[1]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[1] = !show[1]" *ngIf="!show[1]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="!tldr && show[1]">
+      <p>
+        Each ability has a score, a number that defines the magnitue of that ability. A score of 10 or 11 is the normal human average,
+        but adventurers and many monsters are cut above average in most abilities. A score of 18 is the highest that a person
+        usually reaches, but some creatures are known to have a score as high as 20.
+      </p>
+      <p>
+        Each ability also has a modifier, derived from the score and ranging from -5 to +10. To determine an ability modifier subtract
+        10 from the ability score and then divide the total by 2 (rounding down).
+      </p>
+      <p>
+        Ability modifiers affect many aspects of the game. The are used in <strong>attack rolls, ability checks, and saving
+          throws.
+        </strong> Ability modifiers come up in play more often than their associated scores.
+      </p>
+    </div>
+    <div class="col-sm-12" *ngIf="tldr && show[1]">
+      <p>Each ability also has a modifier. To determine an ability modifier subtract 10 from the ability score and then divide
+        the total by 2 (rounding down).</p>
+      <p>When making a roll that uses a specific ability, you added the modifier to the value rolled</p>
+    </div>
+  </div>
+
+  <!-- Prof Bonus -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Proficiency Bonus
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[2] = !show[2]" *ngIf="show[2]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[2] = !show[2]" *ngIf="!show[2]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="show[2]">
+      <p>
+        Characters have a proficiency bonus determined by level. You add this bonus to <strong>ability checks, saving throws,
+          and attack rolls.</strong>
+      </p>
+      <p>
+        When making a saving throw, ability check, or an attack roll that your character is proficient in, you may add your proficiency
+        bonus to that roll.
+      </p>
+    </div>
+  </div>
+
+  <!-- Checks -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Ability Checks
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[3] = !show[3]" *ngIf="show[3]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[3] = !show[3]" *ngIf="!show[3]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="!tldr && show[3]">
+      <p>
+        An ability check tests a character's innate talent and training in an effort to overcome a challenge. The DM decides which
+        of the six abilities is relevant to the task at hand.
+      </p>
+      <p>
+        To make an ability check, roll a d20 and add the relevant ability modifier. If the total is higher or equal to the required
+        check it is successful; otherwise, it's a failure.
+      </p>
+      <p>
+        <small>Example: If a character attempts to lift a large object, they must make a strength check to see if they are
+          able to.</small>
+      </p>
+    </div>
+    <div class="col-sm-12" *ngIf="tldr && show[3]">
+      <p>
+        To make an ability check, roll a d20 and add the relevant ability modifier. If the total is higher or equal to the required
+        check it is successful; otherwise, it is a failure.
+      </p>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Skills
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[4] = !show[4]" *ngIf="show[4]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[4] = !show[4]" *ngIf="!show[4]" />
+    </h4>
+
+    <div class="row">
+      <div class="col-sm-6" *ngIf="!tldr && show[4]">
+        <p>
+          A skill represents a specific aspect of an ability score, and an individual's proficiency in a skill demonstrates a focus
+          on that aspect.
+        </p>
+      </div>
+      <div [ngClass]="tldr ? 'col-sm-12' : 'col-sm-6'" *ngIf="show[4]">
+        <p><strong>Strength: </strong>Athletics</p>
+        <p><strong>Dexterity: </strong>Acrobatics, Sleight of Hand, Stealth</p>
+        <p><strong>Intelligence: </strong>Arcana, History, Investigation, Nature, Religion</p>
+        <p><strong>Wisdom: </strong>Animal Handling, Insight, Medicine, Perception, Survival</p>
+        <p><strong>Charisma: </strong>Deception, Intimidation, Performance, Persuasion</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Saving Throws -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Saving Throws
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[5] = !show[5]" *ngIf="show[5]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[5] = !show[5]" *ngIf="!show[5]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="!tldr && show[5]">
+      <p>
+        A saving throw, or save, represents an attempt to resist a spell, trap, poison, disease, or similar threat.
+      </p>
+      <p>
+        Each class gives proficiency in at least two saving throws. To make a saving throw, roll a d20 and add the appropriate ability
+        modifier. If you have proficiency in the ability, you also add your proficiency modifier to the total.
+      </p>
+      <p>
+        <small>Example: If your character attempts to dodge a falling tree, you must make a dex saving throw to see if you
+          dodge or not.</small>
+      </p>
+    </div>
+    <div class="col-sm-12" *ngIf="tldr && show[5]">
+      <p>
+        Each class gives proficiency in at least two saving throws. To make a saving throw, roll a d20 and add the appropriate ability
+        modifier. If you have proficiency in the ability, you also add your proficiency modifier to the total.
+      </p>
+    </div>
+  </div>
+
+  <!-- Adv/Dadv -->
+  <div class="col-12 dark-border content text-light mt-5">
+    <h4 class="mb-2 mb-sm-3 mx-auto text-center">
+      Advantage and Disadvantage
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/expand_button_gold.png" placement="right"
+        ngbTooltip="Hide" (click)="show[6] = !show[6]" *ngIf="show[6]" />
+      <img class="icon icon-middle icon-ex-sm no-padding d-inline" src="assets/icons/shrink_button_gold.png" placement="right"
+        ngbTooltip="Show" (click)="show[6] = !show[6]" *ngIf="!show[6]" />
+    </h4>
+    <div class="col-sm-12" *ngIf="show[6]">
+      <p *ngIf="!tldr">
+        In some situations your character may an advantage or a disadvantage on an ability check.
+      </p>
+      <p>
+        When you have an advantage or disadvantage on a roll, you roll a second D20. If you have an advantage, you take the higher
+        of the two rolls. If you have a disadvantage, you take the lower of the two rolls.
+      </p>
+    </div>
+  </div>
+</div>

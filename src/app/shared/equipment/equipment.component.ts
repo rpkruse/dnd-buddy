@@ -46,8 +46,6 @@ export class EquipmentComponent implements OnInit {
   
   private isAlive: boolean = true;
 
-  items: Item[] = [];
-
   armor: Equipment = null;
   shield: Equipment = null;
   weapon: Equipment = null;
@@ -73,9 +71,6 @@ export class EquipmentComponent implements OnInit {
   constructor(private _apiService: ApiService, private _dndApiService: DndApiService, private _itemManager: ItemManager, private _modal: NgbModal) { }
 
   ngOnInit() {
-    this.loadAllItems();
-
-    this._itemManager.itemSubj.takeWhile(() => this.isAlive).subscribe(res => this.items = res);
     this._itemManager.newItem.takeWhile(() => this.isAlive).subscribe(res => this.getItems(res));
 
     let j: Subscription = this.moneyChanged.pipe(debounceTime(250)).subscribe(res => this.updateMoney(res));
@@ -92,7 +87,7 @@ export class EquipmentComponent implements OnInit {
       this.setMoneyArray();
     }
   }
-
+  
   private setMoneyArray() {
     let money: number[] = [0, 0, 0]; //GP, SP, CP (500, 55, 50)
     let left: number = 0;
@@ -184,8 +179,8 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.removeItem(index);
   }
 
-  public sellItem(index: number) {
-    let item: Item = this.items[index];
+  public sellItem(item: Item, index: number) {
+    // let item: Item = this.items[index];
 
     let inputs: number[] = []; //Amount, Index (gp, sp, cp)
     switch(item.cost_Type) {
@@ -304,6 +299,26 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.updateCharacterEquipment(this.character, newItem);
   }
 
+  getAction(action: [Item, string, number], ringEquipModal) { //"sell", "use", "remove?", "equip"
+
+    switch (action[1]) {
+      case "sell":
+        this.sellItem(action[0], action[2]);
+        break;
+      case "use":
+        this.removeItemCount(action[2]);
+        break;
+      case "remove":
+
+        break;
+      case "equip":
+        this.getItemToEquip(action[0], ringEquipModal)
+        break;
+      default:
+        return;
+    }
+  }
+
   /**
    * Called when the user clicks on a ring to view. It opens a modal with the ring's details
    * 
@@ -337,7 +352,7 @@ export class EquipmentComponent implements OnInit {
   public swapRings(oldItem: Item) {
     let newItem: ItemType = null;
 
-    if (this.slotSwapIndex == 1) {
+    if (this.slotSwapIndex === 1) {
       oldItem.url = this.ring_1.url;
       oldItem.name = this.ring_1.name;
 

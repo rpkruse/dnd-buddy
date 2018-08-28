@@ -38,5 +38,6 @@ export interface Equipment {
     weight: number,
     properties: Results[],
     bonus?: number,
+    worn?: boolean,
     url: string
 }

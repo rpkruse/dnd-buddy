@@ -157,7 +157,8 @@ export class EditCharacterComponent implements OnInit {
     return "(+" + v + ")";
   }
 
-  updateCharacter() {
+  updateCharacter(clear?: boolean) {
+    if (clear) this.character = null;
     this.updatedCharacter.emit(this.character);
   }
 

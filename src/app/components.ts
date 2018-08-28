@@ -25,6 +25,10 @@ import { SpellbookComponent } from './shared/spellbook/spellbook.component';
 import { StatsComponent } from './shared/stats/stats.component';
 import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 
+//Hep Module:
+import { HelpFaqComponent } from './help/help-faq/help-faq.component';
+import { HelpGameComponent } from './help/help-game/help-game.component';
+
 export {
     AppComponent,
     ProfileComponent,
@@ -42,5 +46,7 @@ export {
     EquipmentComponent,
     SpellbookComponent,
     StatsComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    HelpFaqComponent,
+    HelpGameComponent
 }

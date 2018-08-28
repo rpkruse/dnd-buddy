@@ -74,36 +74,8 @@
     </div>
   </div>
   <div class="row" *ngIf="show">
-
     <div class="col-md-12">
-      <div class="mx-auto no-padding" *ngIf="this.items && this.items.length">
-        <!-- <h5 class="mx-auto text-center bag">Bag:</h5> -->
-        <button (click)="bagVisible = !bagVisible" class="detailButton">Bag
-          <span class="float-right glyphicon glyphicon-menu-down"></span>
-        </button>
-        <div *ngIf="this.bagVisible">
-          <ul class="list-group list-group-flush bag-list short">
-            <li class="list-group-item content w-100" (mouseover)="this.mouseOver = i" (mouseout)="this.mouseOver = -1" *ngFor="let item of this.items index as i">
-
-              <span class="d-inline">{{ item.name }} (x{{ item.count }})</span>
-              <div class="float-right">
-                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2 d-inline"
-                  (click)="addItemCount(item, i)" *ngIf="dmPortal && !item.canEquip">+</button>
-                <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn btn-sm bg-transparent text-light ml-md-2 d-inline"
-                  (click)="getItemToEquip(item, ringEquipModal)" *ngIf="item.canEquip">Equip</button>
-                <div class="d-inline" placement="left" ngbDropdown>
-                  <button [@showState]="this.mouseOver === i || this.onMobile ? 'show' : 'hide'" type="button" class="btn bg-transparent text-light ml-md-2"
-                    ngbDropdownToggle>-</button>
-                  <div class="dropdown text-center" ngbDropdownMenu>
-                    <button class="dropdown-item" (click)="removeItemCount(i)">Use</button>
-                    <button class="dropdown-item" (click)="sellItem(i)">Sell</button>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <app-bag [character]="character" (action)="getAction($event, ringEquipModal)"></app-bag>
     </div>
 
   </div>
@@ -140,7 +112,7 @@
     </div>
   </div>
   <div class="modal-body content">
-    <div class="bg-transparent text-light">
+    <div class="bg-transparent text-light text-center">
       <select class="custom-select col-sm-5" (change)="selectRingSlot($event.target.value)">
         <option selected>Choose</option>
         <option [value]="1">{{ this.ring_1.name }}</option>

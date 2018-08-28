@@ -16,6 +16,7 @@ import { CreateMonsterComponent } from './create-monster/create-monster.componen
 import { EditCharacterComponent } from './edit-character/edit-character.component';
 import { ViewMonsterComponent } from './view-monster/view-monster.component';
 import { FeaturesComponent } from './features/features.component';
+import { BagComponent } from './bag/bag.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { FeaturesComponent } from './features/features.component';
     CreateMonsterComponent,
     EditCharacterComponent,
     ViewMonsterComponent,
-    FeaturesComponent
+    FeaturesComponent,
+    BagComponent
   ],
   exports: [
     EquipmentComponent,

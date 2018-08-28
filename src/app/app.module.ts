@@ -14,6 +14,7 @@ import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import { ManageModule } from './manage/manage.module';
 import { GameModule } from './game/game.module';
 import { SharedModule } from './shared/shared.module';
+import { HelpModule } from './help/help.module';
 
 //Components:
 import { AppComponent, HomeComponent, LoginComponent } from './components';
@@ -41,6 +42,7 @@ import { ProfileComponent } from './profile/profile.component';
     ManageModule,
     GameModule,
     SharedModule,
+    HelpModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: true })
   ],
   providers: [

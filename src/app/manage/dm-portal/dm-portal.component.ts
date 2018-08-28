@@ -176,7 +176,11 @@ export class DmPortalComponent implements OnInit {
    * Called when the DM clicks save on a character, it updates them in the DB
    */
   saveCharacter(character: Character) {
-    if (!character) return;
+    if (!character) {
+      this.character = null;
+      return;
+    }
+
 
     this.character = character;
 

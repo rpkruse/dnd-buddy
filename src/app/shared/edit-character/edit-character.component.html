@@ -4,9 +4,9 @@
 
       <div class="mb-5">
         <h2 class="mb-0">
-          <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Clear" (click)="character = null"
+          <img class="icon icon-sm float-left mt-2 mt-sm-3" src="assets/icons/x_icon.png" placement="right" ngbTooltip="Clear" (click)="updateCharacter(true)"
           /> {{ this.character.name }}
-          <button type="button" class="btn btn-s btn-h float-right" (click)="updateCharacter()">Save</button>
+          <button type="button" class="btn btn-s btn-h float-right" (click)="updateCharacter(false)">Save</button>
         </h2>
       </div>
 

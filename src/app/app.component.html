@@ -33,6 +33,15 @@
     <div class="nav-item">
       <a class="nav-link text-light text-hover" [routerLink]="['/game']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Games</a>
     </div>
+    <div class="nav-item pl-sm-1 pl-3">
+      <div ngbDropdown placement="bottom-left">
+        <div class="text-light text-hover" ngbDropdownToggle>Help</div>
+        <div ngbDropdownMenu>
+          <a class="dropdown-item" [routerLink]="['/help-game']" (click)="isNavbarCollapsed = !isNavbarCollapsed">Game Info</a>
+          <a class="dropdown-item" [routerLink]="['/help-faq']" (click)="isNavbarCollapsed = !isNavbarCollapsed">FAQ</a>
+        </div>
+      </div>
+    </div>
 
   </div>
 
