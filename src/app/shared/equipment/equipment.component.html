@@ -14,12 +14,12 @@
       <div *ngIf="this.armor">
         <p class="hoverHide" *ngIf="!this.shield">
           Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('armor')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.armor, 'armor')"
           />
         </p>
         <p class="hoverHide" *ngIf="this.shield">
           Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('armor')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.armor, 'armor'); removeGear(this.shield, 'shield')"
           />
         </p>
       </div>
@@ -31,7 +31,7 @@
       <div *ngIf="this.weapon">
         <p class="hoverHide">
           Weapon: {{ this.weapon.name }}
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('weapon')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.weapon, 'weapon')"
           />
         </p>
         <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value }} {{ this.weapon.damage.damage_type.name
@@ -45,60 +45,60 @@
       <!-- Magical Items -->
       <div *ngIf="this.neck">
         <p class="hoverHide">Neck:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.neck, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.neck, itemModal)">
             {{ this.neck.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('neck')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.neck, 'neck')"
           />
         </p>
       </div>
 
       <div *ngIf="this.belt">
         <p class="hoverHide">Belt:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.belt, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.belt, itemModal)">
             {{ this.belt.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('belt')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.belt, 'belt')"
           />
         </p>
       </div>
 
       <div *ngIf="this.boot">
         <p class="hoverHide">Boots:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.boot, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.boot, itemModal)">
             {{ this.boot.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('boot')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.boot, 'boot')"
           />
         </p>
       </div>
 
       <div *ngIf="this.cloak">
         <p class="hoverHide">Cloak:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.cloak, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.cloak, itemModal)">
             {{ this.cloak.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('cloak')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.cloak, 'cloak')"
           />
         </p>
       </div>
 
       <div *ngIf="this.gloves">
         <p class="hoverHide">Gloves:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.gloves, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.gloves, itemModal)">
             {{ this.gloves.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('gloves')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.gloves, 'gloves')"
           />
         </p>
       </div>
 
       <div *ngIf="this.helm">
         <p class="hoverHide">Helm:
-          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.helm, itemModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getItemDetails(this.helm, itemModal)">
             {{ this.helm.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('helm')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.helm, 'helm')"
           />
         </p>
       </div>
@@ -106,19 +106,19 @@
       <!-- Rings -->
       <div *ngIf="this.ring_1">
         <p class="hoverHide">Ring 1:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getRingDetails(this.ring_1, ringModal)">
             {{ this.ring_1.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('ring_1')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.ring_1, 'ring_1')"
           />
         </p>
       </div>
 
       <div *ngIf="this.ring_2">
         <p class="hoverHide">Ring 2:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name}}
+          <button type="button" class="btn btn-link p-0 mb-1" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name}}
           </button>
-          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('ring_2')"
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear(this.ring_2, 'ring_2')"
           />
         </p>
       </div>

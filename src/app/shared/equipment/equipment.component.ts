@@ -30,8 +30,6 @@ import { Subscription, Subject } from 'rxjs';
 })
 export class EquipmentComponent implements OnInit {
   @Input() character: Character;
-  // @Input() newItem: ItemType;
-
   @Input() dmPortal: boolean = false; //If true, then we can add items with a "+" button
 
   @HostListener('window:resize', ['$event'])
@@ -45,8 +43,6 @@ export class EquipmentComponent implements OnInit {
   private width: number;
 
   private isAlive: boolean = true;
-
-  // items: Item[] = [];
 
   armor: Equipment = null;
   shield: Equipment = null;
@@ -68,8 +64,6 @@ export class EquipmentComponent implements OnInit {
   money: number[] = []; //GP, SP, CP
 
   lastCharID: number = -1;
-
-  bagVisible: boolean = false;
 
   mouseOver: number = -1;
 
@@ -189,59 +183,52 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.removeItem(index);
   }
 
-  //TODO Add magic
-  public removeGear(type: string) {
-    let item: any;
+  public removeGear(toRemove: Equipment, type: string) {
+    let item: any = this._itemManager.createItem(toRemove, this.character, 1);
 
     switch (type) {
       case "armor":
         this.character.armor = "";
-        item = this._itemManager.createItem(this.armor, this.character, 1);
         this.armor = null;
+        break;
+      case "shield":
+        this.character.shield = "";
+        this.shield = null;
         break;
       case "weapon":
         this.character.weapon = "";
-        item = this._itemManager.createItem(this.weapon, this.character, 1);
         this.weapon = null;
         break;
       case "ring_1":
         this.character.ring_1 = "";
-        item = this._itemManager.createItem(this.ring_1, this.character, 1);
         this.ring_1 = null;
         break;
       case "ring_2":
         this.character.ring_2 = "";
-        item = this._itemManager.createItem(this.ring_2, this.character, 1);
         this.ring_2 = null
         break;
       case "neck":
         this.character.neck = "";
-        item = this._itemManager.createItem(this.neck, this.character, 1);
         this.neck = null;
         break;
       case "belt":
         this.character.belt = "";
-        item = this._itemManager.createItem(this.belt, this.character, 1);
         this.belt = null;
         break;
       case "boot":
         this.character.boots = "";
-        item = this._itemManager.createItem(this.boot, this.character, 1);
         this.boot = null;
         break;
       case "cloak":
         this.character.cloak = "";
-        item = this._itemManager.createItem(this.cloak, this.character, 1);
         this.cloak = null;
         break;
       case "gloves":
         this.character.gloves = "";
-        item = this._itemManager.createItem(this.gloves, this.character, 1);
         this.gloves = null;
         break;
       case "helm":
         this.character.helm = "";
-        item = this._itemManager.createItem(this.helm, this.character, 1);
         this.helm = null;
         break;
       default:
@@ -289,7 +276,7 @@ export class EquipmentComponent implements OnInit {
       err => console.log("unable to get item"),
       () => {
         s.unsubscribe();
-        this.equipItem(eq, item, ringEquipModal);
+        this.equipItem(eq, item, ringEquipModal, item.count === 1);
       }
     );
   }
@@ -297,164 +284,139 @@ export class EquipmentComponent implements OnInit {
   /**
    * Called when the user attempts to swap their equipped item with one in their bag 
    * 
-   * @param {Equipment} item The new equipment to wear 
-   * @param {Item} oldItem The old equipment item to put into our bag 
+   * @param {Equipment} toEq The new equipment to wear (from bag)
+   * @param {Item} toAddToBag The old equipment item to put into our bag (from bag)
    * @param {any} ringEquipModal The ring modal 
    */
-  public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
-    let newItem: ItemType = null;
-    oldItem.count = 1;
-    if (item.equipment_category.includes("Weapon")) {
+  public equipItem(toEq: Equipment, toAddToBag: Item, ringEquipModal, single: boolean) {
+    let newItemType: ItemType = null;
+
+    let newItem: Item = null;
+
+    if (toEq.equipment_category.includes("Weapon")) {
       if (this.weapon) {
-        oldItem.url = this.weapon.url;
-        oldItem.name = this.weapon.name;
-      } else {
-        oldItem.count = 0;
+        newItem = this._itemManager.createItem(this.weapon, this.character, 1);
       }
 
-      this.character.weapon = item.url;
-      newItem = ItemType.Weapon;
-    } else if (item.equipment_category.includes("Armor")) {
-      if (item.name.includes("Shield")) {
+      this.character.weapon = toEq.url;
+      newItemType = ItemType.Weapon;
+    } else if (toEq.equipment_category.includes("Armor")) {
+      if (toEq.name.includes("Shield")) {
         if (this.shield) {
-          oldItem.url = this.shield.url;
-          oldItem.name = this.shield.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.shield, this.character, 1);
         }
-
-        this.character.shield = item.url;
-        newItem = ItemType.Shield;
+        this.character.shield = toEq.url;
+        newItemType = ItemType.Shield;
       } else {
         if (this.armor) {
-          oldItem.url = this.armor.url;
-          oldItem.name = this.armor.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.armor, this.character, 1);
         }
 
-        this.character.armor = item.url;
-        newItem = ItemType.Armor;
+        this.character.armor = toEq.url;
+        newItemType = ItemType.Armor;
       }
-    } else if (item.equipment_category.includes("Shield")) {
+    } else if (toEq.equipment_category.includes("Shield")) {
       if (this.shield) {
-        oldItem.url = this.shield.url;
-        oldItem.name = this.shield.name;
-      } else {
-        oldItem.count = 0;
+        newItem = this._itemManager.createItem(this.shield, this.character, 1);
       }
 
-      this.character.shield = item.url;
-      newItem = ItemType.Shield;
-    } else if (item.equipment_category === "Rings") {
-      this.selectedRing = item;
+      this.character.shield = toEq.url;
+      newItemType = ItemType.Shield;
+    } else if (toEq.equipment_category === "Rings") {
+      this.selectedRing = toEq;
       if (this.ring_1 === null) {
-        this.character.ring_1 = item.url;
-        newItem = ItemType.Ring_1;
-        oldItem.count = 0;
+        this.character.ring_1 = toEq.url;
+        newItemType = ItemType.Ring_1;
       } else if (this.ring_2 === null) {
-        this.character.ring_2 = item.url;
-        newItem = ItemType.Ring_2;
-        oldItem.count = 0;
+        this.character.ring_2 = toEq.url;
+        newItemType = ItemType.Ring_2;
       } else {
         this._modal.open(ringEquipModal).result.then((result) => { //On close via swap
-          this.swapRings(oldItem);
+          this.swapRings(toAddToBag);
         }, (reason) => { //on close via click off
         });
         return;
       }
-    } else if (item.equipment_category.includes("Magical")) {
-      this.equipMagicalItem(item, oldItem);
+    } else if (toEq.equipment_category.includes("Magical")) {
+      this.equipMagicalItem(toEq, toAddToBag, single);
       return;
     } else {
       return;
     }
 
-    this._itemManager.updateItem(oldItem, "Item swapped!");
-    this._itemManager.updateCharacterEquipment(this.character, newItem);
+    toAddToBag.count--;
+    if (newItem) this._itemManager.addItem(newItem, newItem.url);
+    this._itemManager.updateItem(toAddToBag, "Item swapped!");
+    this._itemManager.updateCharacterEquipment(this.character, newItemType);
   }
 
-  private equipMagicalItem(item: Equipment, oldItem: Item) {
-    let newItem: ItemType = null;
+  private equipMagicalItem(item: Equipment, oldItem: Item, single: boolean) {
+    let newItemType: ItemType = null;
 
+    let newItem: Item = null;
     switch (item.armor_category) {
       case "Neck":
         if (this.neck) {
-          oldItem.url = this.neck.url;
-          oldItem.name = this.neck.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.neck, this.character, 1);
         }
 
         this.character.neck = item.url;
-        newItem = ItemType.Neck;
+        newItemType = ItemType.Neck;
         break;
       case "Belt":
         if (this.belt) {
-          oldItem.url = this.belt.url;
-          oldItem.name = this.belt.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.belt, this.character, 1);
         }
 
         this.character.belt = item.url;
-        newItem = ItemType.Belt;
+        newItemType = ItemType.Belt;
 
         break;
       case "Boot":
         if (this.boot) {
-          oldItem.url = this.boot.url;
-          oldItem.name = this.boot.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.boot, this.character, 1);
         }
 
         this.character.boots = item.url;
-        newItem = ItemType.Boot;
+        newItemType = ItemType.Boot;
 
         break;
       case "Cloak":
         if (this.cloak) {
-          oldItem.url = this.cloak.url;
-          oldItem.name = this.cloak.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.cloak, this.character, 1);
         }
 
         this.character.cloak = item.url;
-        newItem = ItemType.Cloak;
+        newItemType = ItemType.Cloak;
 
         break;
       case "Gloves":
         if (this.gloves) {
-          oldItem.url = this.gloves.url;
-          oldItem.name = this.gloves.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.gloves, this.character, 1);
         }
 
         this.character.gloves = item.url;
-        newItem = ItemType.Gloves;
+        newItemType = ItemType.Gloves;
 
         break;
       case "Helm":
         if (this.helm) {
-          oldItem.url = this.helm.url;
-          oldItem.name = this.helm.name;
-        } else {
-          oldItem.count = 0;
+          newItem = this._itemManager.createItem(this.helm, this.character, 1);
         }
 
         this.character.helm = item.url;
-        newItem = ItemType.Helm;
+        newItemType = ItemType.Helm;
 
         break;
       default:
         return;
     }
 
+    oldItem.count--;
+
+    if (newItem) this._itemManager.addItem(newItem, newItem.url);
     this._itemManager.updateItem(oldItem, "Item swapped!");
-    this._itemManager.updateCharacterEquipment(this.character, newItem);
+    this._itemManager.updateCharacterEquipment(this.character, newItemType);
   }
 
   getAction(action: [Item, string, number], ringEquipModal) { //"sell", "use", "remove?", "equip"
@@ -467,7 +429,6 @@ export class EquipmentComponent implements OnInit {
         this.removeItemCount(action[2]);
         break;
       case "remove":
-
         break;
       case "equip":
         this.getItemToEquip(action[0], ringEquipModal);
@@ -513,24 +474,26 @@ export class EquipmentComponent implements OnInit {
    * @param {Item} oldItem The old ring to swap out 
    */
   public swapRings(oldItem: Item) {
-    let newItem: ItemType = null;
+    let newItemType: ItemType = null;
+
+    let newItem: Item = null;
 
     if (this.slotSwapIndex === 1) {
-      oldItem.url = this.ring_1.url;
-      oldItem.name = this.ring_1.name;
+      newItem = this._itemManager.createItem(this.ring_1, this.character, 1);
 
       this.character.ring_1 = this.selectedRing.url;
-      newItem = ItemType.Ring_1;
+      newItemType = ItemType.Ring_1;
     } else {
-      oldItem.url = this.ring_2.url;
-      oldItem.name = this.ring_2.name;
+      newItem = this._itemManager.createItem(this.ring_2, this.character, 1);
 
       this.character.ring_2 = this.selectedRing.url;
-      newItem = ItemType.Ring_2;
+      newItemType = ItemType.Ring_2;
     }
 
+    oldItem.count--;
+    if (newItem) this._itemManager.addItem(newItem, newItem.url);
     this._itemManager.updateItem(oldItem, "Item swapped!");
-    this._itemManager.updateCharacterEquipment(this.character, newItem);
+    this._itemManager.updateCharacterEquipment(this.character, newItemType);
   }
 
   /**

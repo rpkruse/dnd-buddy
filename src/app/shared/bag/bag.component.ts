@@ -81,33 +81,33 @@ export class BagComponent implements OnInit {
     this.normal = [];
     this.equip = [];
     this.magical = [];
+
     if (items.length <= 0) return;
+
+    let changed: boolean[] = [false, false, false]; //n, e, m
 
     this.items = items;
 
     let item: Item;
     for (let i = 0; i < items.length; i++) {
       item = items[i];
-      // if (item.magic_Type !== "none") {
-      //   this.magical.push(item);
-      // } else {
-      //   if (item.canEquip) {
-      //     this.equip.push(item);
-      //   } else {
-      //     this.normal.push(item);
-      //   }
-      // }
-
       if (item.canEquip) {
         this.equip.push(item);
+        changed[1] = true;
       }else{
         if (item.magic_Type !== "none") {
           this.magical.push(item);
+          changed[2] = true;
         }else {
           this.normal.push(item);
+          changed[0] = true;
         }
       }
     }
+
+    if (changed[0]) this.normal.sort((a, b) => a.name > b.name ? 1 : -1);
+    if (changed[1]) this.equip.sort((a, b) => a.name > b.name ? 1 : -1);
+    if (changed[2]) this.magical.sort((a, b) => a.name > b.name ? 1 : -1);
   }
 
 }
