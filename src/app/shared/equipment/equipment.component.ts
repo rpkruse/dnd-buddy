@@ -43,14 +43,24 @@ export class EquipmentComponent implements OnInit {
 
   onMobile: boolean = false;
   private width: number;
-  
+
   private isAlive: boolean = true;
+
+  // items: Item[] = [];
 
   armor: Equipment = null;
   shield: Equipment = null;
   weapon: Equipment = null;
   ring_1: Equipment = null;
   ring_2: Equipment = null;
+  neck: Equipment = null;
+  belt: Equipment = null;
+  boot: Equipment = null;
+  cloak: Equipment = null;
+  gloves: Equipment = null;
+  helm: Equipment = null;
+
+  selectedItem: Equipment = null;
 
   selectedRing: Equipment;
   slotSwapIndex: number = 0;
@@ -87,7 +97,7 @@ export class EquipmentComponent implements OnInit {
       this.setMoneyArray();
     }
   }
-  
+
   private setMoneyArray() {
     let money: number[] = [0, 0, 0]; //GP, SP, CP (500, 55, 50)
     let left: number = 0;
@@ -179,11 +189,74 @@ export class EquipmentComponent implements OnInit {
     this._itemManager.removeItem(index);
   }
 
+  //TODO Add magic
+  public removeGear(type: string) {
+    let item: any;
+
+    switch (type) {
+      case "armor":
+        this.character.armor = "";
+        item = this._itemManager.createItem(this.armor, this.character, 1);
+        this.armor = null;
+        break;
+      case "weapon":
+        this.character.weapon = "";
+        item = this._itemManager.createItem(this.weapon, this.character, 1);
+        this.weapon = null;
+        break;
+      case "ring_1":
+        this.character.ring_1 = "";
+        item = this._itemManager.createItem(this.ring_1, this.character, 1);
+        this.ring_1 = null;
+        break;
+      case "ring_2":
+        this.character.ring_2 = "";
+        item = this._itemManager.createItem(this.ring_2, this.character, 1);
+        this.ring_2 = null
+        break;
+      case "neck":
+        this.character.neck = "";
+        item = this._itemManager.createItem(this.neck, this.character, 1);
+        this.neck = null;
+        break;
+      case "belt":
+        this.character.belt = "";
+        item = this._itemManager.createItem(this.belt, this.character, 1);
+        this.belt = null;
+        break;
+      case "boot":
+        this.character.boots = "";
+        item = this._itemManager.createItem(this.boot, this.character, 1);
+        this.boot = null;
+        break;
+      case "cloak":
+        this.character.cloak = "";
+        item = this._itemManager.createItem(this.cloak, this.character, 1);
+        this.cloak = null;
+        break;
+      case "gloves":
+        this.character.gloves = "";
+        item = this._itemManager.createItem(this.gloves, this.character, 1);
+        this.gloves = null;
+        break;
+      case "helm":
+        this.character.helm = "";
+        item = this._itemManager.createItem(this.helm, this.character, 1);
+        this.helm = null;
+        break;
+      default:
+        return;
+    }
+
+    this._itemManager.addItem(item, item.url);
+    this._itemManager.setCharacter(this.character);
+  }
+
   public sellItem(item: Item, index: number) {
     // let item: Item = this.items[index];
 
     let inputs: number[] = []; //Amount, Index (gp, sp, cp)
-    switch(item.cost_Type) {
+    switch (item.cost_Type) {
       case "gp":
         inputs[0] = item.cost + this.money[0];
         inputs[1] = 0;
@@ -230,7 +303,6 @@ export class EquipmentComponent implements OnInit {
    */
   public equipItem(item: Equipment, oldItem: Item, ringEquipModal) {
     let newItem: ItemType = null;
-
     oldItem.count = 1;
     if (item.equipment_category.includes("Weapon")) {
       if (this.weapon) {
@@ -291,8 +363,94 @@ export class EquipmentComponent implements OnInit {
         });
         return;
       }
-    }else {
+    } else if (item.equipment_category.includes("Magical")) {
+      this.equipMagicalItem(item, oldItem);
       return;
+    } else {
+      return;
+    }
+
+    this._itemManager.updateItem(oldItem, "Item swapped!");
+    this._itemManager.updateCharacterEquipment(this.character, newItem);
+  }
+
+  private equipMagicalItem(item: Equipment, oldItem: Item) {
+    let newItem: ItemType = null;
+
+    switch (item.armor_category) {
+      case "Neck":
+        if (this.neck) {
+          oldItem.url = this.neck.url;
+          oldItem.name = this.neck.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.neck = item.url;
+        newItem = ItemType.Neck;
+        break;
+      case "Belt":
+        if (this.belt) {
+          oldItem.url = this.belt.url;
+          oldItem.name = this.belt.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.belt = item.url;
+        newItem = ItemType.Belt;
+
+        break;
+      case "Boot":
+        if (this.boot) {
+          oldItem.url = this.boot.url;
+          oldItem.name = this.boot.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.boots = item.url;
+        newItem = ItemType.Boot;
+
+        break;
+      case "Cloak":
+        if (this.cloak) {
+          oldItem.url = this.cloak.url;
+          oldItem.name = this.cloak.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.cloak = item.url;
+        newItem = ItemType.Cloak;
+
+        break;
+      case "Gloves":
+        if (this.gloves) {
+          oldItem.url = this.gloves.url;
+          oldItem.name = this.gloves.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.gloves = item.url;
+        newItem = ItemType.Gloves;
+
+        break;
+      case "Helm":
+        if (this.helm) {
+          oldItem.url = this.helm.url;
+          oldItem.name = this.helm.name;
+        } else {
+          oldItem.count = 0;
+        }
+
+        this.character.helm = item.url;
+        newItem = ItemType.Helm;
+
+        break;
+      default:
+        return;
     }
 
     this._itemManager.updateItem(oldItem, "Item swapped!");
@@ -312,7 +470,7 @@ export class EquipmentComponent implements OnInit {
 
         break;
       case "equip":
-        this.getItemToEquip(action[0], ringEquipModal)
+        this.getItemToEquip(action[0], ringEquipModal);
         break;
       default:
         return;
@@ -328,6 +486,11 @@ export class EquipmentComponent implements OnInit {
   public getRingDetails(ring: Equipment, ringModal) {
     this.selectedRing = ring;
     this._modal.open(ringModal, { size: 'lg' });
+  }
+
+  public getItemDetails(item: Equipment, itemModal) {
+    this.selectedItem = item;
+    this._modal.open(itemModal, { size: "lg" });
   }
 
   /**
@@ -395,6 +558,24 @@ export class EquipmentComponent implements OnInit {
       case ItemType.Bag:
         this.getBag();
         break;
+      case ItemType.Neck:
+        this.getNeck();
+        break;
+      case ItemType.Belt:
+        this.getBelt();
+        break;
+      case ItemType.Boot:
+        this.getBoot();
+        break;
+      case ItemType.Cloak:
+        this.getCloak();
+        break;
+      case ItemType.Gloves:
+        this.getGloves();
+        break;
+      case ItemType.Helm:
+        this.getHelm();
+        break;
       default:
         break;
     }
@@ -458,6 +639,66 @@ export class EquipmentComponent implements OnInit {
     );
   }
 
+  private getNeck() {
+    if (this.character.neck) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.neck).subscribe(
+        d => this.neck = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  private getBelt() {
+    if (this.character.belt) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.belt).subscribe(
+        d => this.belt = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  private getBoot() {
+    if (this.character.boots) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.boots).subscribe(
+        d => this.boot = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  private getCloak() {
+    if (this.character.cloak) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.cloak).subscribe(
+        d => this.cloak = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  private getGloves() {
+    if (this.character.gloves) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.gloves).subscribe(
+        d => this.gloves = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
+  private getHelm() {
+    if (this.character.helm) {
+      let s: Subscription = this._dndApiService.getSingleEntity<Equipment>(this.character.helm).subscribe(
+        d => this.helm = d,
+        err => console.log("unable to get neck", err),
+        () => s.unsubscribe()
+      );
+    }
+  }
+
   private resetValues() {
     this.armor = null;
     this.shield = null;
@@ -472,6 +713,12 @@ export class EquipmentComponent implements OnInit {
     this.getRingOne();
     this.getRingTwo();
     this.getBag();
+    this.getNeck();
+    this.getBelt();
+    this.getBoot();
+    this.getCloak();
+    this.getGloves();
+    this.getHelm();
   }
 
   ngOnDestroy() {

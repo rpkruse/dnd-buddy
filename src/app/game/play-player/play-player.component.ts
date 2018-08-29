@@ -180,22 +180,7 @@ export class PlayPlayerComponent implements OnInit {
    * @param {Equipment} eq The item to add to the character's bag 
    */
   private addItemToBag(eq: Equipment, canEquip: boolean) {
-    let item = {
-      name: eq.name,
-      url: eq.url,
-      count: 1,
-      magic_Type: "none",
-      cost: eq.cost.quantity,
-      cost_type: eq.cost.unit,
-      canEquip: canEquip,
-      characterId: this.character.characterId,
-    };
-
-    if (eq.equipment_category === "Magical Items") {
-      item.magic_Type = eq.armor_category;
-      item.canEquip = eq.worn;
-    }
-
+    let item = this._itemManager.createItem(eq, this.character);
     this._itemManager.addItem(item, item.url);
   }
 

@@ -30,3 +30,11 @@
     overflow-x: visible !important;
     overflow-y: scroll;
 }
+
+.hoverHide img {
+    visibility: hidden;
+}
+
+.hoverHide:hover img {
+    visibility: visible;
+}

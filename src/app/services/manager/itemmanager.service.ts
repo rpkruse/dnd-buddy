@@ -121,6 +121,14 @@ export class ItemManager {
     )
   }
 
+  public setCharacter(character: Character) {
+    let s: Subscription = this._apiService.putEntity<Character>("Characters", character, character.characterId).subscribe(
+      d => d = d,
+      err => console.log("unable to update character", err),
+      () => s.unsubscribe()
+    );
+  }
+
   public setItems(items: Item[]) {
     this.items = items;
     this.itemSubj.next(this.items);
@@ -128,6 +136,26 @@ export class ItemManager {
 
   public canEquipItem(item: Equipment): boolean {
     return this.equipableItems.some(x => x === item.equipment_category);
+  }
+
+  public createItem(eq: Equipment, character: Character, amount: number = 1): any {
+    let nItem = {
+      name: eq.name,
+      url: eq.url,
+      count: amount,
+      magic_Type: "none",
+      cost: eq.cost.quantity,
+      cost_type: eq.cost.unit,
+      canEquip: this.canEquipItem(eq),
+      characterId: character.characterId
+    }
+
+    if (eq.equipment_category === "Magical Items") {
+      nItem.magic_Type = eq.armor_category;
+      nItem.canEquip = eq.worn;
+    }
+
+    return nItem;
   }
 
   public triggerMessage(message: string, action: string, level: MessageType) {

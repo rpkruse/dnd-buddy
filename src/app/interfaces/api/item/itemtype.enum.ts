@@ -6,4 +6,10 @@ export enum ItemType{
     Ring_1,
     Ring_2,
     Bag,
+    Neck,
+    Belt,
+    Boot,
+    Cloak,
+    Gloves,
+    Helm
 }

@@ -88,12 +88,22 @@ export class BagComponent implements OnInit {
     let item: Item;
     for (let i = 0; i < items.length; i++) {
       item = items[i];
-      if (item.magic_Type !== "none") {
-        this.magical.push(item);
-      } else {
-        if (item.canEquip) {
-          this.equip.push(item);
-        } else {
+      // if (item.magic_Type !== "none") {
+      //   this.magical.push(item);
+      // } else {
+      //   if (item.canEquip) {
+      //     this.equip.push(item);
+      //   } else {
+      //     this.normal.push(item);
+      //   }
+      // }
+
+      if (item.canEquip) {
+        this.equip.push(item);
+      }else{
+        if (item.magic_Type !== "none") {
+          this.magical.push(item);
+        }else {
           this.normal.push(item);
         }
       }

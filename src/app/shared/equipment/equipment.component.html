@@ -12,8 +12,16 @@
     <div class="col-md-12 text-center">
       <!-- Armor -->
       <div *ngIf="this.armor">
-        <p class="" *ngIf="!this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})</p>
-        <p class="" *ngIf="this.shield">Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)</p>
+        <p class="hoverHide" *ngIf="!this.shield">
+          Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }})
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('armor')"
+          />
+        </p>
+        <p class="hoverHide" *ngIf="this.shield">
+          Armor: {{ this.armor.name }} (AC {{ this.armor.armor_class.base }}+{{ this.shield.armor_class.base }} shield bonus)
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('armor')"
+          />
+        </p>
       </div>
       <div *ngIf="!this.armor">
         <p class="">Armor: None</p>
@@ -21,36 +29,100 @@
 
       <!-- Weapon -->
       <div *ngIf="this.weapon">
-        <p class="">Weapon: {{ this.weapon.name }}</p>
-        <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value }}</p>
-        <p class="">Damage Type: {{ this.weapon.damage.damage_type.name }}</p>
+        <p class="hoverHide">
+          Weapon: {{ this.weapon.name }}
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('weapon')"
+          />
+        </p>
+        <p class="">Damage: {{ this.weapon.damage.dice_count }}D{{ this.weapon.damage.dice_value }} {{ this.weapon.damage.damage_type.name
+          }}
+        </p>
       </div>
       <div *ngIf="!this.weapon">
         <p class="">Weapon: None</p>
       </div>
 
-      <!-- Rings -->
-      <div *ngIf="this.ring_1">
-        <p class="">Ring 1:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">{{ this.ring_1.name
-            }}
+      <!-- Magical Items -->
+      <div *ngIf="this.neck">
+        <p class="hoverHide">Neck:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.neck, itemModal)">
+            {{ this.neck.name}}
           </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('neck')"
+          />
         </p>
       </div>
-      <div *ngIf="!this.ring_1">
-        <p class="">Ring 1: None</p>
+
+      <div *ngIf="this.belt">
+        <p class="hoverHide">Belt:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.belt, itemModal)">
+            {{ this.belt.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('belt')"
+          />
+        </p>
+      </div>
+
+      <div *ngIf="this.boot">
+        <p class="hoverHide">Boots:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.boot, itemModal)">
+            {{ this.boot.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('boot')"
+          />
+        </p>
+      </div>
+
+      <div *ngIf="this.cloak">
+        <p class="hoverHide">Cloak:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.cloak, itemModal)">
+            {{ this.cloak.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('cloak')"
+          />
+        </p>
+      </div>
+
+      <div *ngIf="this.gloves">
+        <p class="hoverHide">Gloves:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.gloves, itemModal)">
+            {{ this.gloves.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('gloves')"
+          />
+        </p>
+      </div>
+
+      <div *ngIf="this.helm">
+        <p class="hoverHide">Helm:
+          <button type="button" class="btn btn-link p-0" (click)="getItemDetails(this.helm, itemModal)">
+            {{ this.helm.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('helm')"
+          />
+        </p>
+      </div>
+
+      <!-- Rings -->
+      <div *ngIf="this.ring_1">
+        <p class="hoverHide">Ring 1:
+          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_1, ringModal)">
+            {{ this.ring_1.name}}
+          </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('ring_1')"
+          />
+        </p>
       </div>
 
       <div *ngIf="this.ring_2">
-        <p class="">Ring 2:
-          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name
-            }}
+        <p class="hoverHide">Ring 2:
+          <button type="button" class="btn btn-link p-0" (click)="getRingDetails(this.ring_2, ringModal)">{{ this.ring_2.name}}
           </button>
+          <img class="icon icon-sm float-right" src="assets/icons/x_icon.png" placement="left" ngbTooltip="Remove" (click)="removeGear('ring_2')"
+          />
         </p>
       </div>
-      <div *ngIf="!this.ring_2">
-        <p class="">Ring 2: None</p>
-      </div>
+
       <div *ngIf="this.money.length">
 
         <div class="input-group input-group-sm mb-3">
@@ -75,7 +147,7 @@
   </div>
   <div class="row" *ngIf="show">
     <div class="col-md-12">
-      <app-bag [character]="character" (action)="getAction($event, ringEquipModal)"></app-bag>
+      <app-bag [character]="character" (action)="getAction($event, ringEquipModal, itemModal)"></app-bag>
     </div>
 
   </div>
@@ -102,6 +174,27 @@
   </div>
   <div class="modal-footer content">
     <button type="button" class="btn btn-sm btn-success" (click)="d()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #itemModal let-c="close" let-d="dismiss">
+  <div class="modal-header header">
+    <div class="col text-center">
+      <h4 class="modal-title text-center">{{ this.selectedItem.name }}</h4>
+    </div>
+  </div>
+  <div class="modal-body content">
+    <div class="bg-transparent text-light">
+      <p *ngFor="let line of this.selectedItem.desc">{{ line }}</p>
+    </div>
+
+    <div class="bg-transparent text-light text-center" *ngIf="this.selectedItem.cost">
+      <p>Worth: {{ this.selectedItem.cost.quantity | number}}{{ this.selectedItem.cost.unit }}</p>
+      <p *ngIf="this.selectedItem.rank">Rarity: {{ this.selectedItem.rank }}</p>
+    </div>
+  </div>
+  <div class="modal-footer content">
+    <button type="button" class="btn btn-sm btn-s btn-h" (click)="d();">Cancel</button>
   </div>
 </ng-template>
 
