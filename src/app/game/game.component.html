@@ -1,9 +1,13 @@
 <div class="container">
   <div class="row justify-content-between">
-    <div class="col-lg-5 mt-5">
+    <div class="col-lg-6 mt-5">
+      <!-- <h4 class="text-center">
+        Games
+      </h4> -->
+      <!-- <hr class="stat mt-0" /> -->
       <ngb-tabset class="customTabset" justify="fill">
         <!-- Character Games -->
-        <ngb-tab title="Character Games">
+        <ngb-tab title="Character">
           <ng-template ngbTabContent>
             <!-- Large list on lg+ -->
             <ul class="list-group list-group-flush static-size-list half-height d-none d-lg-block">
@@ -11,7 +15,7 @@
                 {{ i+1 }}. {{ game.name }}
               </li>
               <li class="list-group-item text-light content" *ngIf="!this.games.length">
-                  You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
+                You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
               </li>
             </ul>
 
@@ -21,14 +25,14 @@
                 {{ i+1 }}. {{ game.name }}
               </li>
               <li class="list-group-item text-light content" *ngIf="!this.games.length">
-                  You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
+                You are not part of any games...<a class="text-white" [routerLink]="['/createCharacter']">(Join one!)</a>
               </li>
             </ul>
           </ng-template>
         </ngb-tab>
 
         <!-- DM Games -->
-        <ngb-tab title="DM Games">
+        <ngb-tab title="DM">
           <ng-template ngbTabContent>
             <!-- Large list on lg+ -->
             <ul class="list-group list-group-flush static-size-list half-height d-none d-lg-block">
@@ -36,7 +40,7 @@
                 {{ i+1 }}. {{ game.name }}
               </li>
               <li class="list-group-item text-light content" *ngIf="!this.dmGames.length">
-                  You do not own any games...try creating one!
+                You do not own any games...try creating one!
               </li>
             </ul>
 
@@ -46,29 +50,29 @@
                 {{ i+1 }}. {{ game.name }}
               </li>
               <li class="list-group-item text-light content" *ngIf="!this.dmGames.length">
-                  You do not own any games...try creating one!
+                You do not own any games...try creating one!
               </li>
             </ul>
           </ng-template>
         </ngb-tab>
 
         <!-- Create Game -->
-        <ngb-tab title="Create Game">
+        <ngb-tab title="Create">
           <ng-template ngbTabContent>
-              <div class="input-group-prepend">
-                <label class="input-group-text">Game Name:</label>
-                <input [value]="gameName" (ngEnter)="saveNewGame()" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header"
-                  placeholder="Game name" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
-              </div>
-              <div>
-                <button type="button" class="btn btn-secondary float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create
-                  Game
-                </button>
-              </div>
-              <div>
-                <small id="usernameHelpBlock" class="form-text text-light float-left" *ngIf="gameName.length">{{!gamenameTaken
-                  ? "Game name is available!" : "Game name is taken."}}</small>
-              </div>
+            <div class="input-group-prepend">
+              <label class="input-group-text">Game Name:</label>
+              <input [value]="gameName" (ngEnter)="saveNewGame()" (input)="typeGameName($event.target.value)" type="text" class="form-control text-light header"
+                placeholder="Game name" [ngClass]="{ 'is-invalid': gamenameTaken || !gameName.length, 'is-valid': !gamenameTaken && gameName.length }">
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary float-right" (click)="saveNewGame()" [disabled]="gamenameTaken || !gameName.length">Create
+                Game
+              </button>
+            </div>
+            <div>
+              <small id="usernameHelpBlock" class="form-text text-light float-left" *ngIf="gameName.length">{{!gamenameTaken
+                ? "Game name is available!" : "Game name is taken."}}</small>
+            </div>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>
