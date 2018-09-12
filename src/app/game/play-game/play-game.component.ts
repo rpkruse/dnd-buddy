@@ -120,6 +120,8 @@ export class PlayGameComponent implements OnInit {
    * @param {number} y The y pos on the grid
    */
   public placeToken(x: number, y: number) {
+    if (!this.isGM) return;
+    
     let gmd: GridMessageData;
 
     if (this.getGridValue(x, y).type === this.token) {

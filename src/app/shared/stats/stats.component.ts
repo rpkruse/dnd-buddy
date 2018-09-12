@@ -47,7 +47,7 @@ export class StatsComponent implements OnInit {
         for (let i = 0; i < this.stats.length; i++) {
           for (let j = 0; j < this.cd.saving_throws.length; j++) {
             if (this.stats[i] === this.cd.saving_throws[j].name) {
-              let fixed: string = "*" + this.stats[i] + ":";
+              let fixed: string = "*" + this.stats[i];
               this.stats[i] = fixed;
             }
           }
