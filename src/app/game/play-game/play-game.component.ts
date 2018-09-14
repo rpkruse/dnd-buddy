@@ -121,7 +121,7 @@ export class PlayGameComponent implements OnInit {
    */
   public placeToken(x: number, y: number) {
     if (!this.isGM) return;
-    
+
     let gmd: GridMessageData;
 
     if (this.getGridValue(x, y).type === this.token) {
@@ -168,60 +168,8 @@ export class PlayGameComponent implements OnInit {
     );
   }
 
-  /**
-   * Called to dynamically display the cells background
-   * 
-   * @param {number} x The x pos on the grid 
-   * @param {number} y The y pos on the grid 
-   */
-  public getGridClass(x: number, y: number) {
-    let gmd: GridMessageData = this._messageService.grid[y][x];
-
-    let color: string;
-    switch (gmd.type) {
-      case "P": //Player
-        color = 'bg-primary';
-        break;
-      case "E": //Enemy
-        color = 'bg-danger';
-        break;
-      case "W": //Wall
-        color = "bg-secondary"
-        break;
-      default: //Anything else
-        color = 'bg-white';
-        break;
-    }
-
-    return color;
-  }
-
   public getGridValue(x: number, y: number): GridMessageData {
     return this._messageService.grid[y][x];
-  }
-
-  /**
-   * Returns an image for a given grid value
-   * 
-   * @param {string} gridValue The value of an image to load on the grid
-   * 
-   * @returns The path to the image 
-   */
-  public getGridImage(gridValue: string): string {
-    switch (gridValue) {
-      case 'P': {
-        return 'assets/class_imgs/cleric.png';
-      }
-      case 'E': {
-        return 'assets/race_imgs/minotaur.png';
-      }
-      case 'N': {
-        return 'assets/textures/emptyTile.jpg';
-      }
-      case 'W': {
-        return 'assets/textures/wall.png';
-      }
-    }
   }
 
   updateCharacter(character: Character) {

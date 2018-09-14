@@ -55,20 +55,36 @@ and (min-width: 481px){
     }
 }
 
-.P {
-    background-color: greenYellow !important;
-}
-
-.E {
+.R {
     background-color: red !important;
 }
 
-.N {
-    background-color: none !important;
+.Y {
+    background-color: yellow !important;
 }
 
-.W {
-    background-color: black !important;
+.O {
+    background-color: orange !important;
+}
+
+.G {
+    background-color: green !important;
+}
+
+.B {
+    background-color: blue !important;
+}
+
+.P {
+    background-color: purple !important;
+}
+
+.D {
+    background-color: burlywood !important;
+}
+
+.Z {
+    background-color: none !important;
 }
 
 .tileObject {

@@ -17,9 +17,8 @@
       <table class="table table-sm text-center">
         <tbody id="board">
           <tr class="boardRow" *ngFor="let gridY of this._messageService.grid index as y">
-            <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} boardCell text-center" [ngClass]="this.getGridClass(x, y)"
+            <td *ngFor="let gridX of gridY index as x" class="{{ this.getGridValue(x, y).type }} border boardCell text-center"
               (click)="this.placeToken(x, y)">
-              <img class="tileObject" src="{{ this.getGridImage(this.getGridValue(x, y).type) }}" /> </td>
           </tr>
         </tbody>
       </table>
@@ -32,9 +31,13 @@
       <label class="col-md-2">Put:</label>
       <select class="custom-select col-md-6" (change)="this.token = $event.target.value">
         <option selected value="N">Empty</option>
-        <option value="P">Player</option>
-        <option value="E">Enemy</option>
-        <option value="W">Wall</option>
+        <option value="R">Red</option>
+        <option value="Y">Yellow</option>
+        <option value="O">Orange</option>
+        <option value="G">Green</option>
+        <option value="B">Blue</option>
+        <option value="P">Purple</option>
+        <option value="D">Brown</option>
       </select>
     </div>
 
@@ -66,5 +69,5 @@
       </div>
     </div>
   </div>
-  <app-play-chat class="d-none d-md-block"></app-play-chat>
+  <!-- <app-play-chat class="d-none d-md-block"></app-play-chat> -->
 </div>
