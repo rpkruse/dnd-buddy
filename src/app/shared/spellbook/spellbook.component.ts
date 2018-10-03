@@ -69,7 +69,7 @@ export class SpellbookComponent implements OnInit {
           d => spell = d,
           err => console.log("Unable to get spells at", i, err),
           () => {
-            this.spellBook.push(spell);
+            this.spellBook[i] = spell;
             if (i === 9) {
               s.unsubscribe();
               this.setSimpleSpellBook();
@@ -120,7 +120,7 @@ export class SpellbookComponent implements OnInit {
 
       for (let j = 0; j < spells.length; j++) {
         let spell: SimpleSpell = {
-          level: i+1,
+          level: i,
           name: spells[j].name,
           url: spells[j].url
         };
