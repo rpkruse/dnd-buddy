@@ -108,7 +108,7 @@
               </li>
             </ul>
             <p class="text-light text-center" *ngIf="!this.selectedGame.character.length">This game contains no players.</p>
-            <img class="icon icon-sm-med float-right mt-3" src="assets/icons/enter_icon_white.png" placement="left" ngbTooltip="Enter"
+            <img class="icon icon-med float-right mt-3" src="assets/icons/enter_icon_white.png" placement="left" ngbTooltip="Enter"
               (click)="joinGame()" *ngIf="this.selectedGame.character.length" />
           </div>
         </div>
@@ -154,7 +154,7 @@
 
   <div class="modal-body content">
 
-    <body class="text-light bg-transparent">Are you sure you want to the game delete:
+    <body class="text-light bg-transparent">Are you sure you want to delete the game:
       <b>{{ this.selectedGame.name }}?</b>
       <br>
     </body>
